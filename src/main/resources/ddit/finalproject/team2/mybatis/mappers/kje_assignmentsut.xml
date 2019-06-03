@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ddit.finalproject.team2.student.dao.KJE_IAssignmentsutDao">
+
+	<select id="selectSubmitFile" parameterType="hashmap" resultType="SubmitFileVo">
+		SELECT
+		SUBMITFILE_NO,
+		ATTEND_NO,
+		FILE_TITLE,
+		TO_CHAR(FILE_DATE,'YYYY/MM/dd')FILE_DATE,
+		FILE_MARKSCORE,
+		ASSIGNMENT_NO,
+		FILE_NAME,
+		FILE_URL,
+		FILE_SIZE
+		FROM
+		SUBMITFILE
+		WHERE
+		ATTEND_NO=#{attend_no}
+		AND
+		ASSIGNMENT_NO=#{assignment_no}
+
+	</select>
+	
+	<insert id="insertSubmitFile" parameterType="KJE_SubmitFileVo" >
+		<selectKey resultType="string" keyProperty="submitfile_no" order="BEFORE">
+			SELECT NVL(MAX(SUBMITFILE_NO),0)+1 FROM SUBMITFILE
+		</selectKey>
+	
+	INSERT INTO SUBMITFILE (
+	    SUBMITFILE_NO, ATTEND_NO,
+	    FILE_TITLE, FILE_DATE,
+	    ASSIGNMENT_NO,FILE_NAME, 
+	    FILE_URL,FILE_SIZE
+	) VALUES (
+		#{submitfile_no},#{attend_no},
+		#{file_title}, SYSDATE,
+		#{assignment_no}, #{file_name},
+		#{file_url}, #{file_size}
+	)
+	
+	</insert>
+	
+	<update id="updateSubmitFile" parameterType="KJE_SubmitFileVo">
+		UPDATE SUBMITFILE
+		SET
+	    FILE_DATE = SYSDATE,
+	    FILE_NAME =#{file_name}, 
+	    FILE_URL=#{file_url},
+	    FILE_SIZE=#{file_size}
+		WHERE	
+		SUBMITFILE_NO=#{submitfile_no}		
+	</update>
+	
+</mapper>
+
+
+ 

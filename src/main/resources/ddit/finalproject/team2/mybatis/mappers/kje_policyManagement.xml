@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ddit.finalproject.team2.admin.dao.KJE_IPolicyManagementDao">
+
+	<select id="selectPolicyManagementAllList" resultType="ddit.finalproject.team2.vo.KJE_PolicyManagementVo">
+		SELECT
+		OPENSEME_YEAR,
+		OPENSEME_SEMESTER,
+		O.OPENSEME_NO,
+		TO_CHAR(OPENSEME_PERIOD1,'YYYY-MM-DD')OPENSEME_PERIOD1,
+		TO_CHAR(OPENSEME_PERIOD2,'YYYY-MM-DD')OPENSEME_PERIOD2,
+		G1.EVALPOLICY_CODE,
+		MIN ((SELECT GRADERANK_RATIO FROM GRADERANK G2
+		WHERE GRADERANK_RANK='A'
+		AND G1.GRADERANK_NO=G2.GRADERANK_NO )) RANK_A,
+		MIN((SELECT GRADERANK_RATIO FROM GRADERANK G2 WHERE GRADERANK_RANK='B'
+		AND
+		G1.GRADERANK_NO=G2.GRADERANK_NO )) RANK_B,
+		MIN((SELECT
+		GRADERANK_RATIO FROM GRADERANK G2 WHERE GRADERANK_RANK='C' AND
+		G1.GRADERANK_NO=G2.GRADERANK_NO )) RANK_C,
+		MIN((SELECT GRADERANK_RATIO
+		FROM GRADERANK G2 WHERE GRADERANK_RANK='D' AND
+		G1.GRADERANK_NO=G2.GRADERANK_NO )) RANK_D,
+		MIN((SELECT GRADERANK_RATIO
+		FROM GRADERANK G2 WHERE GRADERANK_RANK='F' AND
+		G1.GRADERANK_NO=G2.GRADERANK_NO )) RANK_F
+		FROM
+		OPENSEMESTER O INNER JOIN
+		EVALUATIONPOLICY P ON(O.OPENSEME_NO=P.OPENSEME_NO)
+		INNER JOIN GRADERANK
+		G1 ON (P.EVALPOLICY_CODE=G1.EVALPOLICY_CODE)
+		GROUP BY
+		G1.EVALPOLICY_CODE,OPENSEME_YEAR,
+		OPENSEME_SEMESTER,
+		O.OPENSEME_NO,
+		OPENSEME_PERIOD1,
+		OPENSEME_PERIOD2,
+		P.EVALPOLICY_CODE
+		ORDER BY OPENSEME_PERIOD1 DESC
+	</select>
+
+	<select id="selectAddSemesterList" resultType="ddit.finalproject.team2.vo.KJE_SemesterVo">
+		SELECT
+		OPENSEME_YEAR,
+		OPENSEME_SEMESTER,
+		OPENSEME_NO
+		FROM
+		OPENSEMESTER
+		WHERE
+		OPENSEME_NO not in
+		(SELECT O.OPENSEME_NO FROM EVALUATIONPOLICY E INNER
+		JOIN OPENSEMESTER O
+		ON(E.OPENSEME_NO=O.OPENSEME_NO))
+		ORDER BY
+		OPENSEME_YEAR
+		DESC, OPENSEME_SEMESTER DESC
+	</select>
+
+	<select id="selectEvalpolicyCode" parameterType="String"
+		resultType="String">
+		SELECT
+		EVALPOLICY_CODE
+		FROM
+		EVALUATIONPOLICY
+		WHERE OPENSEME_NO
+		=#{openseme_no}
+	</select>
+	<insert id="insertEvaluationPolicy" parameterType="String">
+		<selectKey resultType="string" keyProperty="evalpolicy_code"
+			order="BEFORE">
+			SELECT TO_CHAR(EVALPOLICY_SEQ.NEXTVAL) FROM DUAL
+		</selectKey>
+		INSERT INTO EVALUATIONPOLICY (
+		EVALPOLICY_CODE,
+		OPENSEME_NO
+		) VALUES (
+		#{evalpolicy_code},
+		#{openseme_no}
+		)
+	</insert>
+
+	<insert id="insertGraderank" parameterType="hashmap">
+	<selectKey resultType="string" keyProperty="graderank_no"
+			order="BEFORE">
+			SELECT NVL(MAX(TO_NUMBER(GRADERANK_NO)),0)+1 FROM GRADERANK
+	</selectKey>
+		INSERT ALL
+		<foreach collection="gradeRankList" item="graderank" index="idx">
+		INTO GRADERANK (
+		GRADERANK_NO,
+		GRADERANK_RANK,
+		GRADERANK_MAX,
+		GRADERANK_MIN,
+		EVALPOLICY_CODE,
+		GRADERANK_RATIO
+		) VALUES (
+		#{graderank_no}+#{idx},
+		#{graderank.graderank_rank},
+		#{graderank.graderank_max},
+		#{graderank.graderank_min},
+		#{graderank.evalpolicy_code},
+		#{graderank.graderank_ratio}
+		)
+	</foreach>
+	SELECT * FROM DUAL 
+	</insert>
+	
+	
+	<update id="updateGraderank" parameterType="hashmap">
+	<foreach collection="gradeRankList" item="graderank" index="idx" separator=";" open="DECLARE BEGIN" close=";END;">
+		UPDATE GRADERANK 
+		SET
+		GRADERANK_RATIO=#{graderank.graderank_ratio}
+		WHERE EVALPOLICY_CODE=#{graderank.evalpolicy_code}
+		AND GRADERANK_RANK=#{graderank.graderank_rank}
+	</foreach>
+	
+	</update>
+</mapper>

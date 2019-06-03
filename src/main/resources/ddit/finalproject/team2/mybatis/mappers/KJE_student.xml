@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ddit.finalproject.team2.common.dao.KJE_IStudentDao">
+	
+	<select id="selectFaceId" parameterType="string" resultType="string">
+		SELECT FACE_ID FROM STUDENT WHERE USER_ID= #{user_id}
+	</select>
+
+	<update id="updateFaceId" parameterType="ddit.finalproject.team2.vo.StudentVo" >
+		UPDATE STUDENT
+			SET
+				FACE_ID = #{face_id}
+			WHERE USER_ID = #{user_id}
+	</update>
+</mapper>
+

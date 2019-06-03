@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC
+        "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+        "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+<tiles-definitions>
+
+    <definition name=".student" template="/WEB-INF/views/tilesSetting/baseLayout.jsp">
+        <put-attribute name="title" value="" />
+        <put-attribute name="style" value="/WEB-INF/views/tilesSetting/include/style.jsp"/>
+        <put-attribute name="header" value="/WEB-INF/views/tilesSetting/include/header.jsp" />
+        <put-attribute name="menu" value="/WEB-INF/views/student/menu.jsp"/>
+        <put-attribute name="submenu" value=""/>
+        <put-attribute name="footer" value="/WEB-INF/views/tilesSetting/include/footer.jsp" />
+    </definition>
+
+    <definition name=".professor" template="/WEB-INF/views/tilesSetting/baseLayout.jsp">
+        <put-attribute name="title" value="" />
+        <put-attribute name="style" value="/WEB-INF/views/tilesSetting/include/style.jsp"/>
+        <put-attribute name="header" value="/WEB-INF/views/tilesSetting/include/header.jsp" />
+        <put-attribute name="menu" value="/WEB-INF/views/professor/menu.jsp"/>
+        <put-attribute name="submenu" value=""/>
+        <put-attribute name="footer" value="/WEB-INF/views/tilesSetting/include/footer.jsp" />
+    </definition>
+	
+	<definition name=".admin" template="/WEB-INF/views/tilesSetting/baseLayout.jsp">
+        <put-attribute name="title" value="" />
+        <put-attribute name="style" value="/WEB-INF/views/tilesSetting/include/style.jsp"/>
+        <put-attribute name="header" value="/WEB-INF/views/tilesSetting/include/header.jsp" />
+        <put-attribute name="menu" value="/WEB-INF/views/admin/menu.jsp"/>
+        <put-attribute name="submenu" value=""/>
+        <put-attribute name="footer" value="/WEB-INF/views/tilesSetting/include/footer.jsp" />
+    </definition>
+
+    <definition name=".submenu" template="/WEB-INF/views/tilesSetting/baseLayout.jsp">
+        <put-attribute name="title" value="" />
+        <put-attribute name="style" value="/WEB-INF/views/tilesSetting/include/style.jsp"/>
+        <put-attribute name="header" value="/WEB-INF/views/tilesSetting/include/header.jsp" />
+        <put-attribute name="menu" value="/WEB-INF/views/student/menu.jsp"/>
+        <put-attribute name="submenu" value="/WEB-INF/views/tilesSetting/include/submenu.jsp"/>
+        <put-attribute name="footer" value="/WEB-INF/views/tilesSetting/include/footer.jsp" />
+    </definition>
+
+    <definition name="newPage" template="/WEB-INF/views/tilesSetting/baseLayout.jsp">
+        <put-attribute name="style" value="/WEB-INF/views/tilesSetting/include/style.jsp"/>
+    	<put-attribute name="header" value="/WEB-INF/views/tilesSetting/include/webSocketHeader.jsp"/>
+    	<put-attribute name="submenu" value=""/>
+        <put-attribute name="footer" value="/WEB-INF/views/tilesSetting/include/newPageFooter.jsp" />
+    	<put-attribute name="menu" value=""/>
+    </definition>
+
+    <definition name="empty" template="/WEB-INF/views/tilesSetting/baseLayout.jsp">
+        <put-attribute name="style" value=""/>
+        <put-attribute name="header" value=""/>
+        <put-attribute name="menu" value=""/>
+        <put-attribute name="submenu" value=""/>
+        <put-attribute name="footer" value="" />
+    </definition>
+
+    <!-- (2) -->
+    <definition name="student/exclude/*" extends="empty">
+        <put-attribute name="body" value="/WEB-INF/views/student/exclude/{1}.jsp" />
+    </definition>
+    <definition name="student/submenu/*" extends=".submenu">
+        <put-attribute name="body" value="/WEB-INF/views/student/submenu/{1}.jsp" />
+    </definition>
+    <definition name="student/*" extends=".student">
+        <put-attribute name="body" value="/WEB-INF/views/student/{1}.jsp" />
+    </definition>
+    <definition name="professor/*" extends=".professor">
+        <put-attribute name="body" value="/WEB-INF/views/professor/{1}.jsp" />
+    </definition>
+    <definition name="admin/*" extends=".admin">
+        <put-attribute name="body" value="/WEB-INF/views/admin/{1}.jsp" />
+    </definition>
+    <definition name="new/*" extends="newPage">
+    	<put-attribute name="body" value="/WEB-INF/views/new/{1}.jsp"/>
+    </definition>
+</tiles-definitions>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ddit.finalproject.team2.common.dao.Ljs_IRingDao">
+	<insert id="insertRing" parameterType="ddit.finalproject.team2.vo.RingVo">
+		<selectKey resultType="string" keyProperty="ring_code" order="BEFORE">
+			SELECT RING_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+        INSERT INTO RING (
+		    RING_CODE, RING_RESPONSE_ID, RING_REQUEST_ID,
+		    RING_TYPE, RING_NO, RING_MOVE_ADDRESS, RING_OCCUR_DATE,
+		    RING_CONFIRM_YN, RING_TITLE
+		) VALUES (
+		    #{ring_code}, #{ring_response_id}, #{ring_request_id}
+		    , #{ring_type}, (SELECT NVL(MAX(TO_NUMBER(RING_NO)),0)+1 FROM RING WHERE RING_RESPONSE_ID = #{ring_response_id})
+		    , #{ring_move_address}, SYSDATE, 'N', #{ring_title}
+		)
+	</insert>
+	
+	<select id="selectRingList" parameterType="string" resultType="ddit.finalproject.team2.vo.RingVo">
+		SELECT RING_CODE, RING_RESPONSE_ID, RING_REQUEST_ID,
+		    RING_TYPE, RING_NO, RING_MOVE_ADDRESS, RING_OCCUR_DATE,
+		    RING_CONFIRM_YN, RING_TITLE, USER_NAME REQUEST_NAME
+		FROM RING INNER JOIN USERS
+		ON(RING_REQUEST_ID = USER_ID)
+		WHERE RING_RESPONSE_ID = #{user_id}
+		ORDER BY RING_NO DESC
+	</select>
+	
+	<update id="updateRing" parameterType="string">
+		UPDATE RING
+		SET RING_CONFIRM_DATE = SYSDATE,
+			RING_CONFIRM_YN = 'Y'
+		WHERE RING_CODE = #{ring_code}
+	</update>
+</mapper>

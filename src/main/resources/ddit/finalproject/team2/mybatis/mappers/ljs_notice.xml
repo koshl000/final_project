@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ddit.finalproject.team2.common.dao.Ljs_INoticeDao">
+	<select id="selectNoticeList" resultType="ddit.finalproject.team2.vo.Ljs_BoardVo">
+		SELECT NOTICE_NO BOARD_NO, '공지' BOARD_TYPE, NOTICE_TITLE BOARD_TITLE, NOTICE_CONTENT BOARD_CONTENT
+			, NOTICE_DATE BOARD_DATE, NOTICE_HIT BOARD_HIT, NOTICE_WRITER BOARD_WRITER 
+		FROM NOTICE ORDER BY NOTICE_NO DESC
+	</select>
+	
+	<resultMap type="ddit.finalproject.team2.vo.Ljs_BoardVo" id="boardMapWithoutUser" autoMapping="true">
+		<id property="board_no" column="BOARD_NO"/>
+		<collection property="savedAttachmentList" autoMapping="true" ofType="ddit.finalproject.team2.vo.AttachmentVo">
+			<id property="attachment_no" column="FILE_NO"/>
+		</collection>
+	</resultMap>
+	<select id="selectNotice" parameterType="string" resultMap="boardMapWithoutUser">
+		SELECT A.NOTICE_NO BOARD_NO, NOTICE_TITLE BOARD_TITLE, NOTICE_CONTENT BOARD_CONTENT
+			, NOTICE_DATE BOARD_DATE, NOTICE_HIT BOARD_HIT
+			, FILE_NO, FILE_NAME, FILE_PATH
+		FROM NOTICE A LEFT OUTER JOIN NOTICEATTACHMENT B
+		ON(A.NOTICE_NO = B.NOTICE_NO)
+		WHERE A.NOTICE_NO IN(
+		    TO_NUMBER(#{notice_no}),
+		<![CDATA[
+		    (SELECT MAX(NOTICE_NO) FROM NOTICE WHERE NOTICE_NO < TO_NUMBER(#{notice_no})),
+		    (SELECT MIN(NOTICE_NO) FROM NOTICE WHERE NOTICE_NO > TO_NUMBER(#{notice_no}))
+		]]>
+		)
+		ORDER BY TO_NUMBER(A.NOTICE_NO)
+	</select>
+	
+	<update id="incrementHit" parameterType="string">
+		UPDATE NOTICE
+		SET NOTICE_HIT = TO_NUMBER(NOTICE_HIT) + 1
+		WHERE NOTICE_NO = #{notice_no}
+	</update>
+</mapper>

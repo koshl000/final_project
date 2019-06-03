@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ddit.finalproject.team2.student.dao.KJE_IStatisticsStuDao">
+
+	<select id="selectStudyState" parameterType="String"
+		resultType="ddit.finalproject.team2.vo.GradeVo">
+		SELECT
+		NVL(GRADE_NO,'0')AS GRADE_NO,
+		NVL(GRADE_MIDTERM,'0')AS GRADE_MIDTERM,
+		NVL(GRADE_FINAL,'0')AS
+		GRADE_FINAL,
+		NVL(GRADE_ASSIGNMENT,'0')AS GRADE_ASSIGNMENT,
+		NVL(GRADE_ABSENCE,'0')AS GRADE_ABSENCE,
+		ATTEND_NO
+		FROM
+		GRADE
+		WHERE
+		ATTEND_NO=#{attend_no}
+	</select>
+
+	<select id="selectAvgStudyState" parameterType="String"
+		resultType="ddit.finalproject.team2.vo.GradeVo">
+		SELECT
+		AVG(GRADE_MIDTERM)GRADE_MIDTERM,
+		AVG(GRADE_FINAL)
+		GRADE_FINAL,
+		AVG(GRADE_ASSIGNMENT)GRADE_ASSIGNMENT,
+		AVG(GRADE_ABSENCE)GRADE_ABSENCE
+		FROM
+		GRADE
+		WHERE ATTEND_NO=(SELECT
+		ATTEND_NO FROM ATTEND WHERE LECTURE_CODE = #{lecture_code})
+
+	</select>
+
+	<select id="selectLectureName" parameterType="String"
+		resultType="String">
+		SELECT
+		LECTURE_NAME
+		FROM
+		LECTURE
+		WHERE LECTURE_CODE= #{lecture_code}
+	</select>
+
+
+</mapper>

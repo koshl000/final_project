@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ddit.finalproject.team2.common.dao.KJE_ChatBotDao">
+
+	<select id="selectOpenSemester" parameterType="hashmap"
+		resultType="ddit.finalproject.team2.vo.OpenSemesterVo">
+		SELECT
+		OPENSEME_YEAR, OPENSEME_SEMESTER, OPENSEME_NO,
+		OPENSEME_ATTEND1,OPENSEME_ADJUST1,
+		OPENSEME_ATTEND2,OPENSEME_ADJUST2,
+		OPENSEME_REGISTGRADE1,OPENSEME_REGISTGRADE2,
+		OPENSEME_EVALUATE1,OPENSEME_EVALUATE2,
+		OPENSEME_CHECKGRADE1,OPENSEME_CHECKGRADE2,
+		OPENSEME_PERIOD1,OPENSEME_PERIOD2,
+		OPENSEME_REGISTGRADE3,OPENSEME_REGISTGRADE4,
+		OPENSEME_CHECKGRADE3,OPENSEME_CHECKGRADE4
+		FROM OPENSEMESTER
+		WHERE
+		OPENSEME_YEAR=#{openseme_year}
+		AND
+		OPENSEME_SEMESTER=#{openseme_semester}
+	</select>
+
+	<select id="selectSchedule" parameterType="String"
+		resultType="ddit.finalproject.team2.vo.KJE_ScheduleVo">
+
+		SELECT
+		SCHEDULE_NO,
+		SCHEDULE_TYPE,
+		SCHEDULE_TITLE,
+		SCHEDULE_CONTENT,
+		SCHEDULE_START,
+		SCHEDULE_END,
+		SCHEDULE_ADD,
+		S.LECTURE_CODE,
+		L.LECTURE_NAME
+		FROM SCHEDULE S INNER JOIN LECTURE L ON(S.LECTURE_CODE=L.LECTURE_CODE)
+		WHERE S.LECTURE_CODE =(SELECT LECTURE_CODE FROM ATTEND WHERE USER_ID=#{user_id})
+
+	</select>
+
+
+</mapper>
+
+
+  
+    
+  
+  
+

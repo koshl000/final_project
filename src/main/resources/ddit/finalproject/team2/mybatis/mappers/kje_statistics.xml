@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ddit.finalproject.team2.admin.dao.KJE_IStatisticsDao">
+
+	<select id="selectUpperOrganization" resultType="ddit.finalproject.team2.vo.OrganizationVo">
+		SELECT
+		LOWER_ORGANIZATION
+		FROM
+		ORGANIZATION
+		WHERE UPPER_ORGANIZATION is Null
+	</select>
+
+	<select id="selectLowerOrganization" resultType="ddit.finalproject.team2.vo.OrganizationVo">
+		SELECT
+		LOWER_ORGANIZATION,
+		UPPER_ORGANIZATION
+		FROM
+		ORGANIZATION
+		WHERE
+		UPPER_ORGANIZATION is NOT Null
+	</select>
+
+	<select id="selectStLecture" parameterType="String"
+		resultType="ddit.finalproject.team2.vo.KJE_StlectureVo">
+		SELECT
+		LECTURE_CODE,
+		U.USER_ID,
+		U.USER_NAME,
+		LECTURE_NAME,
+		LOWER_ORGANIZATION
+		FROM
+		LECTURE L
+		INNER JOIN USERS U
+		ON(L.USER_ID=U.USER_ID)
+		WHERE OPENSEME_NO= #{openseme_no}
+	</select>
+
+	<select id="selectAttend" resultType="ddit.finalproject.team2.vo.AttendVo">
+		SELECT
+		USER_ID,
+		ATTEND_NO,
+		LECTURE_CODE
+		FROM
+		ATTEND
+		WHERE USER_ID=#{user_id}
+		AND
+		LECTURE_CODE=#{lecture_code}
+	</select>
+
+	<select id="selectLectureStatistics" resultType="ddit.finalproject.team2.vo.KJE_TimeStatisticsVo">
+		SELECT
+		DECODE(GROUPING(copy_t.tm1),1,'Total',copy_t.tm1||'~'||copy_t.tm2) AS
+		TIME
+		, NVL(SUM(main_t.cnt),0) AS NOA
+		, LECTURE_CODE
+		FROM
+		(
+		SELECT
+		TO_CHAR(CONNECTION_TIME, 'hh24') tm, COUNT(*)
+		cnt,
+		A.LECTURE_CODE
+		FROM
+		LECTUREACCESSSTATISTICS L INNER JOIN ATTEND A
+		ON(L.ATTEND_NO=A.ATTEND_NO)
+		  <![CDATA[
+		WHERE CONNECTION_TIME >= to_date(#{start_date},'yyyymmddhh24miss')
+		AND CONNECTION_TIME <= to_date(#{end_date},'yyyymmddhh24miss')
+		AND LECTURE_CODE=#{lecture_code}
+		GROUP BY TO_CHAR(CONNECTION_TIME, 'hh24'),A.LECTURE_CODE
+		) main_t
+		,
+		(
+		SELECT LPAD(LEVEL -1, 2, '0') tm1
+		, LPAD(LEVEL + 0, 2, '0') tm2
+		FROM dual CONNECT BY LEVEL <= 24
+		) copy_t
+		WHERE copy_t.tm1 = main_t.tm(+)
+		GROUP BY ROLLUP((copy_t.tm1, copy_t.tm2)), LECTURE_CODE
+		ORDER BY copy_t.tm1
+		]]>
+
+	</select>
+
+	<select id="selectProfessorList" resultType="ddit.finalproject.team2.vo.KJE_ProfessorVo">
+		SELECT
+		U.USER_NAME,
+		P.USER_ID
+		FROM PROFESSOR P INNER JOIN USERS U
+		ON(P.USER_ID=U.USER_ID)
+	</select>
+
+
+	<select id="selectBoardTypeCnt" parameterType="hashmap"
+		resultType="ddit.finalproject.team2.vo.KJE_BoardTypeCntVo">
+		SELECT
+		BOARD_TYPE,
+		COUNT(BOARD_NO) AS BOARD_CNT
+		FROM BOARD
+
+		WHERE
+		LECTURE_CODE= #{lecture_code}
+		AND ATTEND_NO IS NULL
+		 <![CDATA[
+		AND TO_CHAR(BOARD_DATE,'YYYYMMDD')>= #{start_date}
+		AND TO_CHAR(BOARD_DATE,'YYYYMMDD')<= #{end_date}
+		]]>
+		GROUP BY BOARD_TYPE
+	</select>
+
+
+	<select id="selectReplyTypeCnt" parameterType="hashmap"
+		resultType="ddit.finalproject.team2.vo.KJE_ReplyTypeCntVo">
+		SELECT
+		LECTURE_CODE,
+		COUNT(REPLY_NO) AS REPLY_CNT
+		FROM REPLY
+		WHERE
+		LECTURE_CODE=#{lecture_code}
+		AND ATTEND_NO IS NULL
+		<![CDATA[
+		AND TO_CHAR(REPLY_REG,'YYYYMMDD')>= #{start_date}
+		AND TO_CHAR(REPLY_REG,'YYYYMMDD')<= #{end_date}
+		]]>
+		GROUP BY LECTURE_CODE
+
+	</select>
+
+	<select id="selectPotalStatistics" parameterType="hashmap"
+		resultType="ddit.finalproject.team2.vo.KJE_TimeStatisticsVo">
+		SELECT
+		DECODE(GROUPING(copy_t.tm1),1,'Total',copy_t.tm1||'~'||copy_t.tm2) AS
+		TIME
+		, SUM(main_t.cnt) AS NOA
+		FROM
+		(
+		SELECT TO_CHAR(PORTAL_VISIT_TIME,
+		'hh24') tm
+		, COUNT(*) cnt
+		FROM
+		PORTALACCESSSTATISTICS
+		<![CDATA[
+		WHERE PORTAL_VISIT_TIME >= to_date(#{start_date},'yyyymmddhh24miss')
+		AND
+		PORTAL_VISIT_TIME <= to_date(#{end_date},'yyyymmddhh24miss')
+		GROUP BY TO_CHAR(PORTAL_VISIT_TIME, 'hh24')
+		) main_t
+		,
+		(
+		SELECT LPAD(LEVEL -1, 2, '0') tm1
+		, LPAD(LEVEL + 0, 2, '0') tm2
+		FROM dual CONNECT BY LEVEL <= 24
+		) copy_t
+		WHERE copy_t.tm1 = main_t.tm(+)
+		GROUP BY ROLLUP((copy_t.tm1, copy_t.tm2))
+		ORDER BY copy_t.tm1
+		]]>
+	</select>
+
+	<select id="selectSemesterList" resultType="ddit.finalproject.team2.vo.KJE_SemesterVo">
+		SELECT
+		OPENSEME_YEAR,
+		OPENSEME_SEMESTER,
+		OPENSEME_NO
+		FROM
+		OPENSEMESTER
+		ORDER BY OPENSEME_YEAR
+		DESC, OPENSEME_SEMESTER DESC
+	</select>
+
+	<select id="selectOperationStList" parameterType="hashmap"
+		resultType="ddit.finalproject.team2.vo.KJE_OperationStatisticsVo">
+		SELECT
+		COUNT(DECODE(LECTURE_COURSETYPE,'전공',1)) MAJOR_CNT,
+		COUNT(DECODE(LECTURE_COURSETYPE,'교양',1)) NONMAJOR_CNT,
+		COUNT(LECTURE_NAME) LECTURE_CNT,
+		sum(LECTURE_CURRENT)LECTURE_CURRENTSUM
+		FROM LECTURE
+		WHERE
+		OPENSEME_NO=#{openseme_no}
+
+		<if test="lower_organization!=null">
+			AND LOWER_ORGANIZATION=#{lower_organization}
+		</if>
+
+	</select>
+
+	<select id="selectThisTimeSemester" parameterType="String"
+		resultType="ddit.finalproject.team2.vo.OpenSemesterVo">
+		SELECT
+		OPENSEME_YEAR,
+		OPENSEME_SEMESTER,
+		openseme_no,
+		TO_CHAR(OPENSEME_PERIOD1,'YYYYMMDD') OPENSEME_PERIOD1,
+		TO_CHAR(OPENSEME_PERIOD2,'YYYYMMDD')OPENSEME_PERIOD2
+		FROM
+		OPENSEMESTER
+		<![CDATA[
+		WHERE TO_CHAR(openseme_period1,'YYYYMMDD')<=#{today}
+		AND TO_CHAR(openseme_period2,'YYYYMMDD')>=#{today}
+			]]>
+	</select>
+
+
+	<insert id="insertLectureAccessStats" parameterType="ddit.finalproject.team2.vo.LectureAccessStatsVo">
+		<selectKey resultType="string" keyProperty="lec_acc_sta_no"
+			order="BEFORE">
+			SELECT TO_CHAR(LECTUREACCESSSTATISTICS_SEQ.NEXTVAL) FROM DUAL
+		</selectKey>
+		INSERT INTO LECTUREACCESSSTATISTICS (
+		LEC_ACC_STA_NO, CONNECTION_TIME,
+		ACC_IP, ATTEND_NO
+		) VALUES (
+		#{lec_acc_sta_no},
+		SYSDATE,
+		#{acc_ip},
+		#{attend_no}
+		)
+	</insert>
+
+
+	<insert id="insertMainAccessStats" parameterType="ddit.finalproject.team2.vo.PortalAccessStatsVo">
+		<selectKey resultType="string" keyProperty="portal_no"
+			order="BEFORE">
+			SELECT TO_CHAR(PORTALACCESSSTATISTICS_SEQ.NEXTVAL) FROM DUAL
+		</selectKey>
+		INSERT INTO PORTALACCESSSTATISTICS (
+		PORTAL_NO,
+		PORTAL_VISIT_TIME,
+		USER_ID,
+		ACCESS_IP
+		) VALUES (
+		#{portal_no},
+		SYSDATE,
+		#{user_id},
+		#{access_ip}
+		)
+	</insert>
+</mapper>
+

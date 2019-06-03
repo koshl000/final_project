@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ddit.finalproject.team2.student.dao.Lsh_ILectureDao">
+    <resultMap id="lectureList" type="Lsh_Attend_LectureVo">
+        <association property="av" javaType="AttendVo"/>
+        <association property="lv" javaType="LectureVo"/>
+    </resultMap>
+
+    <select id="selectLectureListbyOpenseme" parameterType="map" resultType="LectureVo">
+        select *
+        from lecture l1
+                 inner join ATTEND a1 on l1.LECTURE_CODE = a1.LECTURE_CODE
+                 inner join OPENSEMESTER O on l1.OPENSEME_NO = O.OPENSEME_NO
+        where a1.USER_ID = #{user_id}
+          and o.OPENSEME_YEAR = #{openseme_year}
+          and o.OPENSEME_SEMESTER = #{openseme_semester}
+    </select>
+    <!--강의별 동영상목록-->
+    <select id="selectVideoListbyLecture" parameterType="string" resultType="map">
+        select distinct(V.CLASS_IDENTIFYING_CODE),
+                       L1.LECTURE_CREDIT,
+                       L2.LECTURE_SUBNAME,
+                       V.FILE_URL,
+                       A2.ABSENCE_YN,
+                       L1.LECTURE_NAME
+        from ATTEND A1
+                 inner join lecture_201901 L1 on A1.LECTURE_CODE = L1.LECTURE_CODE
+                 inner join LECTUREWEEK L2 on L1.LECTURE_CODE = L2.LECTURE_CODE
+                 inner join VIDEOFILE V
+                            on L2.LECTURE_CODE = V.LECTURE_CODE and V.CLASS_IDENTIFYING_CODE = L2.CLASS_IDENTIFYING_CODE
+                 inner join ABSENCE A2 on A1.ATTEND_NO = A2.ATTEND_NO
+        where A1.LECTURE_CODE = #{lecture_code}
+          AND A1.USER_ID = #{user_id}
+          AND L2.LECTURE_CLASS = A2.ABSENCE_CLASS
+          and L2.LECTURE_WEEK = A2.ABSENCE_WEEK
+        order by v.CLASS_IDENTIFYING_CODE asc
+    </select>
+    <!--수강완료 목록(차시별 출결체크로 수강완료 확인)-->
+    <select id="selectAbsenceYN" parameterType="map" resultType="string">
+        select ABSENCE_YN
+        from ABSENCE A1
+                 inner join ATTEND A2
+                            on A1.ATTEND_NO = A2.ATTEND_NO
+        where A2.LECTURE_CODE = #{lecture_code}
+          and A2.USER_ID = #{user_id}
+        order by ABSENCE_WEEK asc, ABSENCE_CLASS asc
+    </select>
+    <!--이어보기-->
+    <select id="selectContinuePlay" parameterType="map" resultType="map">
+        select STUDYSTATE.*, VIDEOFILE.FILE_URL
+        FROM STUDYSTATE
+                 inner join VIDEOFILE on VIDEOFILE.CLASS_IDENTIFYING_CODE = STUDYSTATE.CLASS_IDENTIFYING_CODE
+            and VIDEOFILE.LECTURE_CODE = STUDYSTATE.LECTURE_CODE
+        WHERE ATTEND_NO = (select attend.attend_no
+                           from attend
+                           where attend.user_id = #{user_id}
+                             and attend.lecture_code = #{lecture_code})
+          and STUDYSTATE.CLASS_IDENTIFYING_CODE=STUDYSTATE.ISPLAYING
+    </select>
+
+    <select id="getAttend" parameterType="map" resultType="string">
+        select attend_no
+        from ATTEND
+        where USER_ID = #{user_id}
+          and LECTURE_CODE = #{lecture_code}
+    </select>
+
+    <update id="updateContinuePlay" parameterType="map">
+        update STUDYSTATE
+        set REPLAY_TIME=#{replay_time}
+        where ATTEND_NO = (select attend.attend_no
+                           from attend
+                           where attend.user_id = #{user_id}
+                             and attend.lecture_code = #{lecture_code})
+          and CLASS_IDENTIFYING_CODE = #{class_identifying_code}
+    </update>
+
+    <update id="updateIdentifyCode" parameterType="map">
+        update STUDYSTATE set ISPLAYING=#{isplaying}
+    </update>
+
+    <select id="selectPlay" parameterType="map" resultType="map">
+        select STUDYSTATE.*, VIDEOFILE.FILE_URL
+        FROM STUDYSTATE
+                 inner join VIDEOFILE on VIDEOFILE.CLASS_IDENTIFYING_CODE = STUDYSTATE.CLASS_IDENTIFYING_CODE
+            and VIDEOFILE.LECTURE_CODE = STUDYSTATE.LECTURE_CODE
+        WHERE ATTEND_NO = (select attend.attend_no
+                           from attend
+                           where attend.user_id = #{user_id}
+                             and attend.lecture_code = #{lecture_code})
+          and STUDYSTATE.CLASS_IDENTIFYING_CODE=#{class_identifying_code}
+    </select>
+
+</mapper>

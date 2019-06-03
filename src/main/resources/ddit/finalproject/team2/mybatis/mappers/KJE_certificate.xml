@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ddit.finalproject.team2.common.dao.KJE_ICertificateDao">
+
+	<select id="selectCertificateList" parameterType="String"
+		resultType="ddit.finalproject.team2.vo.KJE_CertificateVo">
+		SELECT CERTIFICATE_CODE,
+		CERTIFICATE_NAME,
+		CERTIFICATE_PRICE,
+		CERTIFICATE_AUTHORITY
+		FROM CERTIFICATE
+		WHERE
+		CERTIFICATE_AUTHORITY= #{user_authority}
+
+	</select>
+
+	<select id="selectSRinfo" parameterType="String"
+		resultType="ddit.finalproject.team2.vo.KJE_SRVo">
+		SELECT
+		USER_NAME,
+		USER_REGNO,
+		USER_ADD1,
+		USER_ADD2,
+		LOWER_ORGANIZATION,
+		(SELECT TO_CHAR(ADMISSION, 'YYYY"년"MM"월"DD"일"')
+		FROM STUDENT where
+		USER_ID=#{user_id})ADMISSION,
+		(SELECT
+		TO_CHAR(SYSDATE, 'YYYY"년"MM"월"DD"일"' ) AS TODAY FROM DUAL) TODAY
+		FROM
+		USERS A INNER JOIN STUDENT B
+		ON(A.USER_ID =B.USER_ID)
+		where
+		A.USER_ID=#{user_id}
+
+	</select>
+
+	<select id="selectCertificateAdminList" resultType="ddit.finalproject.team2.vo.KJE_CertificatieAdminVo">
+		SELECT
+		ISSUE_CODE,
+		ISSUE_COUNT,
+		ISSUE_TOTALPRICE,
+		ISSUE_DATE,
+		I.CERTIFICATE_CODE,
+		CERTIFICATE_NAME,
+		USER_AUTHORITY,
+		I.USER_ID,
+		USER_NAME
+		FROM ISSUE I INNER JOIN CERTIFICATE C
+		ON(I.CERTIFICATE_CODE= C.CERTIFICATE_CODE)
+		INNER JOIN USERS U ON(I.USER_ID=U.USER_ID)
+	</select>
+
+
+	<insert id="insertIssu" parameterType="ddit.finalproject.team2.vo.IssueVo">
+		<selectKey resultType="int" keyProperty="issue_code" order="BEFORE">
+			SELECT ISSUE_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO ISSUE(
+		ISSUE_CODE, USER_ID, ISSUE_COUNT,
+		CERTIFICATE_CODE, ISSUE_DATE , ISSUE_TOTALPRICE
+		)VALUES(
+		#{issue_code},#{user_id, jdbcType=VARCHAR},#{issue_count},
+		#{certificate_code, jdbcType=VARCHAR}, SYSDATE ,#{issue_totalprice}
+		)
+
+	</insert>
+
+
+
+</mapper>

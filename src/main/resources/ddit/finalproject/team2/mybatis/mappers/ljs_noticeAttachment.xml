@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper	namespace="ddit.finalproject.team2.common.dao.Ljs_INoticeAttachmentDao">
+	<sql id="attachmentCols">
+		FILE_NO ATTACHMENT_NO, FILE_NAME, FILE_PATH, NOTICE_NO BOARD_NO
+	</sql>
+	
+	<select id="selectAttachment" parameterType="string" resultType="ddit.finalproject.team2.vo.AttachmentVo">
+		SELECT 
+			<include refid="attachmentCols" />
+		FROM NOTICEATTACHMENT
+		WHERE FILE_NO = #{file_no}
+	</select>
+</mapper>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ddit.finalproject.team2.common.dao.IAuthDao">
+	<resultMap type="org.springframework.security.core.authority.SimpleGrantedAuthority" id="authMap">
+		<constructor>
+			<arg column="AUTHORITY" javaType="string"/>
+		</constructor>
+	</resultMap>
+	<select id="selectAuthoritiesByUsername" parameterType="string" 
+		resultType="ddit.finalproject.team2.vo.CustomGrantedAuthority">
+		SELECT A.AUTHORITY, ROLE_NAME
+		FROM AUTHORITIES A INNER JOIN ROLES B ON (A.AUTHORITY=B.AUTHORITY)
+		WHERE USER_ID = #{user_id}
+	</select>
+</mapper>

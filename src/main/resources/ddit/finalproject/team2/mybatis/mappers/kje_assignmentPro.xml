@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ddit.finalproject.team2.professor.dao.KJE_IAssignmentDao">
+
+	<select id="selectLWeekAssignmentProList" parameterType="String"
+		resultType="KJE_LWeekAssignmentProVo">
+		SELECT
+		ASSIGNMENT_NO,
+		L.LECTURE_CODE,
+		LECTURE_CLASS,
+		LECTURE_WEEK,
+		L. CLASS_IDENTIFYING_CODE,
+		LECTURE_SUBNAME,
+		TO_CHAR(ASSIGNMENT_DATE,'YYYY/MM/dd') ASSIGNMENT_DATE,
+		TO_CHAR(SUBMIT_PERIOD1,'YYYY/MM/dd') SUBMIT_PERIOD1,
+		TO_CHAR(SUBMIT_PERIOD2,'YYYY/MM/dd')SUBMIT_PERIOD2
+		FROM
+		LECTUREWEEK L
+		LEFT OUTER JOIN ASSIGNMENT A ON
+		(
+		L.CLASS_IDENTIFYING_CODE=A.CLASS_IDENTIFYING_CODE
+		AND
+		L.LECTURE_CODE=A.LECTURE_CODE )
+		WHERE L.LECTURE_CODE =#{lecture_code}
+	</select>
+
+
+	<resultMap type="KJE_AssignmentnFileVo" id="assignmentMap"
+		autoMapping="true">
+		<id property="assignment_no" column="ASSIGNMENT_NO" />
+
+		<collection property="assignmentFileList" ofType="KJE_AssFileVo"
+			autoMapping="true">
+			<id property="file_no" column="FILE_NO" />
+
+		</collection>
+
+	</resultMap>
+
+	<select id="selectAssignment" parameterType="String" resultMap="assignmentMap">
+		SELECT
+		ASSIGNMENT_TITLE,
+		TO_CHAR(ASSIGNMENT_DATE,'YYYY/MM/dd')ASSIGNMENT_DATE,
+		TO_CHAR(SUBMIT_PERIOD1,'YYYY/MM/dd') SUBMIT_PERIOD1,
+		TO_CHAR(SUBMIT_PERIOD2,'YYYY/MM/dd') SUBMIT_PERIOD2,
+		CLASS_IDENTIFYING_CODE,
+		LECTURE_CODE,
+		ASSIGNMENT_CONTENT,
+		FILE_NO,
+		FILE_PATH,
+		FILE_SIZE,
+		FILE_NAME,
+		A. ASSIGNMENT_NO
+		FROM
+		ASSIGNMENT A LEFT
+		OUTER JOIN ASSIGNMENTFILE F ON(A.ASSIGNMENT_NO=F.ASSIGNMENT_NO)
+		WHERE
+		A.ASSIGNMENT_NO=#{assignment_no}
+
+	</select>
+
+	<insert id="insertAssignment" parameterType="KJE_AssignmentnFileVo">
+		<selectKey resultType="string" keyProperty="assignment_no"
+			order="BEFORE">
+			SELECT ASSIGNMENT_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO ASSIGNMENT (
+		ASSIGNMENT_TITLE, ASSIGNMENT_NO,
+		ASSIGNMENT_DATE, SUBMIT_PERIOD1,
+		SUBMIT_PERIOD2,
+		CLASS_IDENTIFYING_CODE,
+		LECTURE_CODE, ASSIGNMENT_CONTENT
+		) VALUES (
+		#{assignment_title}, #{assignment_no},
+		SYSDATE,
+		TO_DATE(#{submit_period1}, 'YYYY/MM/DD'),
+		TO_DATE(#{submit_period2}, 'YYYY/MM/DD'),
+		#{class_identifying_code},
+		#{lecture_code},
+		#{assignment_content, jdbcType=CLOB}
+		)
+	</insert>
+
+	<insert id="insertAllAssFile" parameterType="KJE_AssignmentnFileVo">
+		<selectKey resultType="int" keyProperty="startAssFileNo"
+			order="BEFORE">
+			SELECT NVL(MAX(FILE_NO),0)+1 FROM ASSIGNMENTFILE
+		</selectKey>
+
+		INSERT ALL
+		<foreach collection="assignmentFileList" item="assFile" index="idx">
+			INTO ASSIGNMENTFILE (
+			FILE_NO, FILE_PATH,
+			FILE_SIZE, FILE_NAME,
+			ASSIGNMENT_NO
+			)VALUES(
+			#{startAssFileNo}+#{idx},
+			#{assFile.file_path},
+			#{assFile.file_size}, #{assFile.file_name},
+			#{assignment_no}
+			)
+
+		</foreach>
+		SELECT * FROM DUAL
+	</insert>
+
+	<select id="selectAssFile" parameterType="string" resultType="KJE_AssFileVo">
+		SELECT
+		FILE_NO,
+		FILE_PATH,
+		FILE_SIZE,
+		FILE_NAME,
+		ASSIGNMENT_NO
+		FROM
+		ASSIGNMENTFILE
+		WHERE
+		FILE_NO=#{file_no}
+
+	</select>
+
+	<select id="selectSubmitStuList" parameterType="string"
+		resultType="KJE_SubmitAttendstuVo">
+
+		SELECT
+		SUBMITFILE_NO,
+		S.ATTEND_NO,
+		FILE_TITLE,
+		TO_CHAR(FILE_DATE,'YYYY/MM/dd') FILE_DATE,
+		FILE_MARKSCORE,
+		ASSIGNMENT_NO,
+		FILE_NAME,
+		FILE_URL,
+		FILE_SIZE,
+		A.USER_ID,
+		LOWER_ORGANIZATION,
+		USER_NAME
+		FROM
+		SUBMITFILE S INNER JOIN ATTEND A ON
+		(S.ATTEND_NO=A.ATTEND_NO)
+		INNER JOIN STUDENT T ON(A.USER_ID=T.USER_ID)
+		INNER JOIN USERS U ON(U.USER_ID=T.USER_ID)
+		WHERE ASSIGNMENT_NO =
+		#{ASSIGNMENT_NO}
+	</select>
+
+	<select id="seletSumitFile" parameterType="string" resultType="KJE_SubmitFileVo">
+		SELECT
+		SUBMITFILE_NO,
+		ATTEND_NO,
+		FILE_TITLE,
+		FILE_DATE,
+		FILE_MARKSCORE,
+		ASSIGNMENT_NO,
+		FILE_NAME,
+		FILE_URL,
+		FILE_SIZE
+		FROM
+		SUBMITFILE
+		WHERE SUBMITFILE_NO=#{submitfile_no}
+	</select>
+
+
+	<update id="updatePFchecked" parameterType="java.util.List">
+	<foreach collection="list" item="pfChecker" index="idx" separator=";" open="DECLARE BEGIN" close=";END;">
+		UPDATE SUBMITFILE 
+		SET
+		FILE_MARKSCORE=#{pfChecker.file_markscore}
+		WHERE SUBMITFILE_NO=#{pfChecker.submitfile_no}
+	</foreach>
+	</update>
+	
+	<delete id="deleteAssignment" parameterType="String">
+		DELETE FROM ASSIGNMENT WHERE ASSIGNMENT_NO = #{assignment_no}
+	</delete>
+	
+	<delete id="deleteAssignmentfile" parameterType="String">
+		DELETE FROM ASSIGNMENTFILE WHERE FILE_NO = #{file_no}
+	</delete>
+	
+	<delete id="deleteSubmitfile" parameterType="String">
+		DELETE FROM SUBMITFILE WHERE SUBMITFILE_NO = #{submitfile_no}
+	</delete>
+	
+	<update id="updateAssignment" parameterType="KJE_AssignmentnFileVo">
+		UPDATE ASSIGNMENT
+		SET
+		ASSIGNMENT_TITLE = #{assignment_title}, 
+		ASSIGNMENT_DATE= SYSDATE,
+		SUBMIT_PERIOD1 = TO_DATE(#{submit_period1}, 'YYYY/MM/DD'),
+		SUBMIT_PERIOD2 = TO_DATE(#{submit_period2}, 'YYYY/MM/DD'),
+		ASSIGNMENT_CONTENT = #{assignment_content, jdbcType=CLOB}
+		WHERE ASSIGNMENT_NO = #{assignment_no}
+	</update>
+	
+	
+</mapper>

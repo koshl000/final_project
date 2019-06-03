@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ddit.finalproject.team2.student.dao.Ljs_IBoardDao">
+	<resultMap type="ddit.finalproject.team2.vo.Ljs_BoardVo" id="boardMap" autoMapping="true">
+		<id property="board_no" column="BOARD_NO"/>
+		<collection property="savedAttachmentList" autoMapping="true" ofType="ddit.finalproject.team2.vo.AttachmentVo">
+			<id property="attachment_no" column="ATTACHMENT_NO"/>
+		</collection>
+	</resultMap>
+	
+	<select id="selectBoardList" parameterType="string" resultMap="boardMap">
+		SELECT A.BOARD_NO, A.BOARD_TYPE, A.BOARD_TITLE, BOARD_DATE, WRITER
+				, BOARD_TITLE, BOARD_HIT, BOARD_CONTENT, A.LECTURE_CODE, ATTEND_NO
+		FROM BOARD A
+		WHERE A.LECTURE_CODE = #{lecture_code}
+        ORDER BY DECODE(A.BOARD_TYPE, '강좌공지', 1, A.BOARD_NO, 2), A.BOARD_NO DESC
+	</select>
+	
+	<select id="selectboard" parameterType="string" resultMap="boardMap">
+		SELECT A.BOARD_NO, BOARD_TYPE, BOARD_TITLE, BOARD_DATE, WRITER
+				, BOARD_TITLE, BOARD_HIT, BOARD_CONTENT, A.LECTURE_CODE, A.ATTEND_NO
+				, B.ATTACHMENT_NO, FILE_NAME, FILE_TYPE
+				, FILE_SIZE, FILE_PATH, FILE_ORDER
+		FROM BOARD A
+		LEFT OUTER JOIN ATTACHMENT B
+		ON(A.BOARD_NO = B.BOARD_NO)
+		WHERE A.BOARD_NO IN(
+		    TO_NUMBER(#{board_no}),
+		    <![CDATA[
+		    (SELECT MAX(BOARD_NO) FROM BOARD WHERE BOARD_NO < TO_NUMBER(#{board_no})),
+		    (SELECT MIN(BOARD_NO) FROM BOARD WHERE BOARD_NO > TO_NUMBER(#{board_no}))
+		    ]]>
+		)
+		ORDER BY TO_NUMBER(A.BOARD_NO)
+	</select>
+	
+	<update id="incrementHit" parameterType="string">
+		UPDATE BOARD
+		SET BOARD_HIT = TO_NUMBER(BOARD_HIT) + 1
+		WHERE BOARD_NO = #{board_no}
+	</update>
+	
+	<insert id="insertBoard" parameterType="ddit.finalproject.team2.vo.Ljs_BoardVo">
+		<selectKey resultType="string" keyProperty="board_no" order="BEFORE">
+			SELECT TO_CHAR(BO_SEQ.NEXTVAL) FROM DUAL
+		</selectKey>
+		INSERT INTO BOARD(
+			BOARD_NO, BOARD_TYPE, BOARD_ATTACHMENTCOUNT, BOARD_DATE,
+            BOARD_TITLE, BOARD_HIT, WRITER, LECTURE_CODE, BOARD_CONTENT, ATTEND_NO
+		)VALUES(
+			#{board_no}, #{board_type}, #{board_attachmentcount}, SYSDATE
+			, #{board_title}, '0', #{writer}, #{lecture_code}, #{board_content}, #{attend_no, jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<delete id="deleteBoard" parameterType="string">
+		DELETE FROM BOARD WHERE BOARD_NO = #{board_no}
+	</delete>
+	
+	<update id="updateBoard" parameterType="ddit.finalproject.team2.vo.Ljs_BoardVo">
+		UPDATE BOARD
+		SET
+		BOARD_TITLE = #{board_title}
+		, BOARD_DATE = SYSDATE
+		, BOARD_CONTENT = #{board_content}
+		WHERE BOARD_NO = #{board_no}
+	</update>
+	
+	<select id="selectWriterIdByLectureCode" parameterType="string" resultType="string">
+		SELECT USER_ID FROM LECTURE
+		WHERE LECTURE_CODE = #{lecture_code}
+	</select>
+	
+	<select id="selectWriterIdByAttendNo" parameterType="string" resultType="string">
+		SELECT USER_ID FROM ATTEND
+		WHERE ATTEND_NO = #{attend_no}
+	</select>
+	
+</mapper>

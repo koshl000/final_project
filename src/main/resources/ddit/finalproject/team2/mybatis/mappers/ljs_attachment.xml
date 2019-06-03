@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ddit.finalproject.team2.student.dao.Ljs_IAttachmentDao">
+	<sql id="attachmentCols">
+		BOARD_NO, FILE_NAME, FILE_TYPE, FILE_SIZE, FILE_PATH
+		, FILE_ORDER, ATTACHMENT_NO, LECTURE_CODE
+	</sql>
+	
+	<select id="selectAttacment" parameterType="string" resultType="ddit.finalproject.team2.vo.AttachmentVo">
+		SELECT 
+			<include refid="attachmentCols" />
+		FROM ATTACHMENT
+		WHERE ATTACHMENT_NO = #{attachment_no}
+	</select>
+	
+	<select id="selectAttachmentList" parameterType="ddit.finalproject.team2.vo.Ljs_BoardVo" resultType="ddit.finalproject.team2.vo.AttachmentVo">
+		SELECT ATTACHMENT_NO, FILE_PATH
+		FROM ATTACHMENT
+		WHERE ATTACHMENT_NO IN
+		<foreach collection="deleteAttachmentNos" item="delAttachNo" open="(" close=")" separator=",">
+			#{delAttachNo}
+		</foreach>
+	</select>
+	
+	<insert id="insertAttachmentAll" parameterType="ddit.finalproject.team2.vo.Ljs_BoardVo">
+		<selectKey resultType="int" keyProperty="startAttachmentNo" order="BEFORE">
+			SELECT NVL(MAX(ATTACHMENT_NO), 0) + 1 FROM ATTACHMENT
+		</selectKey>
+		INSERT ALL
+		<foreach collection="attachmentList" item="attachment" index="idx">
+			INTO ATTACHMENT(
+				<include refid="attachmentCols" />
+			) VALUES (
+				#{board_no}, #{attachment.file_name}, #{attachment.file_type}
+				, #{attachment.file_size}, #{attachment.file_path}, #{attachment.file_order}
+				, TO_CHAR(#{startAttachmentNo} + #{idx}), #{lecture_code}
+			)
+		</foreach>
+		SELECT * FROM DUAL
+	</insert>
+	
+	<delete id="deleteAttachmentAll" parameterType="ddit.finalproject.team2.vo.Ljs_BoardVo">
+		DELETE FROM ATTACHMENT
+		WHERE ATTACHMENT_NO IN
+		<foreach collection="deleteAttachmentNos" item="delAttachNo" open="(" close=")" separator=",">
+			#{delAttachNo}
+		</foreach>
+	</delete>
+</mapper>

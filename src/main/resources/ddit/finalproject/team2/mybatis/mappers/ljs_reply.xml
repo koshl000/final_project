@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ddit.finalproject.team2.student.dao.Ljs_IReplyDao">
+	<select id="selectReplyCount" parameterType="string" resultType="int">
+		SELECT COUNT(*)
+		FROM REPLY
+		WHERE BOARD_NO = #{board_no}
+	</select>
+	
+	<select id="selectReplyList" parameterType="string" resultType="ddit.finalproject.team2.vo.Ljs_ReplyVo">
+		SELECT REPLY_NO, ATTEND_NO, LECTURE_CODE
+			, REPLY_CONTENT, REPLY_REG
+		FROM REPLY
+		WHERE BOARD_NO = #{board_no}
+	</select>
+	
+	<insert id="insertReply" parameterType="ddit.finalproject.team2.vo.Ljs_ReplyVo">
+		INSERT INTO REPLY(
+			BOARD_NO, LECTURE_CODE, REPLY_NO, ATTEND_NO
+			, REPLY_CONTENT, REPLY_REG
+		) VALUES (
+			#{board_no}, #{lecture_code}, REPLY_SEQ.NEXTVAL, #{attend_no, jdbcType=VARCHAR}
+			, #{reply_content}, SYSDATE
+		)
+	</insert>
+	
+	<delete id="deleteReply" parameterType="string">
+		DELETE FROM REPLY
+		WHERE REPLY_NO = #{reply_no}
+	</delete>
+	
+	<delete id="deleteAllReply" parameterType="string">
+		DELETE FROM REPLY
+		WHERE BOARD_NO = #{board_no}
+	</delete>
+	
+	<update id="updateReply" parameterType="ddit.finalproject.team2.vo.Ljs_ReplyVo">
+		UPDATE REPLY
+		SET REPLY_CONTENT = #{reply_content}
+		WHERE REPLY_NO = #{reply_no}
+	</update>
+	
+	<select id="selectWriterIdByLectureCode" parameterType="string" resultType="ddit.finalproject.team2.vo.UserVo">
+		SELECT A.USER_ID, USER_NAME 
+		FROM USERS A INNER JOIN LECTURE B
+		ON(A.USER_ID = B.USER_ID)
+		WHERE LECTURE_CODE = #{lecture_code}
+	</select>
+	
+	<select id="selectWriterIdByAttendNo" parameterType="string" resultType="ddit.finalproject.team2.vo.UserVo">
+		SELECT A.USER_ID, USER_NAME
+		FROM USERS A INNER JOIN ATTEND B
+		ON(A.USER_ID = B.USER_ID)
+		WHERE ATTEND_NO = #{attend_no}
+	</select>
+	
+</mapper>
