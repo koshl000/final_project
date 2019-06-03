@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
@@ -16,7 +18,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.socket.TextMessage;
@@ -60,7 +61,7 @@ public class Ljs_BoardServiceImpl implements Ljs_IBoardService{
 	Ljs_IRingDao ringDao;
 	
 	@Resource(name="socketSessionMap")
-	MultiValueMap<String, WebSocketSession> socketSessionMap;
+	ConcurrentMap<String, CopyOnWriteArrayList<WebSocketSession>> socketSessionMap;
 	
 	public void preProcessAttachmentList(Ljs_BoardVo board){
 		List<AttachmentVo> attachList = board.getAttachmentList();
@@ -115,18 +116,21 @@ public class Ljs_BoardServiceImpl implements Ljs_IBoardService{
 		}
 	}
 	
+	public static boolean a(List<LectureVo> list, String lecture_code){
+		if(list!=null){
+			if(list.contains(new LectureVo(lecture_code))){
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	@Override
 	public List<Ljs_BoardVo> retrieveBoardList(String lecture_code) {
 		List<Ljs_BoardVo> boardList = boardDao.selectBoardList(lecture_code);
-		
-		if(boardList.size()>0){
-			for(int i=0; i<boardList.size(); i++){
-				Ljs_BoardVo vo = boardList.get(i);
-				vo.setBoard_title(vo.getBoard_title(), vo.getBoard_no());
-				vo.setReplycount(replyDao.selectReplyCount(vo.getBoard_no()));
-			}
+		for(Ljs_BoardVo board : boardList){
+			board.setBoard_title(board.getBoard_title(), board.getBoard_no());
 		}
-		
 		return boardList;
 	}
 
@@ -163,7 +167,6 @@ public class Ljs_BoardServiceImpl implements Ljs_IBoardService{
 		if(cnt>0){
 			processAttachment(board);
 			processRing(board);
-			
 			result = ServiceResult.OK;
 		}
 		return result;
@@ -251,7 +254,7 @@ public class Ljs_BoardServiceImpl implements Ljs_IBoardService{
 			}
 		}
 		//알림 처리(푸쉬 메세지)
-		for(Entry<String, List<WebSocketSession>> e : socketSessionMap.entrySet()){
+		for(Entry<String, CopyOnWriteArrayList<WebSocketSession>> e : socketSessionMap.entrySet()){
 			for(WebSocketSession session : e.getValue()){
 				if(session.isOpen()){
 					UserVo user = (UserVo) ((Authentication)session.getPrincipal()).getPrincipal();
