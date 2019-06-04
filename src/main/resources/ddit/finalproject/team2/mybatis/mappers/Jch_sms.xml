@@ -5,4 +5,64 @@
 	<select id="selectUserList" resultType="ddit.finalproject.team2.vo.Jch_UserVo">
 		SELECT  U.USER_ID, U.USER_NAME, U.USER_HP, NVL(S.LOWER_ORGANIZATION, '-') AS LOWER_ORGANIZATION FROM USERS U LEFT JOIN STUDENT S ON U.USER_ID = S.USER_ID WHERE U.USER_AUTHORITY='학생'
 	</select>
+	
+	<select id="getSmsGroupList" resultType="ddit.finalproject.team2.vo.Jch_SMSGroupVo">
+		SELECT DISTINCT S.SMSGROUP_NO, S.SMSGROUP_NAME, COUNT(U.USER_ID) USER_COUNT 
+		FROM SMSGROUP S INNER JOIN UNITGROUP U ON (S.SMSGROUP_NO=U.SMSGROUP_NO)
+		GROUP BY S.SMSGROUP_NAME, S.SMSGROUP_NO
+		ORDER BY TO_NUMBER(S.SMSGROUP_NO) DESC
+	</select>
+	
+	<insert id="smsGroupAdd" parameterType="ddit.finalproject.team2.vo.SMSGroupVo">
+		<selectKey resultType="string" keyProperty="smsgroup_no" order="AFTER">
+			SELECT GROUP_SEQ.CURRVAL FROM DUAL
+		</selectKey>
+		INSERT INTO SMSGROUP VALUES ( GROUP_SEQ.NEXTVAL, #{smsgroup_name,jdbcType=VARCHAR} )
+	</insert>
+	
+	<insert id="smsGroupDetailAdd" parameterType="ddit.finalproject.team2.vo.Jch_SMSGroupVo">
+		INSERT ALL
+		<foreach collection="smsgroup_list" item="item">
+			INTO UNITGROUP (UNITGROUP_NO, SMSGROUP_NO, USER_ID) VALUES (get_unit_no(), #{smsgroup_no}, #{item.user_id})
+		</foreach>
+		SELECT * FROM DUAL
+	</insert>
+	
+	<select id="getUnitGroupList" resultType="ddit.finalproject.team2.vo.Jch_UnitGroupVo" parameterType="string">
+		SELECT S.SMSGROUP_NO, U.UNITGROUP_NO, S.SMSGROUP_NAME, U.USER_ID, US.USER_NAME, US.USER_HP 
+		FROM UNITGROUP U LEFT JOIN SMSGROUP S ON (U.SMSGROUP_NO=S.SMSGROUP_NO) 
+		 				 INNER JOIN USERS US ON(U.USER_ID=US.USER_ID) 
+		WHERE S.SMSGROUP_NO=#{smsgroup_no}
+	</select>
+	
+	<select id="getUsersHp" resultType="ddit.finalproject.team2.vo.Jch_UnitGroupVo" parameterType="string">
+		SELECT US.USER_NAME, US.USER_HP 
+		FROM UNITGROUP U LEFT JOIN SMSGROUP S ON (U.SMSGROUP_NO=S.SMSGROUP_NO) 
+		 				 INNER JOIN USERS US ON(U.USER_ID=US.USER_ID) 
+		WHERE S.SMSGROUP_NO=#{smsgroup_no}
+	</select>
+	
+	<update id="groupNameUpdate" parameterType="ddit.finalproject.team2.vo.Jch_SMSGroupVo">
+		UPDATE SMSGROUP SET SMSGROUP_NAME=#{smsgroup_name} WHERE SMSGROUP_NO=#{smsgroup_no}
+	</update>
+	
+	<delete id="getGroupDelete" parameterType="string">
+		DELETE FROM SMSGROUP WHERE SMSGROUP_NO=#{smsgroup_no}
+	</delete>
+	
+	<delete id="getUnitGroupDelete" parameterType="string">
+		DELETE FROM UNITGROUP WHERE SMSGROUP_NO =#{smsgroup_no}
+	</delete>
+	
+	<insert id="insertSms" parameterType="ddit.finalproject.team2.vo.Jch_SMSVo">
+		INSERT INTO sms (SMS_NO, SMS_CATEGORY, SMS_TITLE, SMS_CONTENT,  SMS_TARGET, SMS_DATE,  SMS_TYPE, SMS_GROUPID) 
+		VALUES (sms_seq.nextval, #{sms_category}, #{sms_title}, #{sms_content}, #{sms_target}, TO_DATE(#{sms_date}, 'YYYY-MM-DD HH24:MI:SS'), #{sms_type}, #{sms_groupid})
+	</insert>
+	
+	<select id="getSmsSendList" resultType="ddit.finalproject.team2.vo.Jch_SMSVo">
+		SELECT SMS_GROUPID, SMS_NO, SMS_CATEGORY,  SMS_TITLE, SMS_CONTENT, SMS_TARGET, to_char(SMS_DATE, 'YYYY-MM-DD HH24:MI:SS') SMS_DATE, SMS_TYPE
+		FROM SMS
+		ORDER BY TO_NUMBER(SMS_NO)
+	</select>
+	
 </mapper>

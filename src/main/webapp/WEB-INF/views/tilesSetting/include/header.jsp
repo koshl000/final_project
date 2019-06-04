@@ -271,10 +271,9 @@
 		if(window.WebSocket){
 			console.log("websocket 지원!");
 			
-			sockJS = new WebSocket("wss://localhost/projecttemplate/alert");
+			sockJS = new WebSocket("wss://localhost/alert");
 			sockJS.onopen = function(event){
 				console.log(location.protocol+" 연결");
-				window.localStorage.setItem('webSocket', JSON.stringify(sockJS));
 			};
 			sockJS.onclose = function(closeEvt){
 				console.log("연결 종료, 종료코드 : " + closeEvt.code

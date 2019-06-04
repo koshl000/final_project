@@ -3,6 +3,8 @@ package ddit.finalproject.team2.student.service;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
@@ -11,7 +13,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -46,7 +47,7 @@ public class Ljs_ReplyServiceImpl implements Ljs_IReplyService{
 	Ljs_IBoardDao boardDao;
 	
 	@Resource(name="socketSessionMap")
-	MultiValueMap<String, WebSocketSession> socketSessionMap;
+	ConcurrentMap<String, CopyOnWriteArrayList<WebSocketSession>> socketSessionMap;
 	
 	private void setRemover(List<Ljs_ReplyVo> list){
 		for(Ljs_ReplyVo vo : list){
@@ -134,14 +135,13 @@ public class Ljs_ReplyServiceImpl implements Ljs_IReplyService{
 				new RingVo(null, parentUser, me.getUser_id(), "강좌게시판", null
 					, "/"+reply.getLecture_code()+"/board/"+reply.getBoard_no()
 					, null, null, "N", message));
+		
 		//알림 처리(푸쉬 메세지)
-		for(Entry<String, List<WebSocketSession>> e : socketSessionMap.entrySet()){
+		for(Entry<String, CopyOnWriteArrayList<WebSocketSession>> e : socketSessionMap.entrySet()){
 			for(WebSocketSession session : e.getValue()){
-				if(session.isOpen()){
-					UserVo user = (UserVo) ((Authentication)session.getPrincipal()).getPrincipal();
-					if(user.getUser_id().equals(parentUser)){
-						session.sendMessage(new TextMessage(message));
-					}
+				UserVo user = (UserVo) ((Authentication)session.getPrincipal()).getPrincipal();
+				if(user.getUser_id().equals(parentUser)){
+					session.sendMessage(new TextMessage(message));
 				}
 			}
 		}

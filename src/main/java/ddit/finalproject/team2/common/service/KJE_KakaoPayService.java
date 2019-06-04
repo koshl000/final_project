@@ -52,7 +52,7 @@ public class KJE_KakaoPayService {
 	        params.add("quantity", count);
 	        params.add("total_amount", sum);
 	        params.add("tax_free_amount", "100");
-	        params.add("approval_url", "http://localhost/projecttemplate/"+code);
+	        params.add("approval_url", "https://localhost/"+code);
 	        params.add("cancel_url", "http://localhost:8080/kakaoPayCancel");
 	        params.add("fail_url", "http://localhost:8080/kakaoPaySuccessFail");
 	 

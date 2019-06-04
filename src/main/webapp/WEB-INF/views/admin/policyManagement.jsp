@@ -90,7 +90,7 @@
 							dataType : "text",
 							success : function(resp) {
 								$('#addmodal').modal("hide");
-								location.href = '/projecttemplate/operation/policy';
+								location.href = '${pageContext.request.contextPath}/operation/policy';
 							},
 							error : function(errorResp) {
 								console.log(errorResp.status);

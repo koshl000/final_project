@@ -51,7 +51,7 @@
 
     <definition name="empty" template="/WEB-INF/views/tilesSetting/baseLayout.jsp">
         <put-attribute name="style" value=""/>
-        <put-attribute name="header" value=""/>
+        <put-attribute name="header" value="/WEB-INF/views/tilesSetting/include/webSocketHeader.jsp"/>
         <put-attribute name="menu" value=""/>
         <put-attribute name="submenu" value=""/>
         <put-attribute name="footer" value="" />

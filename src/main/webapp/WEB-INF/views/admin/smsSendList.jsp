@@ -4,102 +4,128 @@
 
 <!-- Data Table JS
 		============================================ -->
-<link rel="stylesheet" href="${pageContext.request.contextPath }/notika/css/jquery.dataTables.min.css">
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath }/notika/css/jquery.dataTables.min.css">
 <!-- normalize CSS
 		============================================ -->
-<link rel="stylesheet" href="${pageContext.request.contextPath }/notika/css/normalize.css">
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath }/notika/css/normalize.css">
 <style>
-	.table-responsive {
-		display: inline;
-	}
-	#sendUserList {
-		float : right;
-		width: 60%;
-		height: 60%;
-		overflow-y: scroll;
+	td {
+		overflow: hidden;
 	}
 </style>
 <script type="text/javascript">
-	$(function(){
+
+	$(function() {
 		
-		var table = $('#data-table-basic').DataTable({
-			ajax: {
+		var groupListTable = $('#sms-group-send-list').DataTable({
+			ajax : {
 				"type" : "get",
-				"url" : "${pageContext.request.contextPath}/sms/menualSend",
+				"url" : "${pageContext.request.contextPath}/sms/getSmsSendList",
 				"dataType" : 'JSON'
 			},
 			columns : [
-				{data : "checkbox"} ,
-				{data : "user_id"} ,
-				{data : "user_name"} ,
-				{data : "user_hp"} ,
-				{data : "lower_organization"} ,
-				{data : "button"} 
+				{ data : "sms_no" }
+				, { data : "sms_groupid" }
+			    , { data : "sms_title" }
+			    , { data : "sms_content" }
+			    , { data : "sms_date" }
+			    , { data : "sms_type" }
+			    , { data : "sms_category" }
+			    , { data : "reservCancelBtn" }
 			]
 		});
 		
-		$('#checkAll').on('click', function(){
-			$('.checkbox').prop('checked', this.checked);
-		});
-		
-		var table = $('#data-table-basic').DataTable();
-		$('#data-table-basic tbody').on( 'click','.btn', function () {
+		var table = $('#sms-group-send-list').DataTable();
+		$('#sms-group-send-list tbody').on('click', '.reservCancel', function() {
 			var tr = $(this).parents('tr');
-			var name = table.row(tr).data().user_name;
-			var hp = table.row(tr).data().user_hp;
-			
-// 			console.log(tr);
-// 		    console.log( table.row(tr).data().user_name );
-		    $('#sendUserList').append("<option value='"+name+"|"+hp+"'>"+name+"|"+hp+"</option>");
-// 		    $(this).attr('onclick', '').unbind('click');
-		    $(this).unbind('click');
+			var no = table.row(tr).data().sms_groupid;
+			var jsonData = {"no" : no};	
+			$.ajax({
+				url : "${pageContext.request.contextPath}/sms/smsSendCancle",
+				method : "get",
+				data : jsonData,
+				dataType : "text", // request header(Accept), response header(Content-Type)
+				success : function(resp) {
+					console.log(resp);
+					$(this).hide();
+					window.location.href = 'groupSendListRe';
+				},
+				error : function(errorResp) {
+					console.log(errorResp.status);
+				}
+			});
 		});
+	});
 	
-	})	
+	var now = getTimeStamp();
+	console.log(now);
 	
+	function getTimeStamp() {
+	  var d = new Date();
+	  var s =
+	    leadingZeros(d.getFullYear(), 4) + '-' +
+	    leadingZeros(d.getMonth() + 1, 2) + '-' +
+	    leadingZeros(d.getDate(), 2) + ' ' +
+
+	    leadingZeros(d.getHours(), 2) + ':' +
+	    leadingZeros(d.getMinutes(), 2) + ':' +
+	    leadingZeros(d.getSeconds(), 2);
+
+	  return s;
+	}
+
+	function leadingZeros(n, digits) {
+	  var zero = '';
+	  n = n.toString();
+
+	  if (n.length < digits) {
+	    for (i = 0; i < digits - n.length; i++)
+	      zero += '0';
+	  }
+	  return zero + n;
+	}
+
+
 </script>
 
-<div class="data-table-area">
+<div class="main">
 	<div class="container">
 		<div class="row">
-			<div class="col-md-6">
-					<div class="basic-tb-hd">
-						<h2>수강신청목록</h2>
+			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+				<div class="data-table-list">
+					<div class="basic-tb-hd sgList">
+						<h2>SMS 발송내역</h2>
 					</div>
 					<div class="table-responsive">
-						<table id="data-table-basic" class="table table-striped dataTable table-hover"
-							role="grid" aria-describedby="data-table-basic_info">
-							<thead>
-								<tr>
-									<th><input type="checkbox" id="checkAll" /></th>
-									<th>번호</th>
-									<th>카테고리</th>
-									<th>제목</th>
-									<th>발송대상</th>
-									<th>내용</th>
-									<th>발송일</th>
-									<th>발송타입</th>
-									<th>비고</th>
-								</tr>
-							</thead>
-							<tbody id="dataBody">
-							</tbody>
-						</table>
+						<div class="smsGroupListBox">
+							<div style="float:right;">
+								<button type="button" class="btn btn-success notika-btn-success waves-effect smsGroupAdd">그룹등록</button>
+							</div>
+							<table id="sms-group-send-list">
+								<thead>
+									<tr>
+										<th>번호</th>
+										<th>그룹번호</th>
+										<th>발송대상</th>
+										<th>메세지</th>
+										<th>발송날짜[예약날짜]</th>
+										<th>발송타입</th>
+										<th>발송결과</th>
+										<th>취소</th>
+									</tr>
+								</thead>
+								<tbody id="dataBody">
+								</tbody>
+							</table>
+						</div>
 					</div>
 				</div>
-			<div class="col-md-6">
-				<div style="background-color:#ebebeb;">
-					<p class="float_l" style="margin:10px 0 0 10px;">선택&nbsp;학생(<span id="SelectTotalCnt" class="fontred fs_14">0</span>)명</p>
-					<div>
-						<button type="button" onclick="smsSelectReset;"><span>초기화</span></button>
-					</div>
-				</div>
-				<select name="sms" id="sendUserList" multiple="multiple" >
-				</select>
 			</div>
 		</div>
 	</div>
 </div>
 
-<script src="${pageContext.request.contextPath }/notika/js/data-table/jquery.dataTables.min.js"></script>
-<script src="${pageContext.request.contextPath }/notika/js/data-table/data-table-act.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+

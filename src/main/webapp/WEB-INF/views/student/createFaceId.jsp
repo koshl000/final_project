@@ -90,7 +90,7 @@
 											success : function(resp) {
 												if (resp == "success") {
 													alert("FaceID 생성에 성공하였습니다.");
-													location.href = '/projecttemplate/chooseMain';
+													location.href = '${pageContext.request.contextPath}/chooseMain';
 												}else{
 													alert("FaceID 생성에 실패하였습니다. 정면을 보고 다시 촬영해주시기 바랍니다.");
 												}

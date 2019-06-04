@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ddit.finalproject.team2.student.dao.Jch_AllLectureDao">
+	
+	<select id="getAllLectureList" resultType="ddit.finalproject.team2.vo.Jch_LectureVo">
+		SELECT
+		    LECTURE_CODE, USER_ID, LECTURE_COURSETYPE, LECTURE_NAME, LECTURE_CREDIT,
+		    LECTURE_TARGET, OPENSEME_NO, LECTURE_CAPACITY, MID_DATE, FINAL_DATE,
+		    LOWER_ORGANIZATION, LECTURE_CURRENT
+		FROM
+		    LECTURE
+	</select>
+	
+	
+</mapper>

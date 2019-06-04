@@ -31,8 +31,8 @@
 		
 	<bean id="filterMultipartResolver" class="org.springframework.web.multipart.support.StandardServletMultipartResolver" />	
 
-	<util:map id="socketSessionMap" key-type="java.lang.String" value-type="org.springframework.web.socket.WebSocketSession" 
-		map-class="org.springframework.util.LinkedMultiValueMap"
+	<util:map id="socketSessionMap" key-type="java.lang.String" value-type="java.util.concurrent.CopyOnWriteArrayList" 
+		map-class="java.util.concurrent.ConcurrentHashMap"
 	/>
 </beans>
 

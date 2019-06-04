@@ -149,9 +149,9 @@
                         <ul  class="notika-main-menu-dropdown">
                             <li><a href="${pageContext.request.contextPath }/statistics/subject">과목통계</a>
                             </li>
-                            <li><a href="${pageContext.request.contextPath }/statistics/operation">운영통계</a>
+                            <li><a href="#">사용자통계</a>
                             </li>
-                            <li><a href="${pageContext.request.contextPath }/statistics/portal">포털 접속통계</a>
+                            <li><a href="#">시스템접속통계</a>
                             </li>
                             <li><a href="${pageContext.request.contextPath }/statistics/behavior">교수활동통계</a>
                             </li>
@@ -159,6 +159,8 @@
                     </div>
                     <div id="portal" class="tab-pane notika-tab-menu-bg animated flipInX">
                         <ul class="notika-main-menu-dropdown">
+                            <li><a href="${pageContext.request.contextPath }/portal/popup">팝업공지</a>
+                            </li>
                             <li><a href="#">일정</a>
                             </li>
                             <li><a href="${pageContext.request.contextPath }/portal/system">시스템관리</a>
@@ -167,11 +169,9 @@
                     </div>
                     <div id="sms" class="tab-pane notika-tab-menu-bg animated flipInX">
                         <ul class="notika-main-menu-dropdown">
-                            <li><a href="${pageContext.request.contextPath }/sms/menualList">SMS발송</a>
+                            <li><a href="${pageContext.request.contextPath }/sms/smsGroupList">SMS그룹관리</a>
                             </li>
-                            <li><a href="#">SMS그룹관리</a>
-                            </li>
-                            <li><a href="#">SMS발송내역</a>
+                            <li><a href="${pageContext.request.contextPath }/sms/smsSendList">SMS발송내역</a>
                             </li>
                         </ul>
                     </div>

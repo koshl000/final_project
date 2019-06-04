@@ -36,6 +36,7 @@ public class Jch_UserVo implements Serializable, UserDetails{
 	private String button = "<button type='button' class='btn'>선택</button>";
 	private List<GrantedAuthority> authorities;
 	
+	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return authorities;
@@ -70,4 +71,10 @@ public class Jch_UserVo implements Serializable, UserDetails{
 	public boolean isEnabled() {
 		return true;
 	}
+
+	public Jch_UserVo(String user_id) {
+		super();
+		this.user_id = user_id;
+	}
+	
 }
