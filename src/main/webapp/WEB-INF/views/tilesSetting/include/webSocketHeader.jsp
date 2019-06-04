@@ -6,7 +6,7 @@ function echoTest(){
 	if(window.WebSocket){
 		console.log("websocket 지원!");
 		
-		sockJS = new WebSocket("wss://localhost/projecttemplate/alert");
+		sockJS = new WebSocket("wss://localhost/alert");
 		sockJS.onopen = function(event){
 			console.log(event.target.url + "과 연결 수립");
 		};
