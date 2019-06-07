@@ -4,4 +4,8 @@
 	<select id="selectUserList" resultType="UserVo">
 		SELECT * FROM USERS
 	</select>
+	
+	<select id="selectStudent" parameterType="string" resultType="StudentVo">
+		SELECT * FROM STUDENT WHERE USER_ID = #{user_id}
+	</select>
 </mapper>

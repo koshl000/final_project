@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper	namespace="ddit.finalproject.team2.professor.dao.Ljs_IEvaluationDao">
+	<resultMap type="Ljs_EvaluationMaterialVo" id="materialMap" autoMapping="true">
+		<id property="user_id" column="USER_ID"/>
+		<collection property="evaluationRatio" autoMapping="true" ofType="EvaluationStudyVo">
+			<id property="evalstudy_code" column="EVALSTUDY_CODE"/>
+		</collection>
+		<collection property="absenceList" autoMapping="true" ofType="AbsenceVo">
+			<id property="absence_no" column="ABSENCE_NO"/>
+		</collection>
+		<collection property="submitFileList" autoMapping="true" ofType="SubmitFileVo">
+			<id property="submitfile_no" column="SUBMITFILE_NO"/>
+		</collection>
+		<collection property="assignmentNoList" autoMapping="true" ofType="AssignmentVo">
+			<id property="assignment_no" column="ASSIGNMENT_NO"/>
+		</collection>
+	</resultMap>
+	<resultMap type="Ljs_ExamVo" id="examMap" autoMapping="true">
+		<id property="exam_no" column="EXAM_NO"/>
+		<collection property="questionList" autoMapping="true" ofType="ExamQuestionVo">
+			<id property="question_no" column="QUESTION_NO"/>
+		</collection>
+		<collection property="answerList" autoMapping="true" ofType="ExamAnswerVo">
+			<id property="answer_no" column="ANSWER_NO"/>
+		</collection>
+	</resultMap>
+	<select id="selectExam" parameterType="Ljs_EvaluationMaterialVo" resultMap="materialMap, examMap">
+		SELECT A.USER_ID, B.ATTEND_NO, B.LECTURE_CODE, B.LECTURE_NAME
+			, C.EVALSTUDY_CODE, C.EVALSTUDY_TYPE, C.EVALSTUDY_RATIO
+			, D.EXAM_NO, D.EXAM_TYPE, E.QUESTION_NO, E.OBJECTIVE_ANSWER, E.SUBJECTIVE_ANSWER
+			, F.ANSWER_NO, F.PROBLEM_NO, F.SUBJECTIVE_ANSWER
+		FROM USERS A LEFT OUTER JOIN ATTEND B
+		ON(A.USER_ID = B.USER_ID)
+		LEFT OUTER JOIN EVALUATIONSTUDY C
+		ON(B.LECTURE_CODE = C.LECTURE_CODE)
+		LEFT OUTER JOIN EXAM D
+		ON(C.EVALSTUDY_CODE = D.EVALSTUDY_CODE)
+		LEFT OUTER JOIN EXAMQUESTION E
+		ON(D.EXAM_NO = E.EXAM_NO)
+		LEFT OUTER JOIN EXAMANSWER F
+		ON(E.EXAM_NO = F.EXAM_NO AND E.QUESTION_NO = F.QUESTION_NO)
+		WHERE A.USER_ID = #{user_id} AND B.LECTURE_CODE = #{lecture_code}
+		ORDER BY B.ATTEND_NO, C.EVALSTUDY_CODE, D.EXAM_NO, E.QUESTION_NO, F.ANSWER_NO
+	</select>
+	
+	<select id="selectAbsenceAndAssignment" parameterType="Ljs_EvaluationMaterialVo" resultMap="materialMap">
+		SELECT A.USER_ID, B.LECTURE_CODE, B.CLASS_IDENTIFYING_CODE
+			, C.ABSENCE_NO, C.ABSENCE_WEEK, C.ABSENCE_CLASS, C.ABSENCE_YN
+		    , D.ASSIGNMENT_NO, E.SUBMITFILE_NO, E.ASSIGNMENT_NO, E.FILE_MARKSCORE
+		FROM ATTEND A LEFT OUTER JOIN LECTUREWEEK B
+		ON(A.LECTURE_CODE = B.LECTURE_CODE)
+		LEFT OUTER JOIN ABSENCE C
+		ON(A.ATTEND_NO = C.ATTEND_NO AND B.LECTURE_WEEK = C.ABSENCE_WEEK AND B.LECTURE_CLASS = C.ABSENCE_CLASS)
+		LEFT OUTER JOIN ASSIGNMENT D
+		ON(B.CLASS_IDENTIFYING_CODE = D.CLASS_IDENTIFYING_CODE AND B.LECTURE_CODE = D.LECTURE_CODE)
+		LEFT OUTER JOIN SUBMITFILE E
+		ON(A.ATTEND_NO = E.ATTEND_NO AND D.ASSIGNMENT_NO = E.ASSIGNMENT_NO)
+		WHERE A.USER_ID = #{user_id} B.LECTURE_CODE = #{lecture_code}
+		ORDER BY A.USER_ID, LECTURE_CODE, CLASS_IDENTIFYING_CODE
+	</select>
+</mapper>

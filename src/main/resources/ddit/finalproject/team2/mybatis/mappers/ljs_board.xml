@@ -11,6 +11,7 @@
 	<select id="selectBoardList" parameterType="string" resultMap="boardMap">
 		SELECT A.BOARD_NO, A.BOARD_TYPE, A.BOARD_TITLE, BOARD_DATE, WRITER
 				, BOARD_TITLE, BOARD_HIT, BOARD_CONTENT, A.LECTURE_CODE, ATTEND_NO
+				,(SELECT COUNT(*) FROM REPLY WHERE BOARD_NO = A.BOARD_NO) REPLYCOUNT
 		FROM BOARD A
 		WHERE A.LECTURE_CODE = #{lecture_code}
         ORDER BY DECODE(A.BOARD_TYPE, '강좌공지', 1, A.BOARD_NO, 2), A.BOARD_NO DESC
@@ -76,4 +77,7 @@
 		WHERE ATTEND_NO = #{attend_no}
 	</select>
 	
+	<select id="selectAllBoard" resultType="Ljs_BoardVo">
+		SELECT * FROM BOARD ORDER BY BOARD_NO DESC
+	</select>
 </mapper>

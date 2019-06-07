@@ -137,11 +137,13 @@ public class Ljs_ReplyServiceImpl implements Ljs_IReplyService{
 					, null, null, "N", message));
 		
 		//알림 처리(푸쉬 메세지)
-		for(Entry<String, CopyOnWriteArrayList<WebSocketSession>> e : socketSessionMap.entrySet()){
-			for(WebSocketSession session : e.getValue()){
-				UserVo user = (UserVo) ((Authentication)session.getPrincipal()).getPrincipal();
-				if(user.getUser_id().equals(parentUser)){
-					session.sendMessage(new TextMessage(message));
+		if(socketSessionMap.size()>0){
+			for(Entry<String, CopyOnWriteArrayList<WebSocketSession>> e : socketSessionMap.entrySet()){
+				for(WebSocketSession session : e.getValue()){
+					UserVo user = (UserVo) ((Authentication)session.getPrincipal()).getPrincipal();
+					if(user.getUser_id().equals(parentUser)){
+						session.sendMessage(new TextMessage(message));
+					}
 				}
 			}
 		}

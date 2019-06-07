@@ -20,6 +20,7 @@
 	<http pattern="*.css" security="none" />
 	<http pattern="*.js" security="none" />
 	
+	<beans:bean id="authorityCheckFilter" class="ddit.finalproject.team2.util.filter.AuthorityCheckFilter" />
 	<http auto-config="true">
 		<form-login
 			login-page="/"
@@ -28,14 +29,16 @@
 			password-parameter="user_pass"
 			default-target-url="/chooseMain"
 			always-use-default-target="false"
+			authentication-success-handler-ref="customAuthenticationSuccessHandler"
 		/>
 		
-		<logout logout-url="/logout" logout-success-url="/" />
+		<logout logout-url="/logout" logout-success-url="/"/>
 		
-		<intercept-url pattern="/**" access="permitAll" requires-channel="https"/>		
-			   
+		<intercept-url pattern="/**" access="permitAll" requires-channel="https"/>
+		<custom-filter ref="authorityCheckFilter"
+			after="LAST"
+		/>
 		<csrf disabled="true"/>		
-			   
 	</http>
 	
 </beans:beans>

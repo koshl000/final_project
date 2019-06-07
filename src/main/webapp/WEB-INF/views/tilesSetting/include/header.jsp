@@ -259,10 +259,12 @@
 			$(span).text(parseInt(num)+1);
 		}
 		
-		$.notify(
+		$.notify.(
 			message,
-			{className : 'info',
-			position : 'bottom right'}
+			{
+				className : 'info',
+				position : 'bottom right'
+			}
 		);
 	}
 	
@@ -271,7 +273,7 @@
 		if(window.WebSocket){
 			console.log("websocket 지원!");
 			
-			sockJS = new WebSocket("wss://localhost/projecttemplate/alert");
+			sockJS = new WebSocket("wss://localhost/alert");
 			sockJS.onopen = function(event){
 				console.log(location.protocol+" 연결");
 			};

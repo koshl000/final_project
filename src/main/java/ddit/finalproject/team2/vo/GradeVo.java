@@ -20,4 +20,9 @@ public class GradeVo implements Serializable{
 	private String grade_assignment;
 	private String grade_absence;
 	@NotNull private String attend_no;
+	private String average;
+	
+	public GradeVo(String attend_no){
+		this.attend_no = attend_no;
+	}
 }

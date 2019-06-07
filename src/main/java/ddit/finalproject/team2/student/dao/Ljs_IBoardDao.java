@@ -42,5 +42,5 @@ public interface Ljs_IBoardDao {
 	
 	String selectWriterIdByLectureCode(String lecture_code);
 	String selectWriterIdByAttendNo(String attend_no);
-	
+	List<Ljs_BoardVo> selectAllBoard();
 }

@@ -237,26 +237,27 @@ public class Ljs_BoardServiceImpl implements Ljs_IBoardService{
 	private void processRing(Ljs_BoardVo board) throws IOException{
 		//알림 처리(DB)
 		UserVo me = (UserVo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String url = "/"+board.getLecture_code()+"/board/"+board.getBoard_no();
 		String message = "<"+board.getLecture_name()+"> "+me.getUser_name()+" 님이 새 글을 작성했습니다.";
 		List<AttendVo> attendList = attendDao.selectAttendList(board.getLecture_code());
-		int a = ringDao.insertRing(
-				new RingVo(null, board.getProfessor_id(), me.getUser_id(), "강좌게시판", null
-					, "/"+board.getLecture_code()+"/board/"+board.getBoard_no()
-					, null, null, "N", message));
-		if(a>0){
-			for(AttendVo att : attendList){
-				if(!att.getUser_id().equals(me.getUser_id())){
-					ringDao.insertRing(
-							new RingVo(null, att.getUser_id(), me.getUser_id(), "강좌게시판", null
-									, "/"+board.getLecture_code()+"/board/"+board.getBoard_no()
-									, null, null, "N", message));
-				}
+		if(!me.getUser_id().equals(board.getProfessor_id())){
+			ringDao.insertRing(
+					new RingVo(null, board.getProfessor_id(), me.getUser_id(), "강좌게시판", null
+							, "/"+board.getLecture_code()+"/board/"+board.getBoard_no()
+							, null, null, "N", message));
+		}
+		for(AttendVo att : attendList){
+			if(!att.getUser_id().equals(me.getUser_id())){
+				ringDao.insertRing(
+						new RingVo(null, att.getUser_id(), me.getUser_id(), "강좌게시판", null
+								, "/"+board.getLecture_code()+"/board/"+board.getBoard_no()
+								, null, null, "N", message));
 			}
 		}
 		//알림 처리(푸쉬 메세지)
-		for(Entry<String, CopyOnWriteArrayList<WebSocketSession>> e : socketSessionMap.entrySet()){
-			for(WebSocketSession session : e.getValue()){
-				if(session.isOpen()){
+		if(socketSessionMap.size()>0){
+			for(Entry<String, CopyOnWriteArrayList<WebSocketSession>> e : socketSessionMap.entrySet()){
+				for(WebSocketSession session : e.getValue()){
 					UserVo user = (UserVo) ((Authentication)session.getPrincipal()).getPrincipal();
 					if((!user.getUser_id().equals(me.getUser_id()) && user.getLectureList().contains(new LectureVo(board.getLecture_code())))
 							|| user.getUser_id().equals(board.getProfessor_id())){
