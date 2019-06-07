@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import ddit.finalproject.team2.vo.KJE_attendApplyVo;
 import ddit.finalproject.team2.vo.LecturePlanVo;
+import ddit.finalproject.team2.vo.OpenSemesterVo;
 
 @Repository
 public interface KJE_IattendApplyDao {
@@ -33,7 +34,6 @@ public interface KJE_IattendApplyDao {
 	 */
 	public LecturePlanVo selectLecturePlan(String lecture_code);
 	
-	//===================================================================
 	
 	/**
 	 *  학생의 ID와 과목 코드를 받아 수강신청 정보를 저장하는 메서드
@@ -57,6 +57,11 @@ public interface KJE_IattendApplyDao {
 	 */
 	public String selectSumCredit(String user_id);
 	
-	
+	/**
+	 * 현재 날짜를 매개변수로 받아 현재 날짜에 해당하는 수강신청 날짜를 반환하는 메서드
+	 * @param today 오늘 날짜
+	 * @return 수강신청 날짜 정보가 담긴 Vo 
+	 */
+	public OpenSemesterVo selectAttendPeriod(String today); 
 	
 }

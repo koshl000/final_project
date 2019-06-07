@@ -11,15 +11,68 @@
 		============================================ -->
     <link rel="stylesheet" href="${pageContext.request.contextPath }/notika/css/dialog/sweetalert2.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath }/notika/css/dialog/dialog.css">
-
+<style>
+   tfoot { 
+       display: table-header-group; 
+   }
+   select {
+       border: 1px solid #eee;
+       height: 35px;
+       padding: 7px 15px;
+       font-size: 13px;
+       border-radius: 2px;
+       -webkit-appearance: none;
+       -moz-appearance: none;
+       line-height: 100%;
+       background-color: #fff;
+       outline: none;
+   }
+   
+   select :hover  {
+      background-color: #00c292 !important;
+       color: #fff !important;
+   }
+   .selectSpan {
+      font-size: 16px;
+      font-weight: bold;
+      margin : 0 5px 0 20px;
+   }
+   #grade, #credit, #course {
+      width: 60px;
+   }
+   
+</style>
 <script type="text/javascript">
 	$(function() {
-		settingAttendApplyListDataTable();
-		settingAttendApplyCompListDataTable();
+		$.ajax({
+			url : "${pageContext.request.contextPath}/getAttendPeriod",
+			method : "get",
+			dataType : "text",
+			success : function(resp) {
+				if(resp=="OK"){
+					settingAttendApplyListDataTable();
+					settingAttendApplyCompListDataTable();
+				}else{
+					
+					$('#acompl').empty();
+					$('#applist').empty();
+					
+					var inner ="<div class='col-lg-12 col-md-12 col-sm-12 col-xs-12'>"
+						inner+="<div class='invoice-hs'>";
+						inner+=" <h2>지금은 수강신청 기간이 아닙니다.</h2></div></div>"
+					$('#acompl').html(inner);
+				}
+			},
+			error : function(errorResp) {
+				console.log(errorResp.status);
+			}
+		});//ajax
+		
 		
 		function settingAttendApplyListDataTable() {
+			$('#searchDiv').empty();
 			
-			$('#AttendApplyList').DataTable(
+			$('#attendApplyList').DataTable(
 							{
 								ajax : {
 									"type" : "get",
@@ -47,25 +100,46 @@
 								},{
 									data : "lecture_current"
 								} ],
-								"order" :  [ 3, 'asc' ], 
+								"order" :  [ 3, 'asc' ],
+								initComplete: function () {
+						            this.api().columns().every( function () {
+						               var column = this;
+						               var select = $('<select><option value=""></option></select>')
+						                  .appendTo( $('#searchDiv') )
+						                  .on( 'change', function () {
+						                     var val = $.fn.dataTable.util.escapeRegex(
+						                        $(this).val()
+						                     );
+						                     
+						                     column
+						                        .search( val ? '^'+val+'$' : '', true, false )
+						                        .draw();
+						                  });
+
+						               column.data().unique().sort().each( function ( d, j ) {
+						                  select.append( '<option value="'+d+'">'+d+'</option>' )
+						               });
+						               
+						            });
+						            $('#searchDiv').find('select:eq(0)').attr('id', 'name').css('display', 'none');
+						            $('#searchDiv').find('select:eq(1)').attr('id', 'course').attr('class', 'selectpicker');
+						            $('#searchDiv').find('select:eq(2)').attr('id', 'credit').attr('class', 'selectpicker');
+						            $('#searchDiv').find('select:eq(3)').attr('id', 'grade').attr('class', 'selectpicker');
+						            $('#searchDiv').find('select:eq(4)').attr('id', 'prof').css('display', 'none');
+						            $('#searchDiv').find('select:eq(5)').attr('id', 'capacity').css('display', 'none');
+						            $('#searchDiv').find('select:eq(6)').attr('id', 'planBtn').css('display', 'none');
+						            $('#searchDiv').find('select:eq(7)').attr('id', 'applyBtn').css('display', 'none');
+						            $('#searchDiv').find('select:eq(8)').attr('id', 'code').css('display', 'none');
+						            $('#searchDiv').find('select:eq(9)').attr('id', 'cnt').css('display', 'none');
+						            $("#grade").after($("#name"));
+						            $("#grade").after($("#course"));
+						            $("#grade").after($("#credit"));
+						            $("<span class='selectSpan'>학년</span>").insertBefore($('#grade'));
+						            $("<span class='selectSpan'>이수구분</span>").insertBefore($('#course'));
+						            $("<span class='selectSpan'>학점</span>").insertBefore($('#credit'));
+						         },
 								"bDestroy" : true,
 								"columnDefs": [{
-					                
-					                "render": function ( data, type, row ) {
-					                	var result;
-					                	
-											if(data=="0"){
-												result="교양";
-												
-											}else{
-												result=data;
-											}	
-					                	
-					                    return result;
-					                },
-					                "targets": 3,
-					               
-							},{
 					                
 					                "render": function ( data, type, row ) {
 					                	var result;
@@ -101,8 +175,8 @@
 				
 				
 				function settingAttendApplyCompListDataTable() {
-					
-					$('#AttendApplyCompList')
+					$('#searchDiv').empty();
+					$('#attendApplyCompList')
 							.DataTable(
 									{
 										ajax : {
@@ -133,22 +207,6 @@
 										} ],
 										"bDestroy" : true,
 										"columnDefs": [{
-							                
-							                "render": function ( data, type, row ) {
-							                	var result;
-							                	
-													if(data=="0"){
-														result="교양";
-														
-													}else{
-														result=data;
-													}	
-							                	
-							                    return result;
-							                },
-							                "targets": 3,
-							               
-									},{
 							                
 							                "render": function ( data, type, row ) {
 							                	var result;
@@ -185,7 +243,7 @@
 						};
 				
 	
-	$applytable = $('#AttendApplyList').DataTable();
+	$applytable = $('#attendApplyList').DataTable();
 	$applytable.on('click', '.viewplanBtn', function() {
 		var lecture_code = $(this).attr("data");
 		var lecture_name = $(this).val();
@@ -237,7 +295,18 @@
 			dataType : "text",
 			success : function(resp) {
 				if(resp=="FULL"){
-					swal("수강신청 실패", "수강신청이 마감되어 신청하실 수 없습니다.", "error"); 
+// 					swal("수강신청 실패", "수강신청이 마감되어 신청하실 수 없습니다.", "error"); 
+					if (!($('.modal.in').length)) {
+						$('.modal-dialog').css({
+							top : 0,
+							left : 0
+						});
+					}
+					$('#fullmodal').modal({
+						backdrop : false,
+						show : true
+					});
+					
 				}else if (resp=="OVER"){
 					swal("수강신청 실패", "수강신청 가능한 학점이 초과되어 신청하실 수 없습니다.", "error"); 
 				}else{
@@ -254,7 +323,7 @@
 	});
 	
 	
-	$attendApplytable = $('#AttendApplyCompList').DataTable();
+	$attendApplytable = $('#attendApplyCompList').DataTable();
 	$attendApplytable.on('click', '.applyCancel', function() {
 		var attend_no = $(this).attr("data");
 		var lecture_name = $(this).val();
@@ -342,7 +411,7 @@
 </div>
 
 
-<div class="container">
+<div class="container" id="applist">
 	<div class="row">
 		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 			<div class="breadcomb-list">
@@ -351,8 +420,9 @@
 					<div class="basic-tb-hd">
 						<h2>수강신청목록</h2>
 					</div>
-						<table id="AttendApplyList" class="table table-striped dataTable"
+						<table id="attendApplyList" class="table table-striped dataTable"
 							role="grid" aria-describedby="data-table-basic_info">
+							   <div id="searchDiv"></div>
 							<thead>
 								<tr>
 									<th>과목명</th>
@@ -380,7 +450,7 @@
 </div>
 
 
-<div class="container">
+<div class="container" id="acompl">
 	<div class="row">
 		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 			<div class="breadcomb-list">
@@ -389,7 +459,7 @@
 					<div class="basic-tb-hd">
 						<h2>수강신청 완료목록</h2>
 					</div>
-						<table id="AttendApplyCompList" class="table table-striped dataTable"
+						<table id="attendApplyCompList" class="table table-striped dataTable"
 							role="grid" aria-describedby="data-table-basic_info">
 							<thead>
 								<tr>
@@ -471,5 +541,20 @@
     </div>
 </div>
 
+
+<div class="modal fade" id="fullmodal" role="dialog">
+    <div class="modal-dialog modal-large">
+        <div class="modal-content">
+            <div class="modal-header">
+            </div>
+            <div class="modal-body">
+             
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script	src="${pageContext.request.contextPath }/notika/js/dialog/sweetalert2.min.js"></script>

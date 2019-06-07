@@ -131,7 +131,7 @@
                             </li>
                             <li><a href="index-2.html">나의정보</a>
                             </li>
-                            <li><a href="index-3.html">일정관리</a>
+                            <li><a href="${pageContext.request.contextPath}/professor/proschedule">일정관리</a>
                             </li>
                             <li><a href="index-4.html">담당강의</a>
                             </li>

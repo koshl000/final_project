@@ -198,13 +198,6 @@ function settingDataTable(){
 									</p>
 								</div>
 
-								<div class="col-sm-6 col-md-6 col-sm-6 col-xs-12">
-									<div class="notika-todo-btn" id="add" >
-										<p  class="pull-right btn btn-primary btn-sm">평가정책
-											추가</p>
-									</div>
-								</div>
-
 							</div>
 
 						</div>
@@ -220,6 +213,7 @@ function settingDataTable(){
 		<div class="row">
 			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 				<div class="data-table-list">
+				 <button class="btn btn-success notika-btn-success waves-effect" style="float:right;"  id="add" >평가정책 추가</button>
 					<table id="policyList" class="table table-striped dataTable"
 						role="grid" aria-describedby="data-table-basic_info">
 						<thead>

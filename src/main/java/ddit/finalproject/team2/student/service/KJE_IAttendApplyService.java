@@ -53,4 +53,5 @@ public interface KJE_IAttendApplyService {
 	 * @return 수강 신청한 학점의 합계
 	 */
 	public String retriveSumCredit(String user_id);
+	
 }
