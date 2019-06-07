@@ -12,6 +12,7 @@ public interface Lsh_ILectureService {
     public List<String> selectAbsenceYN(Map<String,String> map);
     public Map<String,String> selectContinuePlay(Map<String,String> map);
     public String getAttend(Map<String, String> map);
+//    public String selectAttendUserID()
     public int updateContinuePlay(Map<String, String> map);
 
     public int updateIdentifyCode(Map<String, String> map);
