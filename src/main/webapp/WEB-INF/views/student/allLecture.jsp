@@ -2,32 +2,33 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
-<!-- Data Table JS
-		============================================ -->
-<link rel="stylesheet" href="${pageContext.request.contextPath }/notika/css/jquery.dataTables.min.css">
-<!-- normalize CSS
-		============================================ -->
-<link rel="stylesheet" href="${pageContext.request.contextPath }/notika/css/normalize.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
 <script type="text/javascript">
+	$(function() {
+		var table = $('#data-table-basic').DataTable({
+			ajax : {
+				"type" : "get",
+				"url" : "${pageContext.request.contextPath}/mail/allLecture/allLectureList",
+				"dataType" : "JSON"
+			},
+			columns : [
+				{data : "lecture_code"}
+				, {data : "lecture_name"}
+				, {data : "lecture_coursetype"}
+				, {data : "lecture_credit"}
+				, {data : "lecture_target"}
+				, {data : "user_id"}
+				, {data : "lecture_capacity"}
+				, {data : "lecture_plan"}
+			],
+			"order" : []
+		});
+	})
+	
 	function page_link() {
 		window.open("${pageContext.request.contextPath }/subjectPage/eduGoal", "상세강의보기", "width=1000, height=700, toolbar=no, menubar=no, scrollbars=no, resizable=yes, location=yes");
 	}
 </script>
-<style>
-.sangyup {
-	display: inline;
-	float: right;
-}
-
-.dataTables_wrapper .dataTables_filter {
-	width: 45%;
-}
-
-.dataTables_wrapper .dataTables_filter input, .dataTables_wrapper .dataTables_filter label
-	{
-	width: 20%;
-}
-</style>
 
 <!--    메뉴 소개 영역 -->
 <div class="breadcomb-area">
@@ -59,68 +60,22 @@
 			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 				<div class="data-table-list">
 					<div class="table-responsive">
-						<div>
-							<span>Search:</span> <input type="search" placeholder=""
-								aria-controls="data-table-basic" /> <span>연도<select><OPTION>2019년</OPTION>
-									<OPTION>2018년</OPTION>
-									<OPTION>2017년</OPTION></select></span> <span>학기<select><option>1학기</option>
-									<option>2학기</option></select></span>
-							<button class="btn btn-default notika-btn-default" id="asd">조회하기</button>
-						</div>
 						<table id="data-table-basic" class="table table-striped dataTable"
 							role="grid" aria-describedby="data-table-basic_info">
+							<div id="searchDiv"></div>
 							<thead>
-								<tr role="row">
-									<th class="sorting_asc" tabindex="0"
-										aria-controls="data-table-basic" rowspan="1" colspan="1"
-										aria-sort="ascending"
-										aria-label="Name: activate to sort column descending"
-										style="width: 80px;">과목명</th>
-									<th class="sorting" tabindex="0"
-										aria-controls="data-table-basic" rowspan="1" colspan="1"
-										aria-label="Position: activate to sort column ascending"
-										style="width: 100px;">이수구분</th>
-									<th class="sorting" tabindex="0"
-										aria-controls="data-table-basic" rowspan="1" colspan="1"
-										aria-label="Office: activate to sort column ascending"
-										style="width: 80px;">학점</th>
-									<th class="sorting" tabindex="0"
-										aria-controls="data-table-basic" rowspan="1" colspan="1"
-										aria-label="Age: activate to sort column ascending"
-										style="width: 80px;">학년</th>
-									<th class="sorting" tabindex="0"
-										aria-controls="data-table-basic" rowspan="1" colspan="1"
-										aria-label="Start date: activate to sort column ascending"
-										style="width: 125px;">담당교수</th>
-									<th class="sorting" tabindex="0"
-										aria-controls="data-table-basic" rowspan="1" colspan="1"
-										aria-label="Salary: activate to sort column ascending"
-										style="width: 117px;">수강인원</th>
-									<th class="sorting" tabindex="0"
-										aria-controls="data-table-basic" rowspan="1" colspan="1"
-										aria-label="Salary: activate to sort column ascending"
-										style="width: 80px;">강의계획서</th>
+								<tr>
+									<th>과목코드</th>
+									<th>과목명</th>
+									<th>이수구분</th>
+									<th>학점</th>
+									<th>학년</th>
+									<th>담당교수</th>
+									<th>수강인원</th>
+									<th>강의계획서</th>
 								</tr>
 							</thead>
 							<tbody>
-								<tr role="row" class="odd">
-									<td><a onClick="javascript:page_link();">초급자바</a></td>
-									<td>교양</td>
-									<td>2</td>
-									<td>1학년</td>
-									<td>이성엽</td>
-									<td>65/70</td>
-									<td><button class="btn btn-default notika-btn-default">보기1</button></td>
-								</tr>
-								<tr role="row" class="odd">
-									<td><a onClick="javascript:page_link();">중급자바</a></td>
-									<td>교양</td>
-									<td>2</td>
-									<td>1학년</td>
-									<td>이진우</td>
-									<td>65/70</td>
-									<td><button class="btn btn-default notika-btn-default">보기2</button></td>
-								</tr>
 							</tbody>
 						</table>
 					</div>
@@ -130,5 +85,4 @@
 	</div>
 </div>
 
-<script src="${pageContext.request.contextPath }/notika/js/data-table/jquery.dataTables.min.js"></script>
-<script src="${pageContext.request.contextPath }/notika/js/data-table/data-table-act.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>

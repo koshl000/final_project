@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ddit.finalproject.team2.student.dao.KJE_IattendApplyDao">
+
+	<select id="selectAttendApplyList" parameterType="hashMap"
+		resultType="KJE_attendApplyVo">
+		SELECT
+		LECTURE_CODE,
+		LECTURE_NAME,
+		LECTURE_COURSETYPE,
+		LECTURE_CREDIT,
+		LECTURE_TARGET,
+		U.USER_NAME PRO_NAME,
+		LECTURE_CAPACITY,
+		L.USER_ID PRO_ID,
+		OPENSEME_NO,
+		MID_DATE,
+		FINAL_DATE,
+		LOWER_ORGANIZATION,
+		NVL((SELECT COUNT(ATTEND_NO) FROM ATTEND A GROUP BY LECTURE_CODE HAVING
+		A.LECTURE_CODE= L.LECTURE_CODE),'0')LECTURE_CURRENT
+		FROM
+		LECTURE L INNER JOIN
+		USERS U ON
+		(L.USER_ID=U.USER_ID)
+		WHERE OPENSEME_NO= #{openseme_no}
+		AND
+		lecture_code
+		NOT IN (SELECT lecture_code FROM ATTEND WHERE
+		USER_ID=#{user_id})
+
+	</select>
+
+	<select id="selectAttendApplyCompList" parameterType="hashMap"
+		resultType="KJE_attendApplyVo">
+		SELECT
+		A.USER_ID,
+		ATTEND_NO,
+		A. LECTURE_CODE,
+		LECTURE_NAME,
+		LECTURE_COURSETYPE,
+		LECTURE_CREDIT,
+		LECTURE_TARGET,
+		LECTURE_CAPACITY,
+		L.USER_ID PRO_ID,
+		U.USER_NAME PRO_NAME,
+		OPENSEME_NO,
+		MID_DATE,
+		FINAL_DATE,
+		LOWER_ORGANIZATION,
+		NVL((SELECT COUNT(ATTEND_NO) FROM ATTEND A
+		GROUP BY LECTURE_CODE HAVING A.LECTURE_CODE=
+		L.LECTURE_CODE),'0')LECTURE_CURRENT
+		FROM
+		ATTEND A INNER JOIN
+		LECTURE L ON
+		(A.LECTURE_CODE=L.LECTURE_CODE)
+		INNER JOIN USERS U ON
+		(L.USER_ID=U.USER_ID)
+		WHERE A.USER_ID=#{user_id}
+		AND
+		OPENSEME_NO=#{openseme_no}
+
+	</select>
+
+	<select id="selectLecturePlan" parameterType="string"
+		resultType="LecturePlanVo">
+
+		SELECT
+		LECTURE_CODE,
+		WEEK_CONTENT,
+		ASSIGNMENT_INFO,
+		INTRODUCTION,
+		LEC_PLAN_SUMMARY,
+		LEC_PLAN_METHOD,
+		BOOK_MATERIAL
+		FROM
+		LECTUREPLAN
+		WHERE
+		LECTURE_CODE=#{lecture_code}
+
+	</select>
+
+	<insert id="insertAttend" parameterType="hashMap">
+		INSERT FIRST
+		<![CDATA[
+		WHEN (SELECT COUNT(ATTEND_NO) FROM ATTEND WHERE LECTURE_CODE=#{lecture_code})<(SELECT LECTURE_CAPACITY FROM LECTURE WHERE LECTURE_CODE=#{lecture_code})
+		]]>
+		THEN
+		INTO ATTEND VALUES (#{user_id},#{lecture_code}||LPAD((SELECT
+		COUNT(*)+1 FROM
+		ATTEND WHERE LECTURE_CODE =
+		#{lecture_code}),'3','0'),#{lecture_code})
+		SELECT *
+		FROM DUAL
+	</insert>
+
+	<delete id="deleteAttend" parameterType="string">
+		DELETE FROM ATTEND WHERE
+		ATTEND_NO = #{attend_no}
+	</delete>
+	
+	<select id="selectSumCredit" parameterType="String" resultType="String">
+		SELECT
+		SUM (LECTURE_CREDIT)
+		FROM LECTURE L INNER JOIN ATTEND A ON(L.LECTURE_CODE=A.LECTURE_CODE)
+		WHERE A.USER_ID=#{user_id}
+	</select>
+	
+	<select id ="selectAttendPeriod" parameterType="string"  resultType="OpenSemesterVo">
+	SELECT
+		OPENSEME_YEAR,
+		OPENSEME_SEMESTER,
+		OPENSEME_NO,
+		TO_CHAR(OPENSEME_ATTEND1,'YYYYMMDD')OPENSEME_ATTEND1,
+		TO_CHAR(OPENSEME_ATTEND2,'YYYYMMDD')OPENSEME_ATTEND2
+		FROM
+		OPENSEMESTER
+		<![CDATA[
+		WHERE TO_CHAR(OPENSEME_ATTEND1,'YYYYMMDD')<=#{today}
+		AND TO_CHAR(OPENSEME_ATTEND2,'YYYYMMDD')>=#{today}
+        	]]>
+	</select>
+
+</mapper>

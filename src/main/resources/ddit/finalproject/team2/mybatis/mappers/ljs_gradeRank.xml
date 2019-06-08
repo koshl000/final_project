@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ddit.finalproject.team2.professor.dao.Ljs_IGradeRankDao">
+	<select id="selectGradeRank" parameterType="string" resultType="GradeRankVo">
+		SELECT D.GRADERANK_NO, GRADERANK_RANK, GRADERANK_MAX
+			GRADERANK_MIN, EVALPOLICY_CODE, GRADERANK_RATIO
+		FROM OPENSEMESTER B	LEFT OUTER JOIN EVALUATIONPOLICY C
+		ON(B.OPENSEME_NO = C.OPENSEME_NO)
+		LEFT OUTER JOIN GRADERANK D
+		ON(C.EVALPOLICY_CODE = D.EVALPOLICY_CODE)
+		WHERE B.OPENSEME_NO = #{openseme_no}
+	</select>
+	
+</mapper>

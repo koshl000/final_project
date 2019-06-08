@@ -1,178 +1,240 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%--         <script src="${pageContext.request.contextPath}/res/fullCalendar/lib/jquery.min.js"></script> --%>
-        <script src='${pageContext.request.contextPath}/res/fullCalendar/fullcalendar/fullcalendar.js'></script>
-        <link rel='stylesheet' href="${pageContext.request.contextPath}/res/fullCalendar/fullcalendar/fullcalendar.css" />
-        <script src="${pageContext.request.contextPath }/res/modal/1.11.2_jquery-ui.min.js"></script>
- 		<script src="${pageContext.request.contextPath }/res/modal/3.3.5_bootstrap.min.js"></script>
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+
+<link rel="stylesheet" href="${pageContext.request.contextPath}/res/fullCalendar/fullcalendar/style_full.css"/>
+<script type="text/javascript" src="${pageContext.request.contextPath}/res/fullCalendar/fullcalendar/moment.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/res/fullCalendar/fullcalendar/fullcalendar.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/res/fullCalendar/fullcalendar/spectrum.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/res/fullCalendar/fullcalendar/front.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.2/TweenMax.min.js"></script>
+<link rel="stylesheet" href="${pageContext.request.contextPath }/notika/css/datapicker/datepicker3.css">
+	
+	<!-- dialog CSS
+		============================================ -->
+    <link rel="stylesheet" href="${pageContext.request.contextPath }/notika/css/dialog/sweetalert2.min.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath }/notika/css/dialog/dialog.css">
+    
 <style>
-.modal
-{
-    overflow: hidden;
-}
-.modal-dialog{
-    margin-right: 0;
-    margin-left: 0;
-}
-.modeless{
-    top:5%;
-    left:60%;
-    bottom:auto;
-    right:auto;
-    margin-left:-300px;
-}
-/* .input-group .form-control { */
-/*     width: 30%; */
+   tfoot { 
+       display: table-header-group; 
+   }
+   select {
+       border: 1px solid #eee;
+       height: 35px;
+       padding: 7px 15px;
+       font-size: 13px;
+       border-radius: 2px;
+       -webkit-appearance: none;
+       -moz-appearance: none;
+       line-height: 100%;
+       background-color: #fff;
+       outline: none;
+   }
+   
+   select :hover  {
+      background-color: #00c292 !important;
+       color: #fff !important;
+   }
+   .selectSpan {
+      font-size: 16px;
+      font-weight: bold;
+      margin : 0 5px 0 20px;
+   }
+   #grade, #credit, #course {
+      width: 60px;
+   }
+   
 </style>
 
+<script type="text/javascript">
+$(function(){
 
-		<script>
-		$(document).ready(function() {
-			function modalppop(){
-				$("#myModal").modal({
-					backdrop: true,
-			 	    show: true	
-				});
-				$("#myModal").draggable();
-				
-        	};
-			var date = new Date();
-			var d = date.getDate();
-			var m = date.getMonth();
-			var y = date.getFullYear();
-			var ok = false;
-			var start;
-			var end;
-			var allDay;
+	$('.input-group.date').datepicker({
+		todayBtn : "linked",
+		keyboardNavigation : false,
+		forceParse : false,
+		calendarWeeks : true,
+		autoclose : true,
+		format : "yyyy/mm/dd"
 
-			var calendar = $('#calendar').fullCalendar({
-				header: {
-					left: 'prev,next today',
-					center: 'title',
-					right: 'month,agendaWeek,agendaDay'
-				},
-				selectable: true,
-				selectHelper: true,
-				select: function(start, end, allDay) {
-					console.log(calendar);
-					modalppop();
-				},
-				editable: true,
-				events: [
-					{
-						title: 'All Day Event',
-						start: new Date(y, m, 1)
-					},
-					{
-						title: 'Long Event',
-						start: new Date(y, m, d-5),
-						end: new Date(y, m, d-2)
-					},
-					{
-						id: 999,
-						title: 'Repeating Event',
-						start: new Date(y, m, d-3, 16, 0),
-						allDay: false
-					},
-					{
-						id: 999,
-						title: 'Repeating Event',
-						start: new Date(y, m, d+4, 16, 0),
-						allDay: false
-					},
-					{
-						title: 'Meeting',
-						start: new Date(y, m, d, 10, 30),
-						allDay: false
-					},
-					{
-						title: 'Lunch',
-						start: new Date(y, m, d, 12, 0),
-						end: new Date(y, m, d, 14, 0),
-						allDay: false
-					},
-					{
-						title: 'Birthday Party',
-						start: new Date(y, m, d+1, 19, 0),
-						end: new Date(y, m, d+1, 22, 30),
-						allDay: false
-					},
-					{
-						title: 'Click for Google',
-						start: new Date(y, m, 28),
-						end: new Date(y, m, 29),
-						url: 'http://google.com/'
-					}
-				]}
-			);
-			$('#ok').click(function(){
-				var title=$("#calTitle").val();
-				var start=$("#startD").val();
-				var end=$("#endD").val();
-				var modal=$(this).parent('#myModal');
-				calendar.fullCalendar('renderEvent',
-						{
-							title:title,
-							start:start,
-							end:end
-						},
-						true // make the event "stick"
-					);
-				modal.close();
-				calendar.fullCalendar('unselect');
-			});
 		});
-        </script>
-
-
-<c:set var="now" value="<%=new java.util.Date()%>" />
-<div id='calendar'></div>
-<div id="myModal" class="modal fade modeless">
-    <div class="modal-dialog" style="width:400px; height:300px;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                 <h4 class="modal-title">날짜입력</h4>
-
-            </div>
-            <div class="modal-body">
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    <div class="data-table-list">
-                        <div class="basic-tb-hd">
-						<span>제목:</span><input id="calTitle" type="text"/><br/>
-						
-						<span>시작일</span>
-                                <div class="form-group nk-datapk-ctm form-elet-mg" id="data_1">
-                                    <div class="input-group date nk-int-st">
-                                        <span class="input-group-addon"></span>
-                                        <input id="startD" type="text" class="form-control" value="now">
-                                    </div>
-                                </div>
-						
-						<span>종료일</span>
-								<div class="form-group nk-datapk-ctm form-elet-mg" id="data_2">
-                                    <div class="input-group date nk-int-st">
-                                        <span class="input-group-addon"></span>
-                                        <input id="endD" type="text" class="form-control" value="now">
-                                    </div>
-                                </div>
-                        </div>
-                        
-                </div>
-            </div>
-                
-            </div>
-            <div class="modal-footer">
-                <button type="button" id="ok" class="btn btn-default">확인</button>
-                <button type="button" id="cancel" class="btn btn-default" data-dismiss="modal">닫기</button>
-            </div>
-        </div>
-        <!-- /.modal-content -->
-    </div>
-    <!-- /.modal-dialog -->
-</div>
-        
-        <script type="text/javascript" src="${pageContext.request.contextPath}/notika/js/datapicker/bootstrap-datepicker.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/notika/js/datapicker/datepicker-active.js"></script>
+	
+	$('#saveschedule').on("click",function(event){
 		
+		var lecture_name= $("[name='lecture']").children(":selected").val();	
+		var lecture_code= $("[name='lecture']").children(":selected").prop("id");	
+		$("[name='lecture_code']").val(lecture_code);
+		$("[name='lecture_name']").val(lecture_name);
+		
+		var queryString = $('#scheduleForm').serialize();
+		
+		$.ajax({
+			url :"${pageContext.request.contextPath}/saveSchedule",
+			method : "post",
+			data : queryString,
+			success : function(resp) {
+				if(resp.msg=="SUCCESS"){
+					swal("일정 등록", "일정 등록에 성공하였습니다.", "success");
+					$("#calendar").fullCalendar( 'renderEvent', resp.schedule ,'stick');
+					scheduleRegist.init();			// 일정 등록 관리 초기화
+					scheduleRegist.hide();	
+				}else if(resp.msg=="FAIL"){
+					swal("일정 등록", "일정 등록에 실패 하였습니다.", "error"); 
+				}
+				
+			},
+			error : function(errorResp) {
+				swal("일정 등록", "일정 등록에 실패 하였습니다.", "error"); 
+				console.log(errorResp.status);
+			}
+		});
+		
+		
+	});
+	
+	
+});
+
+</script>
+
+<div class="breadcomb-area">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+				<div class="breadcomb-list">
+					<div class="row">
+						<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+							<div class="breadcomb-wp">
+								<div class="breadcomb-icon">
+									<i class="notika-icon notika-bar-chart"></i>
+								</div>
+								<div class="breadcomb-ctn">
+									<h2>일정 관리 </h2>
+									<p> 날짜를 클릭하시면 일정을 추가하실 수 있습니다.<p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="container">
+	<div class="row">
+		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+		<div class="wrap">
+		<div class="calendar_wrap" id="calendar"> </div>
+		<!--// calendar_wrap-->
+
+		<div class="schedule_wrap">
+		<div class="schedule_form">
+		<form:form id="scheduleForm" modelAttribute="schedule">
+			<table class="tbl th_ver" border="0" cellpadding="0" cellspacing="0">
+	            <caption></caption>
+	            <colgroup>
+	                <col width="30%" />
+	                <col width="70%" />
+	            </colgroup>	
+	            <tbody>
+	            	<tr>
+	            		<th scope="row">과목 선택</th>
+	            		<td><select name="lecture">
+						<c:forEach var="lecture" items="${lectureList}">
+							<option id="${lecture.lecture_code}" value="${lecture.lecture_name}">${lecture.lecture_name}</option>
+						</c:forEach>
+						<input type="hidden" name="lecture_code"/>
+						<input type="hidden" name="lecture_name"/>
+					</select></td>
+	            	</tr>
+	            	<tr>
+	            		<th scope="row">일정명</th>
+	            		<td><input type="text" id="sTitle" name="schedule_title" required/></td>
+	            	</tr>
+	            	<tr>
+	            		<th scope="row">등록일</th>
+	            		<td class="write_date" name="schedule_add"></td>
+	            	</tr>
+	            	<tr>
+	            		<th scope="row">시작일</th>
+	            		<td>
+	            			<div class="input-group date nk-int-st">
+								<span class="input-group-addon" style="border: 0px solid #ccc;"></span> 
+								<input type="text" class="form-control" placeholder="시작일" id="start-date" name="schedule_start"/>
+							</div>
+	            		</td>
+	            	</tr>
+	            	<tr>
+	            		<th scope="row">일정 시작 시간</th>
+	            		<td>
+	            			<input type="time" id="stTime" name="stTime"/>
+	            		</td>
+	            	</tr>
+	            	<tr>
+	            		<th scope="row">종료일</th>
+	            		<td>
+							<div class="input-group date nk-int-st">
+								<span class="input-group-addon" style="border: 0px solid #ccc;"></span> 
+								<input type="text" class="form-control" placeholder="종료일" id="end-date" name="schedule_end">
+							</div>
+	            		</td>
+	            	</tr>
+	            	<tr>
+	            		<th scope="row">일정 종료 시간</th>
+	            		<td>
+	            			<input type="time" id="edTime" name="edTime"/>
+	            		</td>
+	            	</tr>
+	            	<tr>
+	            		<th scope="row">색상</th>
+	            		<td>
+	            			<input type="text" id="sBg" name="schedule_color"/>
+	            		</td>
+	            	</tr>
+	            	<tr>
+	            		<th scope="row">상태</th>
+	            		<td>
+	            			<div >
+	                            <label>
+	                                <span></span>
+	                                <select>
+	                                    <option value="사용" selected>사용</option>
+	                                    <option value="중지">중지</option>
+	                                </select>
+	                            </label>
+	                        </div>
+	                        <!--// style_select-->
+	            		</td>
+	            	</tr>
+	            </tbody>
+            </table>
+            </form:form>
+		</div>
+		<!--// schedule_form-->
+
+		<div class="btn_area center">
+			<button type="button" class="btn notica" id="saveschedule">저장</button>
+			<button type="button" class="btn cancel" id="closeBtn">취소</button>
+		</div>
+		<!--// btn_area-->
+	</div>
+	<!--// schedule_wrap-->
+	<!--// con_box-->
+</div>
+</div>
+</div>
+</div>
+<script type="text/javascript">
+$(function(){
+	scheduleRegist.init();			// 일정 등록 관리 초기화
+	ajaxData();
+	
+});
+</script>
+
+<script	src="${pageContext.request.contextPath }/notika/js/dialog/sweetalert2.min.js"></script>
+<script
+	src="${pageContext.request.contextPath }/notika/js/datapicker/bootstrap-datepicker.js"></script>

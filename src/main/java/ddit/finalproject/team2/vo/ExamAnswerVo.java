@@ -19,4 +19,5 @@ public class ExamAnswerVo implements Serializable{
 	@NotNull private String question_no;
 	@NotNull private String problem_no;
 	@NotNull private String answer_no;
+	private String subjective_answer;
 }

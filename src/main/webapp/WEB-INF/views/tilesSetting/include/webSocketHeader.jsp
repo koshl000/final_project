@@ -1,12 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <script>
+echoTest();
+
 var sockJS;
 function echoTest(){
 	if(window.WebSocket){
 		console.log("websocket 지원!");
 		
-		sockJS = new WebSocket("wss://localhost/projecttemplate/alert");
+		sockJS = new WebSocket("wss://localhost/alert");
 		sockJS.onopen = function(event){
 			console.log(event.target.url + "과 연결 수립");
 		};
@@ -20,11 +22,19 @@ function echoTest(){
 		};
 		
 		sockJS.onmessage = function(messageEvt){
-			
+			writeMessage(message);
 		};
 		
 	}else{
 			console.log("websocket 미지원...");
 	}
+}
+
+function writeMessage(message){
+	$.notify(
+		message,
+		{className : 'info',
+		position : 'bottom right'}
+	);
 }
 </script>

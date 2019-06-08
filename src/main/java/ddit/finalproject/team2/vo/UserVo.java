@@ -35,6 +35,8 @@ public class UserVo implements Serializable, UserDetails{
 	private List<AttendVo> attendNoList;
 	private List<LectureVo> lectureList;
 	
+	private String face_id;
+	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return authorities;

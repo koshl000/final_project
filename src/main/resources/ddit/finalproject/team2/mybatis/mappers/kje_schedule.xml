@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ddit.finalproject.team2.professor.dao.KJE_IScheduleDao">
+
+	<select id="selectScheduleList" parameterType="String"
+		resultType="KJE_ScheduleVo">
+
+		SELECT
+		SCHEDULE_NO,
+		SCHEDULE_TYPE,
+		SCHEDULE_TITLE,
+		SCHEDULE_CONTENT,
+		TO_CHAR(SCHEDULE_START, 'YYYY/MM/DD HH24:MI')SCHEDULE_START, 
+		TO_CHAR(SCHEDULE_END, 'YYYY/MM/DD HH24:MI')SCHEDULE_END,
+		TO_CHAR(SCHEDULE_ADD,'YYYY/MM/dd')SCHEDULE_ADD,
+		SCHEDULE_COLOR,
+		S.LECTURE_CODE,
+		L.LECTURE_NAME
+		FROM SCHEDULE S INNER JOIN LECTURE L ON(S.LECTURE_CODE=L.LECTURE_CODE)
+		WHERE L.USER_ID = #{user_id}
+	</select>
+
+	<select id="selectStLecture" parameterType="hashMap" resultType="KJE_StlectureVo">
+		SELECT
+		LECTURE_CODE,
+		U.USER_ID,
+		U.USER_NAME,
+		LECTURE_NAME,
+		LOWER_ORGANIZATION
+		FROM
+		LECTURE L
+		INNER JOIN USERS U
+		ON(L.USER_ID=U.USER_ID)
+		WHERE OPENSEME_NO=#{openseme_no}
+		AND U.USER_ID =#{user_id}
+	</select>
+	
+	<insert id="insertSchedule" parameterType="KJE_ScheduleVo">
+		<selectKey resultType="string" keyProperty="schedule_no"
+				order="BEFORE">
+				SELECT SCHEDULE_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+
+		INSERT INTO SCHEDULE (
+		SCHEDULE_NO, SCHEDULE_TYPE,
+		SCHEDULE_TITLE, SCHEDULE_START,
+		SCHEDULE_END, SCHEDULE_ADD,
+		LECTURE_CODE, SCHEDULE_COLOR
+		) VALUES (
+		#{schedule_no},
+		#{schedule_type},
+		#{schedule_title},
+		TO_DATE(#{schedule_start}, 'YYYY/MM/DD HH24:MI'),
+		TO_DATE(#{schedule_end}, 'YYYY/MM/DD HH24:MI'),
+		SYSDATE,
+		#{lecture_code},
+		#{schedule_color}
+		)
+	
+	</insert>
+
+</mapper>

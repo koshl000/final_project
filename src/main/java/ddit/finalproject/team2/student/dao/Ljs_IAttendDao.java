@@ -11,4 +11,5 @@ import ddit.finalproject.team2.vo.Ljs_BoardVo;
 public interface Ljs_IAttendDao {
 	String selectAttendNo(Ljs_BoardVo board);
 	List<AttendVo> selectAttendList(String lecture_code);
+	AttendVo selectAttend(String attend_no);
 }

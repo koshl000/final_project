@@ -12,6 +12,11 @@
 <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
 
+<!-- dialog CSS
+		============================================ -->
+    <link rel="stylesheet" href="${pageContext.request.contextPath }/notika/css/dialog/sweetalert2.min.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath }/notika/css/dialog/dialog.css">
+
 <script type="text/javascript">
 	$(function() {
 		$('#data-table-basic').DataTable({
@@ -44,7 +49,7 @@
 			var sum = $(this).parent().parent().find($(".suminput")).text();
 			var na = $(this).parent().parent().find($(".sorting_1")).text();
 			if(cnt==0){
-				alert("신청하신 증명서가 없습니다.");
+				swal("증명서 신청", "신청하신 증명서가 없습니다.", "warning"); 
 			}else{
 				var myForm = document.popForm;
 				$('#code').val(code);
@@ -144,3 +149,5 @@
 			</div>
 		</div>
 	</div>
+
+	<script	src="${pageContext.request.contextPath }/notika/js/dialog/sweetalert2.min.js"></script>

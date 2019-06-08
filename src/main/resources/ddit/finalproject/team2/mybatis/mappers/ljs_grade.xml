@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ddit.finalproject.team2.professor.dao.Ljs_IGradeDao">
+	<insert id="insertGrade" parameterType="GradeVo">
+		INSERT INTO GRADE (
+		    GRADE_NO, GRADE_MIDTERM, GRADE_FINAL,
+		    GRADE_ASSIGNMENT, GRADE_ABSENCE, ATTEND_NO, AVERAGE
+		) VALUES (
+		    GRADE_SEQ.NEXTVAL, #{grade_midterm, jdbcType=VARCHAR}, #{grade_final, jdbcType=VARCHAR},
+		    #{grade_assignment, jdbcType=VARCHAR}, #{grade_absence, jdbcType=VARCHAR}, #{attend_no}
+		    , #{average, jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<select id="selectGrade" parameterType="string" resultType="GradeVo">
+		SELECT * FROM GRADE WHERE ATTEND_NO = #{attend_no}
+	</select>
+	
+	<update id="updateGrade" parameterType="GradeVo">
+		UPDATE GRADE
+		SET GRADE_MIDTERM = #{grade_midterm, jdbcType = VARCHAR}, GRADE_FINAL = #{grade_final, jdbcType = VARCHAR}
+			, GRADE_ABSENCE = #{grade_absence, jdbcType = VARCHAR}, GRADE_ASSIGNMENT = #{grade_assignment, jdbcType = VARCHAR}
+			, AVERAGE = #{average. jdbcType = VARCHAR}
+		WHERE GRADE_NO = #{grade_no}
+	</update>
+	
+	<select id="selectGradeList" parameterType="string" resultType="GradeVo">
+		SELECT A.ATTEND_NO, GRADE_NO, GRADE_MIDTERM, GRADE_FINAL,
+		    GRADE_ASSIGNMENT, GRADE_ABSENCE, ATTEND_NO, AVERAGE
+		FROM ATTEND A LEFT OUTER JOIN GRADE B
+		ON(A.ATTEND_NO = B.ATTEND_NO)
+		WHERE A.LECTURE_CODE = #{lecture_code}
+	</select>
+	
+	<update id="updateGradeAll" parameterType="java.util.List">
+		<foreach collection="list" index="i" item="grade">
+			UPDATE GRADE
+			SET AVERAGE = #{grade.average}
+			WHERE ATTEND_NO = #{grade.attend_no}
+		</foreach>
+	</update>
+</mapper>

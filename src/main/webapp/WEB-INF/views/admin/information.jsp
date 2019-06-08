@@ -1,5 +1,51 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+
+<script type="text/javascript"
+	src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" type="text/css"
+	href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath }/notika/css/datapicker/datepicker3.css">
+	
+	<!-- dialog CSS
+		============================================ -->
+    <link rel="stylesheet" href="${pageContext.request.contextPath }/notika/css/dialog/sweetalert2.min.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath }/notika/css/dialog/dialog.css">
+<style>
+   tfoot { 
+       display: table-header-group; 
+   }
+   select {
+       border: 1px solid #eee;
+       height: 35px;
+       padding: 7px 15px;
+       font-size: 13px;
+       border-radius: 2px;
+       -webkit-appearance: none;
+       -moz-appearance: none;
+       line-height: 100%;
+       background-color: #fff;
+       outline: none;
+   }
+   
+   select :hover  {
+      background-color: #00c292 !important;
+       color: #fff !important;
+   }
+   .selectSpan {
+      font-size: 16px;
+      font-weight: bold;
+      margin : 0 5px 0 20px;
+   }
+   #grade, #credit, #course {
+      width: 60px;
+   }
+   
+</style>
+    
 <%--
 * [[개정이력(Modification Information)]]
 * 수정일                 수정자      수정내용
@@ -12,27 +58,97 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath }/notika/css/datapicker/datepicker3.css">
 <script type="text/javascript">
 	$(function(){
-		$('#btn1').click(function() {
-			  // reset modal if it isn't visible
-			  if (!($('.modal.in').length)) {
-			    $('.modal-dialog').css({
-			      top: 0,
-			      left: 0
-			    });
-			  }
-			  $('#myModal').modal({
-			    backdrop: false,
-			    show: true
-			  });
-
-// 			  $('.modal-dialog').draggable({
-// 			    handle: ".modal-header"
-// 			  });
-
+		
+		settingDataTable();
+		function settingDataTable() {
+			$('#basicInfoList').DataTable(
+							{
+								ajax : {
+									"type" : "get",
+									"url" : "${pageContext.request.contextPath}/getbasicInfoList",
+									"dataType" : "JSON"
+								},
+								columns : [ {
+									data : "openseme_year"
+								}, {
+									data : "openseme_semester"
+								}, {
+									data : "openseme_period1"
+								}, {
+									data : "openseme_period2"
+								}, {
+									data : "viewBtn"
+								},{
+									data : "openseme_no"
+								}],
+								"order" : [ [ 0, 'desc' ], [ 1, 'desc' ] ],
+								"bDestroy" : true,
+								"columnDefs": [{
+									"render": function ( data, type, row ) {
+					                	var result;
+					                		result = "<button class='btn btn-default notika-btn-default viewplanBtn'"; 
+					                		result+="' value='"+row.openseme_no+"'>상세보기/수정</button></td>";
+					                    return result;
+					                },
+					                "targets": 4
+									
+								}, { "visible": false,  "targets": [ 5 ]}]
+					});
+			};
+			
+		
+	$('#createBtn').on("click",function(event){
+		$('#insertForm input').val("");
+		
+		if (!($('.modal.in').length)) {
+			$('.modal-dialog').css({
+				top : 0,
+				left : 0
 			});
+		}
+		$('#insertmodal').modal({
+			backdrop : false,
+			show : true
+		});
+	
+	});		
+			
+
+	$('.input-group.date').datepicker({
+		todayBtn : "linked",
+		keyboardNavigation : false,
+		forceParse : false,
+		calendarWeeks : true,
+		autoclose : true,
+		format : "yyyy/mm/dd"
+
+		});
+	
+	
+	$('#saveInfo').on("click",function(event){
+		var queryString = $('#insertForm').serialize();
+		
+		$.ajax({
+			url :"${pageContext.request.contextPath}/saveInfo",
+			method : "post",
+			data : queryString,
+			success : function(resp) {
+				 swal("학기 및 기간 등록", "학기 및 기간 등록에 성공하였습니다.", "success"); 
+				settingDataTable();
+									
+			},
+			error : function(errorResp) {
+				swal("학기 및 기간 등록", "학기 및 기간 등록에 실패 하였습니다.", "error"); 
+				console.log(errorResp.status);
+			}
+		});
 		
 		
 	});
+	
+	
+});
+	
 	</script>
 	
  <div class="breadcomb-area">
@@ -56,56 +172,262 @@
       </div>
    </div>
 
-<div class="data-table-area">
-        <div class="container">
-            <div class="row">
+
+<div class="container" id="applist">
+	<div class="row">
+		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+			<div class="breadcomb-list">
+				<div class="row">
+					<div class="data-table-list">
+					 <button class="btn btn-success notika-btn-success waves-effect" style="float:right;"  id="createBtn" >등록</button>
+						<table id="basicInfoList" class="table table-striped dataTable"
+							role="grid" aria-describedby="data-table-basic_info">
+							   <div id="searchDiv"></div>
+							<thead>
+								<tr>
+									<th>연도</th>
+									<th>학기</th>
+									<th>학기 시작</th>
+									<th>학기 종료</th>
+									<th>상세보기</th>
+									<th>학기번호</th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+							<tfoot>
+							</tfoot>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="insertmodal" role="dialog">
+    <div class="modal-dialog modal-large">
+        <div class="modal-content">
+            <div class="modal-header">
+            </div>
+            <div class="modal-body">
+                <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    <div class="data-table-list">
-                        <div class="table-responsive">
-                        <button class="btn btn-default notika-btn-default" style="float:right;"  id="btn1" >등록</button>
-                        
-                            <div id="data-table-basic_wrapper" class="dataTables_wrapper">
-                            <div class="dataTables_length" id="data-table-basic_length">
-                            <label>Show <select name="data-table-basic_length" aria-controls="data-table-basic" class="">
-                            <option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select>
-                             entries</label>
-                           <table id="data-table-basic" class="table table-striped dataTable" role="grid" aria-describedby="data-table-basic_info">
+                    <div class="normal-table-list">
+                       <div class="basic-tb-hd">
+                            <h2>학기 및 기간 등록</h2>
+                        </div>
+                        <form:form id="insertForm" modelAttribute="saveInfo">
+                        <table class="table table-sc-ex">
                                 <thead>
-                                    <tr role="row">
-                                    <th class="sorting_asc" tabindex="0" aria-controls="data-table-basic" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 150px;">연도/학기</th>
-                                    <th class="sorting" tabindex="0" aria-controls="data-table-basic" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 150px;">학기기간</th>
-                                    <th class="sorting" tabindex="0" aria-controls="data-table-basic" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 150px;">수강신청기간</th>
-                                    <th class="sorting" tabindex="0" aria-controls="data-table-basic" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 150px;">수강정정기간</th>
-                                    <th class="sorting" tabindex="0" aria-controls="data-table-basic" rowspan="1" colspan="1" aria-label="Start date: activate to sort column ascending" style="width: 150px;">성적열람기간</th>
-                                    <th class="sorting" tabindex="0" aria-controls="data-table-basic" rowspan="1" colspan="1" aria-label="Salary: activate to sort column ascending" style="width: 150px;">성적이의기간</th>
-                                    <th class="sorting" tabindex="0" aria-controls="data-table-basic" rowspan="1" colspan="1" aria-label="Salary: activate to sort column ascending" style="width: 150px;">성적정정기간</th>
-                                    </tr>
                                 </thead>
                                 <tbody>
                                 <tr role="row" class="odd">
-                                        <td class="sorting_1">2019년도 1학기</td>
-                                        <td>2019-05-05~2019-10-10</td>
-                                        <td>2019-05-05~2019-10-10</td>
-                                        <td>2019-05-05~2019-10-10</td>
-                                        <td>2019-05-05~2019-10-10</td>
-                                        <td>2019-05-05~2019-10-10</td>
-                                        <td>2019-05-05~2019-10-10</td>
-                                    </tr><tr role="row" class="even">
-                                        <td class="sorting_1">2019년도 2학기</td>
-                                        <td>2019-05-05~2019-10-10</td>
-                                        <td>2019-05-05~2019-10-10</td>
-                                        <td>2019-05-05~2019-10-10</td>
-                                        <td>2019-05-05~2019-10-10</td>
-                                        <td>2019-05-05~2019-10-10</td>
-                                        <td>2019-05-05~2019-10-10</td>
-                            </table><div class="dataTables_info" id="data-table-basic_info" role="status" aria-live="polite">Showing 1 to 10 of 57 entries</div><div class="dataTables_paginate paging_simple_numbers" id="data-table-basic_paginate"><a class="paginate_button previous disabled" aria-controls="data-table-basic" data-dt-idx="0" tabindex="0" id="data-table-basic_previous">Previous</a><span><a class="paginate_button current" aria-controls="data-table-basic" data-dt-idx="1" tabindex="0">1</a><a class="paginate_button " aria-controls="data-table-basic" data-dt-idx="2" tabindex="0">2</a><a class="paginate_button " aria-controls="data-table-basic" data-dt-idx="3" tabindex="0">3</a><a class="paginate_button " aria-controls="data-table-basic" data-dt-idx="4" tabindex="0">4</a><a class="paginate_button " aria-controls="data-table-basic" data-dt-idx="5" tabindex="0">5</a><a class="paginate_button " aria-controls="data-table-basic" data-dt-idx="6" tabindex="0">6</a></span><a class="paginate_button next" aria-controls="data-table-basic" data-dt-idx="7" tabindex="0" id="data-table-basic_next">Next</a></div></div>
+                                        <td class="sorting_1">학기입력</td>
+                                        <td colspan="2"><input type ="text" name="openseme_year"/>년</td>
+                                        <td><select name="openseme_semester" >
+                            			<option value="1">1</option><option value="2">2</option></select>학기</td>
+                                        <td></td>
+                                      
+                                   </tr>
+                                   <tr role="row" class="even">
+                                        <td class="sorting_1">학기기간</td>
+										<td>
+										<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+											<div class="form-group nk-datapk-ctm form-elet-mg">
+												<div class="input-group date nk-int-st">
+													<span class="input-group-addon"></span> 
+													<input type="text" class="form-control" placeholder="학기 시작일" name="openseme_period1">
+													</div>
+												</div>
+											</div>
+										</td>
+										<td></td>
+                                        <td>
+                                        	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+											<div class="form-group nk-datapk-ctm form-elet-mg">
+												<div class="input-group date nk-int-st">
+													<span class="input-group-addon"></span> 
+													<input type="text" class="form-control" placeholder="학기 종료일" name="openseme_period2">
+													</div>
+												</div>
+											</div>
+										</td>
+                                    </tr>
+                                    
+                                    <tr role="row" class="odd">
+                                        <td class="sorting_1">수강신청기간</td>
+										<td>
+										<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+											<div class="form-group nk-datapk-ctm form-elet-mg">
+												<div class="input-group date nk-int-st">
+													<span class="input-group-addon"></span> 
+													<input type="text" class="form-control" placeholder="수강신청 시작일" name="openseme_attend1">
+													</div>
+												</div>
+											</div>
+										</td>
+										<td></td>
+                                        <td>
+                                        	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+											<div class="form-group nk-datapk-ctm form-elet-mg">
+												<div class="input-group date nk-int-st">
+													<span class="input-group-addon"></span> 
+													<input type="text" class="form-control" placeholder="수강신청 종료일" name="openseme_attend2">
+													</div>
+												</div>
+											</div>
+										</td>
+                                    </tr>
+                                    
+                                    
+                                    <tr role="row" class="even">
+                                        <td class="sorting_1">중간고사 성적등록</td>
+										<td>
+										<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+											<div class="form-group nk-datapk-ctm form-elet-mg">
+												<div class="input-group date nk-int-st">
+													<span class="input-group-addon"></span> 
+													<input type="text" class="form-control" placeholder="성적등록 시작일" name="openseme_registgrade1">
+													</div>
+												</div>
+											</div>
+										</td>
+										<td></td>
+                                        <td>
+                                        	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+											<div class="form-group nk-datapk-ctm form-elet-mg">
+												<div class="input-group date nk-int-st">
+													<span class="input-group-addon"></span> 
+													<input type="text" class="form-control" placeholder="성적등록 종료일" name="openseme_registgrade2">
+													</div>
+												</div>
+											</div>
+										</td>
+                                    </tr>
+                                    
+                                     <tr role="row" class="odd">
+                                        <td class="sorting_1">중간고사 <br/>성적 열람기간</td>
+										<td>
+										<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+											<div class="form-group nk-datapk-ctm form-elet-mg">
+												<div class="input-group date nk-int-st">
+													<span class="input-group-addon"></span> 
+													<input type="text" class="form-control" placeholder="성적열람 시작일" name="openseme_checkgrade1">
+													</div>
+												</div>
+											</div>
+										</td>
+										<td></td>
+                                        <td>
+                                        	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+											<div class="form-group nk-datapk-ctm form-elet-mg">
+												<div class="input-group date nk-int-st">
+													<span class="input-group-addon"></span> 
+													<input type="text" class="form-control" placeholder="성적열람 종료일" name="openseme_checkgrade2">
+													</div>
+												</div>
+											</div>
+										</td>
+                                    </tr>
+                                    <tr role="row" class="even">
+                                        <td class="sorting_1">기말고사 성적등록</td>
+										<td>
+										<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+											<div class="form-group nk-datapk-ctm form-elet-mg">
+												<div class="input-group date nk-int-st">
+													<span class="input-group-addon"></span> 
+													<input type="text" class="form-control" placeholder="성적등록 시작일" name="openseme_registgrade3">
+													</div>
+												</div>
+											</div>
+										</td>
+										<td></td>
+                                        <td>
+                                        	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+											<div class="form-group nk-datapk-ctm form-elet-mg">
+												<div class="input-group date nk-int-st">
+													<span class="input-group-addon"></span> 
+													<input type="text" class="form-control" placeholder="성적등록 종료일" name="openseme_registgrade4">
+													</div>
+												</div>
+											</div>
+										</td>
+                                    </tr>
+                                    
+                                     <tr role="row" class="odd">
+                                        <td class="sorting_1">기말고사 <br/>성적 열람기간</td>
+										<td>
+										<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+											<div class="form-group nk-datapk-ctm form-elet-mg">
+												<div class="input-group date nk-int-st">
+													<span class="input-group-addon"></span> 
+													<input type="text" class="form-control" placeholder="성적열람 시작일" name="openseme_checkgrade3">
+													</div>
+												</div>
+											</div>
+										</td>
+										<td></td>
+                                        <td>
+                                        	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+											<div class="form-group nk-datapk-ctm form-elet-mg">
+												<div class="input-group date nk-int-st">
+													<span class="input-group-addon"></span> 
+													<input type="text" class="form-control" placeholder="성적열람 종료일" name="openseme_checkgrade4">
+													</div>
+												</div>
+											</div>
+										</td>
+                                    </tr>
+                                    
+                                    <tr role="row" class="even">
+                                        <td class="sorting_1">강의평가기간</td>
+										<td>
+										<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+											<div class="form-group nk-datapk-ctm form-elet-mg">
+												<div class="input-group date nk-int-st">
+													<span class="input-group-addon"></span> 
+													<input type="text" class="form-control" placeholder="강의평가 시작일" name="openseme_evaluate1">
+													</div>
+												</div>
+											</div>
+										</td>
+										<td></td>
+                                        <td>
+                                        	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+											<div class="form-group nk-datapk-ctm form-elet-mg">
+												<div class="input-group date nk-int-st">
+													<span class="input-group-addon"></span> 
+													<input type="text" class="form-control" placeholder="강의평가 종료일" name="openseme_evaluate2">
+													</div>
+												</div>
+											</div>
+										</td>
+                                    </tr>
+                                    
+                                   </tbody>
+                               		<tfoot>
+                               		</tfoot>
+                           		 </table>
+                            
+                            </form:form>
                         </div>
                     </div>
                 </div>
             </div>
+            <div class="modal-footer">
+            	<button type="button" class="btn btn-default" data-dismiss="modal" id="saveInfo">저장</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
+            </div>
         </div>
     </div>
+</div>
 
 
-<script src="${pageContext.request.contextPath }/notika/js/datapicker/bootstrap-datepicker.js"></script>
-<script src="${pageContext.request.contextPath }/notika/js/datapicker/datepicker-active.js"></script>
+
+
+<script	src="${pageContext.request.contextPath }/notika/js/dialog/sweetalert2.min.js"></script>
+<script
+	src="${pageContext.request.contextPath }/notika/js/datapicker/bootstrap-datepicker.js"></script>
+	
+

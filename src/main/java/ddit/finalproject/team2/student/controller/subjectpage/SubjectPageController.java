@@ -1,12 +1,22 @@
 
 package ddit.finalproject.team2.student.controller.subjectpage;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
+import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
+import lombok.extern.java.Log;
+import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
+import org.apache.log4j.Logger;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +33,7 @@ import ddit.finalproject.team2.admin.service.KJE_IStatisticsService;
 import ddit.finalproject.team2.student.dao.KJE_IStatisticsStuDao;
 import ddit.finalproject.team2.student.service.Lsh_ILectureService;
 import ddit.finalproject.team2.vo.UserVo;
+import org.springframework.web.socket.WebSocketSession;
 
 /**
  * @author 이종선
@@ -50,8 +61,11 @@ public class SubjectPageController {
     
     @Inject
     Lsh_ILectureService lectureService;
-    
-    
+
+    @Resource(name = "socketSessionMap")
+    ConcurrentMap<String, CopyOnWriteArrayList<WebSocketSession>> smap;
+
+    static Logger log = Logger.getLogger(SubjectPageController.class.getName());
 
     /**
      * 교육목표 화면으로 이동하기 위한 command handler
@@ -158,10 +172,18 @@ public class SubjectPageController {
      * @return
      */
     @GetMapping("mantoman")
-    public ModelAndView goFaceChat(ModelAndView mv, Authentication au) {
-        mv.setViewName("student/submenu/mantoman");
+    public ModelAndView goMantoMan(ModelAndView mv, Authentication au,@PathVariable String lecture_code) {
+        mv.setViewName("student/exclude/mantoman");
+        List<String> al=new ArrayList<>();
         mv.getModel().put("id", au.getName());
         mv.getModel().put("user", (UserVo)au.getPrincipal());
+        for(Map.Entry<String,CopyOnWriteArrayList<WebSocketSession>> entry:smap.entrySet()){
+            for(String id:lectureService.selectAttendUserID(lecture_code)){
+                if(entry.getKey().equals(id)){
+                    mv.getModel().put("conn_users",id);
+                }
+            }
+        }
         return mv;
     }
 

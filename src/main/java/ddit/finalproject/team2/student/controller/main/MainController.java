@@ -35,6 +35,7 @@ public class MainController {
 
 	@Inject
 	Lsh_ILectureService lectureService;
+	
 	/**
 	 * 성적조회 화면으로 이동하기 위한 command handler
 	 * 
