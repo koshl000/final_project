@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,8 +21,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import ddit.finalproject.team2.vo.Lsy_EmbraceAnswer;
+import ddit.finalproject.team2.vo.Lsy_EmbraceExamAnswer;
+import ddit.finalproject.team2.vo.Lsy_EmbraceExamVo;
 import ddit.finalproject.team2.vo.Lsy_EmbraceQuizVo;
+import ddit.finalproject.team2.vo.Lsy_ExamQuestionVo;
+import ddit.finalproject.team2.vo.Lsy_ExamVo;
+import ddit.finalproject.team2.vo.Lsy_QuizAnswerVo;
 import ddit.finalproject.team2.vo.Lsy_QuizQuestionVO;
+import ddit.finalproject.team2.vo.UserVo;
 
 
 @Controller
@@ -29,10 +37,20 @@ public class ControllerForView {
 	@Inject
 	LSY_IQuizService service;
 	
-		@GetMapping("/student")
-		public String chooseMain() throws IOException{
-//			return "professor/window";
-			return "new/gradeRank";
+		@PostMapping("/student/submit")
+		public String dsadada12(@Validated @ModelAttribute Lsy_EmbraceAnswer answerList, Model model, Authentication au) {
+			Lsy_QuizQuestionVO quizVo = new Lsy_QuizQuestionVO();
+			List<String> keyVal = service.stAnswerNextVal(answerList.getAnswerList().size());
+			
+			for (int idx = 0; idx < answerList.getAnswerList().size(); idx++) {
+				answerList.getAnswerList().get(idx).setQuizAnswer_code(keyVal.get(idx));
+			}
+			int result = service.createStAnswer(answerList);
+			if(result>0) {
+				model.addAttribute("result", "실패");
+				return "new/quiz";
+			}
+			return null;
 		}
 		
 		@GetMapping("/professor/register")
@@ -50,6 +68,7 @@ public class ControllerForView {
 //					mav.addObject("btnType", "quiz");
 					model.addAttribute("start", 1);
 					model.addAttribute("end", 5);
+					model.addAttribute("attend_no", "1");
 					List<String> otherType = new ArrayList<String>();
 					otherType.add("①"); otherType.add("②"); otherType.add("③"); otherType.add("④");
 					model.addAttribute("number", 0);
@@ -61,8 +80,8 @@ public class ControllerForView {
 					return "new/quiz";
 				}
 				
-				//quiz 보기 클릭했을 때
-				@GetMapping("/professor/quiz2")
+				//quiz 등록 클릭했을 때
+				@GetMapping("/professor/createQuiz")
 				public String sdda(@Validated @ModelAttribute Lsy_QuizQuestionVO quizVo, Model model){
 					quizVo.setClass_identifying_code("11");
 					quizVo.setLecture_code("lecture_code_1");
@@ -96,7 +115,7 @@ public class ControllerForView {
 				System.out.println(error);
 			}
 			System.out.println(allQuestion.getQuizList().get(0).getQuestion_no());
-			service.insertQuiz(allQuestion);
+			service.createQuiz(allQuestion);
 			return "professor/quizz";
 		}
 		
@@ -124,9 +143,95 @@ public class ControllerForView {
 			return mav;
 		}
 		
-		@GetMapping("/professor/quizPage")
-		public String dsada() {
-			return "professor/shoQuizz";
+		@GetMapping("/new/createSurvey")
+		public String dsada21(Model model) {
+			model.addAttribute("btnType", "survey");
+			return "new/survey";
+		}
+
+		@GetMapping("/professor/showExam")
+		public String dsada2231(Model model) {
+			HashMap<String, String> examMap = new HashMap<String, String>();
+			examMap.put("examType", "중간");
+			//jsp에서 렉쳐코드와 시험타입 쏴줄것
+			examMap.put("lecture_code", "CS001");
+			model.addAttribute("success", "success");
+			model.addAttribute("btnType", "exam");
+			//au에서 값꺼내서 넣기
+			model.addAttribute("identifier", "교수");
+			Lsy_ExamVo result = service.retrieveExamList(examMap);
+			model.addAttribute("examVo", result);
+			model.addAttribute("start", 0);
+			model.addAttribute("end", 5);
+			List<String> otherType = new ArrayList<String>();
+			otherType.add("①"); otherType.add("②"); otherType.add("③"); otherType.add("④");
+			model.addAttribute("numList", otherType);
+			return "new/exam";
+		}
+		
+		@GetMapping("/professor/createExam")
+		public String asdad(Model model) {
+			model.addAttribute("btnType", "exam");
+			//au에서 값꺼내서 넣기
+			model.addAttribute("identifier", "교수");
+			return "new/createQuestion";
+		}
+		
+		@PostMapping("/professor/createExam")
+		public String dasddsda23132(@Validated @ModelAttribute Lsy_EmbraceExamVo examVo, Model model) {
+			int problemSize = 20;
+			int problemIdx = 0;
+			if(examVo!=null) {
+				System.out.println(examVo.getLecture_code());
+				HashMap<String, String> examMap = new HashMap<String, String>();
+				System.out.println(examVo.getExamList().get(0).getExam_type());
+				examMap.put("examType", examVo.getExamList().get(0).getExam_type().substring(0, 2));
+				//jsp에서 렉쳐코드 쏴줄것.
+				examMap.put("lecture_code", "CS001");
+				examMap.put("problemSize", "20");
+				HashMap<String, Object> examNoAndStudyCode = (HashMap<String, Object>) service.examNoNextVal(examMap);
+				examMap.put("evalCode", examNoAndStudyCode.get("studyCode").toString());
+				List<String> problemSeq = (List<String>) examNoAndStudyCode.get("problemSeq");
+				examVo.getExamList().get(0).setExam_no(examNoAndStudyCode.get("examNo").toString());
+				examVo.getExamList().get(0).setEvalStudy_code(examNoAndStudyCode.get("studyCode").toString());
+				if(examVo.getExamList().get(0).getQuestionList()!=null) {
+					for (int j = 0; j < examVo.getExamList().get(0).getQuestionList().size(); j++) {
+						examVo.getExamList().get(0).getQuestionList().get(j).setExam_no(examNoAndStudyCode.get("examNo").toString());
+						if(examVo.getExamList().get(0).getQuestionList().get(j).getProblemList()!=null) {
+							for (int k = 0; k < examVo.getExamList().get(0).getQuestionList().get(j).getProblemList().size(); k++) {
+								examVo.getExamList().get(0).getQuestionList().get(j).getProblemList().get(k).setExam_no(examNoAndStudyCode.get("examNo").toString());
+								examVo.getExamList().get(0).getQuestionList().get(j).getProblemList().get(k).setProblem_no(problemSeq.get(problemIdx));
+								problemIdx++;
+							}
+						}
+					}
+				}
+				int result = service.createExam(examVo);
+				if(result>0) {
+					Lsy_ExamVo result2 = service.retrieveExamList(examMap);
+					model.addAttribute("result", "성공");
+					model.addAttribute("btnType", "exam");
+					return "new/exam";
+				}
+			}
+			model.addAttribute("failed", "failed");
+			return "new/exam";
+		}
+		
+		@PostMapping(value="/professor/updateQuestion", produces="application/json;charset=utf-8")
+		@ResponseBody
+		public Lsy_ExamVo dsada123(@Validated @RequestBody Lsy_ExamQuestionVo examVo, BindingResult errors) {
+			System.out.println(examVo);
+			if(examVo!=null) {
+				int result = service.updateExam(examVo);
+				Map<String, String> examMap = new HashMap<String, String>();
+				examMap.put("exam_no", examVo.getExam_no());
+				examMap.put("question_no", examVo.getQuestion_no());
+				examMap.put("exam_type", examVo.getExam_type());
+				Lsy_ExamVo ajaxExam = service.retrieveOneExam(examMap);
+				return ajaxExam;
+			}
+			return null;
 		}
 		
 		@PostMapping(value="/professor/showQuizz", produces="application/json;charset=utf-8")
@@ -142,6 +247,26 @@ public class ControllerForView {
 				System.out.println(thisQuiz);
 			}
 			return thisQuiz;
+		}
+		
+		@PostMapping("/professor/createExamAnswer")
+		public String sdad(@Validated @ModelAttribute Lsy_EmbraceExamAnswer answerList, BindingResult errors, Model model) {
+			List<String> result = null;
+			model.addAttribute("result", "실패");
+			if(!errors.hasErrors()) {
+				result = service.answerNoSeqVal(answerList.getAnswerList().size());
+			}
+			if(result!=null) {
+				for (int i = 0; i < answerList.getAnswerList().size(); i++) {
+					answerList.getAnswerList().get(i).setAnswer_no(result.get(i));
+				}
+			}
+			int result2 = service.createExamAnswer(answerList);
+			if(result2>0) {
+//				service.
+				model.addAttribute("result", "성공");
+			}
+			return "new/exam";
 		}
 		
 		@GetMapping("/professor/gradeRank")
@@ -191,7 +316,7 @@ public class ControllerForView {
 		
 		@GetMapping(value="/professor/selectType/{btnType}", produces="application/json;charset=UTF-8")
 		@ResponseBody
-		public Map<String, List<String>> asdsa(@PathVariable String btnType){
+		public Map<String, List<String>> asdsa(@PathVariable("btnType") String btnType){
 			Map<String, List<String>> resultMap = new HashMap<String, List<String>>();
 			if(btnType.equals("survey")) {
 			List<String> surveyProblemList = new ArrayList<String>(); 
@@ -229,7 +354,7 @@ public class ControllerForView {
 				resultMap.put("classList", classList);
 				return resultMap;
 				}
-					else if(btnType.equals("test")) {
+					else if(btnType.equals("exam")) {
 					List<String> examList = new ArrayList<String>();
 					examList.add("시험선택");
 					examList.add("중간고사");

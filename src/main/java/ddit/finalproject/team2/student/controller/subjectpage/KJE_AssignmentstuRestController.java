@@ -1,7 +1,5 @@
 package ddit.finalproject.team2.student.controller.subjectpage;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;

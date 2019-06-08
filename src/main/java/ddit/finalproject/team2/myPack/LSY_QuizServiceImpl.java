@@ -2,7 +2,9 @@ package ddit.finalproject.team2.myPack;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -10,7 +12,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ddit.finalproject.team2.myPack.dao.LSY_QuizDAO;
+import ddit.finalproject.team2.vo.Lsy_EmbraceAnswer;
+import ddit.finalproject.team2.vo.Lsy_EmbraceExamAnswer;
+import ddit.finalproject.team2.vo.Lsy_EmbraceExamVo;
 import ddit.finalproject.team2.vo.Lsy_EmbraceQuizVo;
+import ddit.finalproject.team2.vo.Lsy_ExamProblemVo;
+import ddit.finalproject.team2.vo.Lsy_ExamQuestionVo;
+import ddit.finalproject.team2.vo.Lsy_ExamVo;
+import ddit.finalproject.team2.vo.Lsy_QuizAnswerVo;
 import ddit.finalproject.team2.vo.Lsy_QuizProblemVo;
 import ddit.finalproject.team2.vo.Lsy_QuizQuestionVO;
 
@@ -22,7 +31,7 @@ public class LSY_QuizServiceImpl implements LSY_IQuizService{
 	
 	@Override
 	@Transactional
-	public int insertQuiz(Lsy_EmbraceQuizVo quizChunk) {
+	public int createQuiz(Lsy_EmbraceQuizVo quizChunk) {
 		int quizSize = quizChunk.getQuizList().size();
 		List<String> keyList = keyNextVal(quizSize);
 		
@@ -30,7 +39,41 @@ public class LSY_QuizServiceImpl implements LSY_IQuizService{
 			quizChunk.getQuizList().get(i).setQuestion_no(keyList.get(i));
 		}
 		
+		
 		int result = quizDao.insertQuiz(quizChunk);
+		if(result>0) {
+			return result;
+		}
+		return 0;
+	}
+	
+	@Override
+	@Transactional
+	public int createStAnswer(Lsy_EmbraceAnswer stQuizChunk) {
+//		int realSize = 0;
+//		for(Lsy_QuizAnswerVo vo : stQuizChunk.getAnswerList()) {
+//			vo.splitQuizproblem_no();
+//			if(vo.getQuizProblem_no_div()!=null) {
+//				int lengths = vo.getQuizProblem_no_div().length;
+//				realSize += lengths;
+//			}
+//		}
+		
+//		List<String> keys = quizDao.stAnswerNextVal(realSize);
+		List<String> keys = quizDao.stAnswerNextVal(stQuizChunk.getAnswerList().size());
+		for (int i = 0; i < stQuizChunk.getAnswerList().size(); i++) {
+			stQuizChunk.getAnswerList().get(i).setQuizAnswer_code(keys.get(i));
+		}
+//			if(stQuizChunk.getAnswerList().get(i).getQuizProblem_no_div().length>1) {
+//				for (int j = 0; j < stQuizChunk.getAnswerList().get(i).getQuizProblem_no_div().length; j++) {
+//					stQuizChunk.getAnswerList().get(i).splitQuizAnswer_code(keys.get(i));
+//				}
+//			} else {
+//				stQuizChunk.getAnswerList().get(i).splitQuizAnswer_code(keys.get(i));
+//			}
+//		}
+		
+		int result = quizDao.insertStAnswer(stQuizChunk);
 		if(result>0) {
 			return result;
 		}
@@ -66,7 +109,7 @@ public class LSY_QuizServiceImpl implements LSY_IQuizService{
 	@Transactional
 	public int updateProblems(Lsy_QuizProblemVo problemVo) {
 		int result = 0; 
-		result = quizDao.updateProblems(problemVo);
+		result = quizDao.updateQuizProblems(problemVo);
 		if(result>0) {
 			return result;
 		}
@@ -79,10 +122,137 @@ public class LSY_QuizServiceImpl implements LSY_IQuizService{
 		List<String> keyVal = quizDao.keyNextVal(quizSize);
 		return keyVal;
 	}
-
+	
 	@Override
 	public Lsy_QuizQuestionVO retrieveOneQuiz(Lsy_QuizQuestionVO oneQuiz) {
 		Lsy_QuizQuestionVO oneQuizz = quizDao.selectOneQuiz(oneQuiz);
 		return oneQuizz;
+	}
+
+	@Override
+	@Transactional
+	public List<String> stAnswerNextVal(int quizSize) {
+		List<String> keyVal = quizDao.stAnswerNextVal(quizSize);
+		return keyVal;
+	}
+	
+	public List<String> markingTest(List<Lsy_QuizQuestionVO> realAnswer, List<Lsy_QuizAnswerVo> stAnswer) {
+		List<String> answerFlag = new ArrayList<String>();
+		if(realAnswer.size()==stAnswer.size()) {
+			for (int idx = 0; idx < realAnswer.size(); idx++) {
+				if(realAnswer.get(idx).getQuestion_answer().replace(" ", "").equals(stAnswer.get(idx).getStSelect_no().replace(" ", ""))) {
+					answerFlag.add("O");
+				} else {
+					answerFlag.add("X");
+				}
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public List<Lsy_QuizQuestionVO> markingTest(Lsy_EmbraceAnswer stQuizChunk) {
+		List<Lsy_QuizQuestionVO> result = quizDao.markingTest(stQuizChunk);
+		return result;
+	}
+
+	@Override
+	@Transactional
+	public Map<String, Object> examNoNextVal(HashMap<String, String> examMap) {
+		String result = quizDao.examNoNextVal();
+		Map<String, Object> returnMap = new HashMap<String, Object>();
+		if(result!=null) {
+			Lsy_ExamVo result2 = retrieveStudyCode(examMap);
+			List<String> problemSeq = problemNoSeqVal(Integer.parseInt(examMap.get("problemSize")));
+			returnMap.put("examNo", result);
+			returnMap.put("studyCode", result2.getEvalStudy_code());
+			returnMap.put("problemSeq", problemSeq);
+		}
+		return returnMap;
+	}
+
+	@Override
+	public Lsy_ExamVo retrieveStudyCode(HashMap<String, String> examMap) {
+		Lsy_ExamVo result = quizDao.selectStudyCode(examMap);
+		return result;
+	}
+
+	@Override
+	@Transactional
+	public int createExam(Lsy_EmbraceExamVo examChunk) {
+		int result = quizDao.insertExam(examChunk);
+		return result;
+	}
+
+	@Override
+	public Lsy_ExamVo retrieveExamList(HashMap<String, String> examMap) {
+		Lsy_ExamVo result = retrieveStudyCode(examMap);
+		if(result!=null) {
+			examMap.put("evalCode", result.getEvalStudy_code());
+			examMap.put("examNo", result.getExam_no());
+			Lsy_ExamVo result2 = quizDao.selectExamList(examMap);
+			return result2;
+		}
+		return null;
+	}
+
+	@Override
+	public List<String> problemNoSeqVal(int problemSize) {
+		List<String> problemSeqVal = quizDao.problemNoSeqVal(problemSize);
+		return problemSeqVal;
+	}
+
+	@Override
+	@Transactional
+	public int updateExam(Lsy_ExamQuestionVo examVo) {
+		int result = quizDao.updateExam(examVo);
+		int result2 = 0;
+		if(result>0) {
+			for (int i = 0; i < examVo.getProblemList().size(); i++) {
+				result2 += updateExamProblems(examVo.getProblemList().get(i));
+			}
+			if(result2>0) {
+				return result2;
+			}
+		}
+		return result2;
+	}
+
+	@Override
+	@Transactional
+	public int updateExamProblems(Lsy_ExamProblemVo problemVo) {
+		int result = 0; 
+		result = quizDao.updateExamProblems(problemVo);
+		if(result>0) {
+			return result;
+		}
+		return result;
+	}
+
+	@Override
+	public Lsy_ExamVo retrieveOneExam(Map<String, String> examMap) {
+		Lsy_ExamVo result = quizDao.selectOneExam(examMap);
+		if(result!=null) {
+			return result;
+		}
+		return null;
+	}
+
+	@Override
+	public List<String> answerNoSeqVal(int answerSize) {
+		List<String> result = quizDao.answerNoSeqVal(answerSize);
+		if(result!=null) {
+			return result;
+		}
+		return null;
+	}
+
+	@Override
+	public int createExamAnswer(Lsy_EmbraceExamAnswer answerList) {
+		int result = quizDao.insertExamAnswer(answerList);
+		if(result>0) {
+			return result;
+		}
+		return 0;
 	}
 }

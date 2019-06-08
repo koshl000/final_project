@@ -32,8 +32,8 @@
 		
 		<logout logout-url="/logout" logout-success-url="/" />
 		
-		<intercept-url pattern="/**" access="permitAll" requires-channel="https"/>		
-			   
+		<intercept-url pattern="/**" access="permitAll"/>		
+<!-- 			   requires-channel="https" -->
 		<csrf disabled="true"/>		
 			   
 	</http>
