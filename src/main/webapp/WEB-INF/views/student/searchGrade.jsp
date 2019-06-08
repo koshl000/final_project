@@ -67,7 +67,6 @@
 											<th>총점</th>
 											<th>평점평균</th>
 											<th>누적평점평균</th>
-											<th>성적경고(연속경고횟수)</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -89,6 +88,25 @@
 	src="${pageContext.request.contextPath }/notika/js/data-table/data-table-act.js"></script>
 <script>
 	$('#table').DataTable({
-		url : '${pageContext.request.contextPath}/searchGrade'
+		ajax : {
+			type : 'get',
+			url : '${pageContext.request.contextPath}/searchGrade/${user.user_id}',
+			dataType : 'json'
+		}
+		, columns : [ {
+			data : "seme"
+		}, {
+			data : "grade"
+		}, {
+			data : "totalLecture"
+		}, {
+			data : "completeLecture"
+		}, {
+			data : "completeCredit"
+		}, {
+			data : "totalAverage"
+		}, {
+			data : "accumulateAverage"
+		} ],
 	});
 </script>

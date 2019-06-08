@@ -4,6 +4,7 @@
 	<resultMap type="Ljs_SearchGradeVo" id="averageMap">
 		<id property="semester.openseme_no" column="OPENSEME_NO"/>
 		<association property="semester" autoMapping="true" javaType="OpenSemesterVo" />
+		<association property="me" autoMapping="true" javaType="StudentVo" column="USER_ID" select="selectStudent"/>
 		<collection property="lectureList" autoMapping="true" ofType="LectureVo">
 			<id property="lecture_code" column="LECTURE_CODE"/>
 		</collection>
@@ -12,16 +13,22 @@
 		</collection>
 	</resultMap>
 	<select id="selectAverageList" parameterType="string" resultMap="averageMap">
-		SELECT C.USER_ID, A.OPENSEME_NO, A.OPENSEME_YEAR, A.OPENSEME_SEMESTER
-		    , B.LECTURE_CODE, B.LECTURE_CREDIT
-		    , D.GRADE_NO, D.AVERAGE
+		SELECT A.OPENSEME_NO, A.OPENSEME_YEAR, A.OPENSEME_SEMESTER
+		    , B.LECTURE_CODE, B.LECTURE_NAME, B.LECTURE_CREDIT
+		    , C.USER_ID, S.CURRENT_YEAR, C.ATTEND_NO, D.GRADE_NO, D.AVERAGE
 		FROM OPENSEMESTER A LEFT OUTER JOIN LECTURE B
 		ON(A.OPENSEME_NO = B.OPENSEME_NO)
 		LEFT OUTER JOIN ATTEND C
 		ON(B.LECTURE_CODE = C.LECTURE_CODE)
+		LEFT OUTER JOIN STUDENT S
+		ON(C.USER_ID = S.USER_ID)
 		LEFT OUTER JOIN GRADE D
 		ON(C.ATTEND_NO = D.ATTEND_NO)
 		WHERE C.USER_ID = #{user_id}
 		ORDER BY A.OPENSEME_YEAR, A.OPENSEME_SEMESTER ASC
+	</select>
+	
+	<select id="selectStudent" parameterType="string" resultType="StudentVo">
+		SELECT CURRENT_YEAR FROM STUDENT WHERE USER_ID = #{user_id}
 	</select>
 </mapper>

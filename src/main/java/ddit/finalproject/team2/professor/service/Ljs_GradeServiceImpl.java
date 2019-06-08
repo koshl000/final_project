@@ -1,8 +1,5 @@
 package ddit.finalproject.team2.professor.service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -11,10 +8,8 @@ import org.springframework.stereotype.Service;
 
 import ddit.finalproject.team2.professor.dao.Ljs_IEvaluationDao;
 import ddit.finalproject.team2.professor.dao.Ljs_IGradeDao;
-import ddit.finalproject.team2.professor.dao.Ljs_IGradeRankDao;
 import ddit.finalproject.team2.student.dao.Ljs_IAttendDao;
 import ddit.finalproject.team2.util.enumpack.EvaluationType;
-import ddit.finalproject.team2.util.enumpack.RankType;
 import ddit.finalproject.team2.util.enumpack.ServiceResult;
 import ddit.finalproject.team2.util.exception.CommonException;
 import ddit.finalproject.team2.vo.AbsenceVo;
@@ -23,7 +18,6 @@ import ddit.finalproject.team2.vo.AttendVo;
 import ddit.finalproject.team2.vo.EvaluationStudyVo;
 import ddit.finalproject.team2.vo.ExamAnswerVo;
 import ddit.finalproject.team2.vo.ExamQuestionVo;
-import ddit.finalproject.team2.vo.GradeRankVo;
 import ddit.finalproject.team2.vo.GradeVo;
 import ddit.finalproject.team2.vo.Ljs_EvaluationMaterialVo;
 import ddit.finalproject.team2.vo.Ljs_ExamVo;
@@ -39,9 +33,6 @@ public class Ljs_GradeServiceImpl implements Ljs_IGradeService{
 	
 	@Inject
 	Ljs_IAttendDao attendDao;
-	
-	@Inject
-	Ljs_IGradeRankDao rankDao;
 	
 	private String[] evaluateRate(Ljs_EvaluationMaterialVo vo){
 		String[] rateArr = new String[4];
@@ -199,46 +190,25 @@ public class Ljs_GradeServiceImpl implements Ljs_IGradeService{
 
 	@Override
 	public ServiceResult evaluateAverage(String lecture_code) {
+		ServiceResult result = ServiceResult.FAILED;
 		List<GradeVo> gradeList = gradeDao.selectGradeList(lecture_code);
 		List<AttendVo> attendList = attendDao.selectAttendList(lecture_code);
-		List<GradeRankVo> rankList = rankDao.selectGradeRank(lecture_code);
-		if(gradeList.size()>0 && gradeList.size()==attendList.size()){
-			GradeVo[] a = null;
-			GradeVo[] b = null;
-			List<Float> minList = new ArrayList<>();
-			for(GradeRankVo vo : rankList){
-				int capacity = (int) (attendList.size()/100f*Integer.parseInt(vo.getGraderank_ratio()));
-				if(RankType.A.equals(vo.getGraderank_rank())){
-					a = new GradeVo[capacity];
-				}
-				
-				if(RankType.B.equals(vo.getGraderank_rank())){
-					b = new GradeVo[capacity];
-				}
-				minList.add(Float.parseFloat(vo.getGraderank_min()));
-				Collections.sort(minList, new Comparator<Float>() {
-
-					@Override
-					public int compare(Float o1, Float o2) {
-						return o1.compareTo(o2)*(-1);
-					}
-				});
-			}
-			
-			for(GradeVo grade : gradeList){
+		
+		for(GradeVo grade : gradeList){
+			if(gradeList.size()>0 && gradeList.size()==attendList.size() && grade.getGrade_assignment()!=null){
 				float total = Float.parseFloat(grade.getGrade_midterm()) + Float.parseFloat(grade.getGrade_final())
 					+ Float.parseFloat(grade.getGrade_absence()) + Float.parseFloat(grade.getGrade_assignment());
-				for(int i=0; i<minList.size(); i++){
-					if(total>=minList.get(i)){
-						
-					}
-				}
+				grade.setAverage(Math.floor(total*45/1000*100)/100f+"");
+			}else{
+				throw new CommonException("성적이 취합되지 않은 학생이 존재합니다.");
 			}
-		}else{
-			throw new CommonException("성적이 취합되지 않은 학생이 존재합니다.");
 		}
 		
-		return null;
+		int cnt = gradeDao.updateGradeAll(gradeList);
+		if(cnt>0){
+			result = ServiceResult.OK;
+		}
+		return result;
 	}
 
 }

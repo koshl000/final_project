@@ -8,5 +8,5 @@ import ddit.finalproject.team2.vo.GradeRankVo;
 
 @Repository
 public interface Ljs_IGradeRankDao {
-	List<GradeRankVo> selectGradeRank(String lecture_code);
+	List<GradeRankVo> selectGradeRank(String openseme_no);
 }

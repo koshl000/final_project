@@ -12,4 +12,7 @@
 		ON(A.USER_ID = B.USER_ID)
 		WHERE A.LECTURE_CODE = #{lecture_code}
 	</select>
+	<select id="selectAttend" parameterType="string" resultType="AttendVo">
+		SELECT * FROM ATTEND WHERE ATTEND_NO = #{attend_no}
+	</select>
 </mapper>

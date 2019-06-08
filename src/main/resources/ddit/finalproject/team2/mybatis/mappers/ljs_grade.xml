@@ -31,4 +31,12 @@
 		ON(A.ATTEND_NO = B.ATTEND_NO)
 		WHERE A.LECTURE_CODE = #{lecture_code}
 	</select>
+	
+	<update id="updateGradeAll" parameterType="java.util.List">
+		<foreach collection="list" index="i" item="grade">
+			UPDATE GRADE
+			SET AVERAGE = #{grade.average}
+			WHERE ATTEND_NO = #{grade.attend_no}
+		</foreach>
+	</update>
 </mapper>

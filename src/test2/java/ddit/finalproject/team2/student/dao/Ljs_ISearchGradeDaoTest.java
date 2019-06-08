@@ -21,9 +21,7 @@ public class Ljs_ISearchGradeDaoTest {
 
 	@Test
 	public void selectGradeListTest() {
-		List<Ljs_SearchGradeVo> list = dao.selectAverageList("st_001");
-		System.out.println((18*5/100f*Integer.parseInt("20")*100+0.5f)/100);
-		assertEquals(2, list.size());
+		System.out.println(Math.floor(95f*45/1000*100)/100f);
 	}
 
 }

@@ -1,6 +1,8 @@
 package ddit.finalproject.team2.student.controller.main;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -14,13 +16,15 @@ import ddit.finalproject.team2.vo.Ljs_SearchGradeVo;
 
 @RestController
 @RequestMapping("/searchGrade/{user_id}")
-public class SearchGradeController {
+public class SearchGradeRestController {
 	@Inject
 	Ljs_ISearchGradeService service;
 	
 	@GetMapping(produces="application/json;charset=UTF-8")
-	public List<Ljs_SearchGradeVo> list(@PathVariable String user_id){
+	public Map<String, Object> list(@PathVariable String user_id){
+		Map<String, Object> map = new HashMap<>();
 		List<Ljs_SearchGradeVo> list = service.retrieveGradeList(user_id);
-		return list;
+		map.put("data", list);
+		return map;
 	}
 }
