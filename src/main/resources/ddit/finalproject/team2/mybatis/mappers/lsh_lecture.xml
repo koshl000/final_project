@@ -90,5 +90,10 @@
                              and attend.lecture_code = #{lecture_code})
           and STUDYSTATE.CLASS_IDENTIFYING_CODE=#{class_identifying_code}
     </select>
-
+    <select id="selectAttendUserID" parameterType="string" resultType="string">
+        select USER_ID from ATTEND where LECTURE_CODE=#{lecture_code}
+    </select>
+    <select id="selectLecProID" parameterType="string" resultType="string">
+        select USER_ID from LECTURE where LECTURE_CODE=#{lecture_code}
+    </select>
 </mapper>

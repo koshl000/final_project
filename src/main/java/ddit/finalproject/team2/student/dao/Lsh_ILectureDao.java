@@ -31,4 +31,8 @@ public interface Lsh_ILectureDao {
     public int updateIdentifyCode(Map<String, String> map);
 
     public Map<String, String> selectPlay(Map<String, String> map);
+
+    public List<String> selectAttendUserID(String lec_code);
+
+    public String selectLecProID(String lec_code);
 }

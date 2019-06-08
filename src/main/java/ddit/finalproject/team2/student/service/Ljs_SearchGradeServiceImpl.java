@@ -1,25 +1,16 @@
 package ddit.finalproject.team2.student.service;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
-import javax.inject.Inject;
-
-import org.springframework.stereotype.Service;
-
 import ddit.finalproject.team2.professor.dao.Ljs_IGradeRankDao;
 import ddit.finalproject.team2.student.dao.Ljs_IAttendDao;
 import ddit.finalproject.team2.student.dao.Ljs_ISearchGradeDao;
 import ddit.finalproject.team2.util.enumpack.RankType;
-import ddit.finalproject.team2.vo.AttendVo;
-import ddit.finalproject.team2.vo.GradeRankVo;
-import ddit.finalproject.team2.vo.GradeVo;
-import ddit.finalproject.team2.vo.LectureVo;
-import ddit.finalproject.team2.vo.Ljs_SearchGradeVo;
+import ddit.finalproject.team2.vo.*;
+import org.springframework.stereotype.Service;
+
+import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 @Service
 public class Ljs_SearchGradeServiceImpl implements Ljs_ISearchGradeService{
