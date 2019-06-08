@@ -23,7 +23,7 @@
 	OPENSEMESTER
 	</select>
 	
-	<select id="selectBInfo" parameterType="string" resultType="KJE_OperationStatisticsVo">
+	<select id="selectBInfo" parameterType="string" resultType="KJE_OpenSemesterVo">
 	SELECT
 	OPENSEME_YEAR, OPENSEME_SEMESTER, OPENSEME_NO,
 	TO_CHAR(OPENSEME_ATTEND1,'YYYY/MM/dd') OPENSEME_ATTEND1,

@@ -1,7 +1,9 @@
 
 package ddit.finalproject.team2.student.controller.subjectpage;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -59,9 +61,6 @@ public class SubjectPageController {
     
     @Inject
     Lsh_ILectureService lectureService;
-
-//    @Inject
-//    Lsh_IMantoManService mantomanService;
 
     @Resource(name = "socketSessionMap")
     ConcurrentMap<String, CopyOnWriteArrayList<WebSocketSession>> smap;
@@ -173,14 +172,17 @@ public class SubjectPageController {
      * @return
      */
     @GetMapping("mantoman")
-    public ModelAndView goMantoMan(ModelAndView mv, Authentication au, HttpSession session) {
+    public ModelAndView goMantoMan(ModelAndView mv, Authentication au,@PathVariable String lecture_code) {
         mv.setViewName("student/exclude/mantoman");
+        List<String> al=new ArrayList<>();
         mv.getModel().put("id", au.getName());
         mv.getModel().put("user", (UserVo)au.getPrincipal());
         for(Map.Entry<String,CopyOnWriteArrayList<WebSocketSession>> entry:smap.entrySet()){
-            log.info("==========================");
-            log.info(entry.getKey());
-            log.info("==========================");
+            for(String id:lectureService.selectAttendUserID(lecture_code)){
+                if(entry.getKey().equals(id)){
+                    mv.getModel().put("conn_users",id);
+                }
+            }
         }
         return mv;
     }

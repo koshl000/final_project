@@ -35,6 +35,16 @@ public class Lsh_ILectureServiceImpl implements Lsh_ILectureService {
     }
 
     @Override
+    public List<String> selectAttendUserID(String lec_code) {
+        return dao.selectAttendUserID(lec_code);
+    }
+
+    @Override
+    public String selectLecProID(String lec_code) {
+        return dao.selectLecProID(lec_code);
+    }
+
+    @Override
     public Map<String, String> selectContinuePlay(Map<String, String> map) {
         return dao.selectContinuePlay(map);
     }

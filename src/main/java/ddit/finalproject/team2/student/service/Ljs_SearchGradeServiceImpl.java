@@ -79,3 +79,4 @@ public class Ljs_SearchGradeServiceImpl implements Ljs_ISearchGradeService{
 		return averageList;
 	}
 }
+
