@@ -1,7 +1,5 @@
 package ddit.finalproject.team2.student.service;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -55,6 +53,7 @@ public class Ljs_SearchGradeServiceImpl implements Ljs_ISearchGradeService{
 			
 			int completeCredit = 0;
 			int totalCredit = 0;
+			int sumAverage = 0;
 			List<AttendVo> fList = new ArrayList<>();
 			for(GradeVo grade : search.getAverageList()){
 				if(max>Integer.parseInt(grade.getAverage())){
@@ -68,11 +67,14 @@ public class Ljs_SearchGradeServiceImpl implements Ljs_ISearchGradeService{
 				totalCredit+=Integer.parseInt(lecture.getLecture_credit());
 				for(AttendVo attend : fList){
 					if(attend.getLecture_code().equals(lecture.getLecture_code())){
-						completeCredit+=Integer.parseInt(lecture.getLecture_credit());
+						completeCredit=totalCredit - Integer.parseInt(lecture.getLecture_credit());
+						fList.remove(attend);
 						break;
 					}
 				}
 			}
+			search.setCompleteCredit(completeCredit+"");
+			int totalAverage = 0;
 		}
 		return averageList;
 	}
