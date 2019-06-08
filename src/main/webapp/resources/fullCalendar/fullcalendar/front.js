@@ -4,7 +4,7 @@ var ajaxData = function(){
 		wHeight = $(window).height() - 100,
 		prevYear = today.getFullYear(), curYear;
 
-	$.ajax({
+	var ajaxfun=$.ajax({
 		type:"GET",
 		url:"/getCalender",
 		dataType:"json",
@@ -38,13 +38,13 @@ var ajaxData = function(){
                 },
 				eventClick:function(calEvent, e, view){
 					var title = calEvent.title;
-
 					for(var i in data) {
 						if(title == data[i].title){
 							var val = data[i];
 							scheduleRegist.inputVal(data[i]);
 						}
 					}
+					
 				},
 				viewRender:function(view, element){
 					if(!prevYear){return;}

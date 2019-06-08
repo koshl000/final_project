@@ -149,9 +149,9 @@
                         <ul  class="notika-main-menu-dropdown">
                             <li><a href="${pageContext.request.contextPath }/statistics/subject">과목통계</a>
                             </li>
-                            <li><a href="#">사용자통계</a>
+                            <li><a href="${pageContext.request.contextPath }/statistics/operation">학기별 운영통계</a>
                             </li>
-                            <li><a href="#">시스템접속통계</a>
+                            <li><a href="${pageContext.request.contextPath }/statistics/portal">시스템접속통계</a>
                             </li>
                             <li><a href="${pageContext.request.contextPath }/statistics/behavior">교수활동통계</a>
                             </li>

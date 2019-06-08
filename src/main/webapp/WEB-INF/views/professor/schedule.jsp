@@ -78,7 +78,6 @@ $(function(){
 				if(resp.msg=="SUCCESS"){
 					swal("일정 등록", "일정 등록에 성공하였습니다.", "success");
 					$("#calendar").fullCalendar( 'renderEvent', resp.schedule ,'stick');
-					$("#calendar").fullCalendar ( 'addEventSource', resp.schedule);
 					scheduleRegist.init();			// 일정 등록 관리 초기화
 					scheduleRegist.hide();	
 				}else if(resp.msg=="FAIL"){
