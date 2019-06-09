@@ -41,19 +41,23 @@
 
             $j("div.unit_title").find("h1").text(subname);
 
+            //비디오 컨텍스트 메뉴 제거
             $j("video").on("contextmenu", function () {
                 return false;
             });
+            //주차별 강의태그
             $j(".list.unit.unit_lecture").on("click", function () {
                 var obj = JSON.parse($j(this).attr("fxd-data"));
                 location.href = "${pageContext.request.contextPath}/subjectPage/${continuePlay.LECTURE_CODE}/lecturePage/" + obj.id;
             });
 
+            //나가기버튼
             $j("div.right_buttons").on("click",function(event){
                 event.stopPropagation();
                 location.href="${pageContext.request.contextPath}/subjectPage/${continuePlay.LECTURE_CODE}/eduGoal";
             });
 
+            //페이지 에서 나갈시 주차코드와 나가기전까지 재생된 시간을 저장하여 이어보기 기능 구현
             $j(window).on('unload', function () {
                 console.log('unload');
                 videoinfo = {
@@ -97,7 +101,7 @@
             <aside class="lecture_nav lecture_nav_left">
                 <div class="lecture_nav_left_header">
                     <h5>${videoList[0].LECTURE_NAME}</h5>
-                    <p><span class="is-bold">기간:</span> 무제한</p>
+                    <p><span class="is-bold">기간:</span>${attend_period.OPENSEME_ATTEND1}~${attend_period.OPENSEME_ATTEND2}</p>
                     <div class="progress_container">
                         <div class="inf_progress">
                             <c:set var="count" value="0"/>

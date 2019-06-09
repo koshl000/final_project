@@ -29,34 +29,6 @@
     <script src="${pageContext.request.contextPath}/res/socket/socket.io.js"></script>
     <script src="${pageContext.request.contextPath}/res/dev/getHTMLMediaElement.js"></script>
 </head>
-<script>
-    var sockJS;
-    function echoTest(){
-        if(window.WebSocket){
-            console.log("websocket 지원!");
-            sockJS = new WebSocket("wss://localhost/alert");
-            sockJS.onopen = function(event){
-                console.log(location.protocol+" 연결");
-            };
-            sockJS.onclose = function(closeEvt){
-                console.log("연결 종료, 종료코드 : " + closeEvt.code
-                    + ", 종료사유 : " + closeEvt.reason);
-            };
-
-            sockJS.onerror = function(errorEvt){
-                console.log("에러 발생, 에러코드는 종료 후 종료코드 확인.");
-            };
-
-            sockJS.onmessage = function(messageEvt){
-                var message = messageEvt.data;
-                writeMessage(message);
-            };
-        }else{
-            console.log("websocket 미지원...");
-        }
-    }
-</script>
-
 <body>
 <div id="frame" class="vid_con">
 </div>
@@ -317,35 +289,35 @@
         }
     });
 </script>
-<script>
-    var socket = io('https://localhost:9003');
+<%--<script>--%>
+<%--    var socket = io('https://localhost:9003');--%>
 
-    var userInfo = {
-        user_id: '${user.user_id}',
-        user_name: '${user.user_name}'
-    };
+<%--    var userInfo = {--%>
+<%--        user_id: '${user.user_id}',--%>
+<%--        user_name: '${user.user_name}'--%>
+<%--    };--%>
 
-    socket.emit('userInfo', userInfo);
-    $('form').submit(function (e) {
-        e.preventDefault(); // prevents page reloading
-        socket.emit('chat message', $('#m').val());
-        $('#m').val('');
-        return false;
-    });
-    socket.on('connect', function () {
-    });
-    socket.on('userInfo', function (users) {
-        $('.userInfo').html('');
-        for (var i = 0; i < users.userid.length; ++i) {
-            $('.userInfo').append(users.user_id[i] + '(' + users.user_name[i] + ')<br>');
-        }
-    });
-    socket.on('chat message', function (msg) {
-        $('#messages').append($('<li>').text(msg));
-    });
-    socket.on('disconnect', function (userInfo) {
-    });
-</script>
+<%--    socket.emit('userInfo', userInfo);--%>
+<%--    $('form').submit(function (e) {--%>
+<%--        e.preventDefault(); // prevents page reloading--%>
+<%--        socket.emit('chat message', $('#m').val());--%>
+<%--        $('#m').val('');--%>
+<%--        return false;--%>
+<%--    });--%>
+<%--    socket.on('connect', function () {--%>
+<%--    });--%>
+<%--    socket.on('userInfo', function (users) {--%>
+<%--        $('.userInfo').html('');--%>
+<%--        for (var i = 0; i < users.userid.length; ++i) {--%>
+<%--            $('.userInfo').append(users.user_id[i] + '(' + users.user_name[i] + ')<br>');--%>
+<%--        }--%>
+<%--    });--%>
+<%--    socket.on('chat message', function (msg) {--%>
+<%--        $('#messages').append($('<li>').text(msg));--%>
+<%--    });--%>
+<%--    socket.on('disconnect', function (userInfo) {--%>
+<%--    });--%>
+<%--</script>--%>
 
 </body>
 </html>

@@ -259,7 +259,7 @@
 			$(span).text(parseInt(num)+1);
 		}
 		
-		$.notify.(
+		$.notify(
 			message,
 			{
 				className : 'info',

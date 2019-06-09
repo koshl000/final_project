@@ -1,5 +1,6 @@
 package ddit.finalproject.team2.common.handler;
 
+import java.io.Console;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -31,7 +32,7 @@ public class TextEchoWebSocketHandler extends TextWebSocketHandler{
 	
 	@Override
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-//		session.sendMessage(message);
+		System.out.println(message);
 	}
 	
 	@Override
