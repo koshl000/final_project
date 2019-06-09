@@ -1,16 +1,23 @@
 package ddit.finalproject.team2.student.service;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Service;
+
 import ddit.finalproject.team2.professor.dao.Ljs_IGradeRankDao;
 import ddit.finalproject.team2.student.dao.Ljs_IAttendDao;
 import ddit.finalproject.team2.student.dao.Ljs_ISearchGradeDao;
 import ddit.finalproject.team2.util.enumpack.RankType;
-import ddit.finalproject.team2.vo.*;
-import org.springframework.stereotype.Service;
-
-import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import ddit.finalproject.team2.vo.AttendVo;
+import ddit.finalproject.team2.vo.GradeRankVo;
+import ddit.finalproject.team2.vo.GradeVo;
+import ddit.finalproject.team2.vo.LectureVo;
+import ddit.finalproject.team2.vo.Ljs_SearchGradeVo;
 
 @Service
 public class Ljs_SearchGradeServiceImpl implements Ljs_ISearchGradeService{
@@ -46,6 +53,7 @@ public class Ljs_SearchGradeServiceImpl implements Ljs_ISearchGradeService{
 			
 			int completeCredit = 0;
 			int totalCredit = 0;
+			int sumAverage = 0;
 			List<AttendVo> fList = new ArrayList<>();
 			for(GradeVo grade : search.getAverageList()){
 				if(max>Integer.parseInt(grade.getAverage())){
@@ -59,12 +67,16 @@ public class Ljs_SearchGradeServiceImpl implements Ljs_ISearchGradeService{
 				totalCredit+=Integer.parseInt(lecture.getLecture_credit());
 				for(AttendVo attend : fList){
 					if(attend.getLecture_code().equals(lecture.getLecture_code())){
-						completeCredit+=Integer.parseInt(lecture.getLecture_credit());
+						completeCredit=totalCredit - Integer.parseInt(lecture.getLecture_credit());
+						fList.remove(attend);
 						break;
 					}
 				}
 			}
+			search.setCompleteCredit(completeCredit+"");
+			int totalAverage = 0;
 		}
 		return averageList;
 	}
 }
+

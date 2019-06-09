@@ -3,6 +3,33 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="path" value="${pageContext.request.contextPath}/"></c:set>
 
+<script>
+	function openNewQuizPage(){
+		newPage = window.open('${path}professor/quiz', '', 'width=800, height=700'); return false;
+	}
+	
+	function openMakeQuiz(){
+		MakeQuestionPage = window.open('${path}professor/createQuiz', '', 'width=800, height=700'); return false;
+	}
+	
+	function openMakeExam(){
+		MakeQuestionPage = window.open('${path}professor/createExam', '', 'width=800, height=700'); return false;
+	}
+	var identifier = "학생";
+	function openNewExamPage(){
+		if(identifier=="학생"){
+			alert("확인을 누르시면 시험이 진행됩니다. 아직 준비가 되지 않으셨다면 취소를 눌러주세요.")
+			MakeQuestionPage = window.open('${path}professor/showExam', '', 'width=800, height=700'); return false;
+		} else {
+			MakeQuestionPage = window.open('${path}professor/showExam', '', 'width=800, height=700'); return false;
+		}
+	}
+	
+	function openMakeSurvey(){
+		MakeQuestionPage = window.open('${path}professor/createSurvey', '', 'width=800, height=700'); return false;
+	}
+</script>
+
 <div class="accordion-area">
 	<div class="container">
 		<div class="row">
@@ -41,15 +68,18 @@
 													</div>
 													<div style="display: inline-block; padding-left: 50px;">
 														<strong>퀴즈</strong>
-														<button class="btn-sm" onClick="window.open('${path}professor/quiz', '', 'width=800, height=700'); return false;">보기</button>
-														<button class="btn-sm" onClick="window.open('${path}professor/quiz2', '', 'width=800, height=700'); return false;">등록</button>
-														<button class="btn-sm">수정</button>
+														<button class="btn-sm" onClick="openNewQuizPage()">보기</button>
+														<button class="btn-sm" onClick="openMakeQuiz()">등록</button>
 													</div>
 													<div style="display: inline-block; padding-left: 50px;">
 														<strong>시험</strong>
-														<button class="btn-sm">보기</button>
-														<button class="btn-sm">등록</button>
-														<button class="btn-sm">수정</button>
+														<button class="btn-sm" onClick="openNewExamPage()">보기</button>
+														<button class="btn-sm" onClick="openMakeExam()">등록</button>
+													</div>
+													<div style="display: inline-block; padding-left: 50px;">
+														<strong>설문</strong>
+														<button class="btn-sm" onClick="">보기</button>
+														<button class="btn-sm" onClick="openMakeSurvey()">등록</button>
 													</div>
 												</div>
 												<div>
