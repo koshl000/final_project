@@ -1,10 +1,14 @@
 package ddit.finalproject.team2.professor.service;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
+import javax.annotation.Resource;
 import javax.inject.Inject;
 
 import org.apache.commons.io.FileUtils;
@@ -13,12 +17,19 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.socket.WebSocketSession;
 
+import ddit.finalproject.team2.common.dao.Ljs_IRingDao;
 import ddit.finalproject.team2.professor.dao.KJE_IAssignmentDao;
+import ddit.finalproject.team2.professor.dao.KJE_IScheduleDao;
+import ddit.finalproject.team2.student.dao.Ljs_IAttendDao;
+import ddit.finalproject.team2.util.RingUtils;
 import ddit.finalproject.team2.util.enumpack.ServiceResult;
+import ddit.finalproject.team2.vo.AttendVo;
 import ddit.finalproject.team2.vo.KJE_AssFileVo;
 import ddit.finalproject.team2.vo.KJE_AssignmentnFileVo;
 import ddit.finalproject.team2.vo.KJE_LWeekAssignmentProVo;
+import ddit.finalproject.team2.vo.KJE_ScheduleVo;
 import ddit.finalproject.team2.vo.KJE_SubmitAttendstuVo;
 import ddit.finalproject.team2.vo.KJE_SubmitFileVo;
 
@@ -27,6 +38,18 @@ public class KJE_AssignmentServiceImpl implements KJE_IAssignmentService {
 	
 	@Inject
 	KJE_IAssignmentDao assignmentDao; 
+	
+	@Inject
+	Ljs_IRingDao ringDao;
+	
+	@Inject
+	Ljs_IAttendDao attendDao;
+	
+	@Inject
+	KJE_IScheduleDao scheduleDao; 
+	
+	@Resource(name="socketSessionMap")
+	ConcurrentMap<String, CopyOnWriteArrayList<WebSocketSession>> socketSessionMap;
 	
 	@Value("#{appInfo['assignmentPath']}") // spEL사용
 	String assignmentPath ;
@@ -72,10 +95,8 @@ public class KJE_AssignmentServiceImpl implements KJE_IAssignmentService {
 	@Override
 	public ServiceResult createAssignment(KJE_AssignmentnFileVo assignmentnFileVo) {
 		preProcessAssignmentFileList(assignmentnFileVo);
-		
-		int rowCnt = assignmentDao.insertAssignment(assignmentnFileVo);
-		
 		ServiceResult result = ServiceResult.FAILED;
+		int rowCnt = assignmentDao.insertAssignment(assignmentnFileVo);
 		if(rowCnt > 0) {
 			List<KJE_AssFileVo> assignmentFileList = assignmentnFileVo.getAssignmentFileList();
 			if(assignmentFileList.size()!=0) {
@@ -92,7 +113,26 @@ public class KJE_AssignmentServiceImpl implements KJE_IAssignmentService {
 						throw new RuntimeException(e);
 					}
 				}
+				
 			}
+			
+			KJE_ScheduleVo assignmentschedule = new KJE_ScheduleVo();
+			assignmentschedule.setSchedule_title(assignmentnFileVo.getAssignment_title());
+			assignmentschedule.setSchedule_type("과제물");
+			assignmentschedule.setSchedule_start(assignmentnFileVo.getSubmit_period1()+" "+"09:00");
+			assignmentschedule.setSchedule_end(assignmentnFileVo.getSubmit_period2()+" "+"18:00");
+			assignmentschedule.setSchedule_add(assignmentnFileVo.getAssignment_date());
+			assignmentschedule.setLecture_code(assignmentnFileVo.getLecture_code());
+			assignmentschedule.setSchedule_color("#e22828");
+				scheduleDao.insertSchedule(assignmentschedule);
+				
+			List<AttendVo> attendList = attendDao.selectAttendList(assignmentnFileVo.getLecture_code());
+			try {
+				RingUtils.ringForAssignment(attendList, ringDao, socketSessionMap);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
 			result = ServiceResult.OK;
 		} // if(rowCnt > 0) end
 		return result;
@@ -103,7 +143,6 @@ public class KJE_AssignmentServiceImpl implements KJE_IAssignmentService {
 		KJE_AssFileVo assfile = assignmentDao.selectAssFile(file_no);
 		return assfile;
 	}
-
 	
 	@Override
 	public List<KJE_SubmitAttendstuVo> retriveSubmitStuList(String assignment_no) {
