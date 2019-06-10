@@ -32,4 +32,9 @@ public class OpenSemesterVo {
 	@NotNull private String openseme_checkgrade4;
 	@NotNull private String openseme_period1;
 	@NotNull private String openseme_period2;
+	
+	public OpenSemesterVo(String openseme_year, String openseme_semester){
+		this.openseme_year = openseme_year;
+		this.openseme_semester = openseme_semester;
+	}
 }

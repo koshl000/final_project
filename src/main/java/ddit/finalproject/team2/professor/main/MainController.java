@@ -1,13 +1,16 @@
 package ddit.finalproject.team2.professor.main;
 
+import ddit.finalproject.team2.myPack.LSY_IQuizService;
+import ddit.finalproject.team2.student.service.Lsh_ILectureService;
+import ddit.finalproject.team2.vo.Lsy_LectureInfos;
+import ddit.finalproject.team2.vo.ProfessorVo;
+import ddit.finalproject.team2.vo.UserVo;
+
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.apache.tiles.autotag.core.runtime.annotation.Parameter;
-import ddit.finalproject.team2.vo.UserVo;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,15 +18,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import ddit.finalproject.team2.admin.service.KJE_IStatisticsService;
-import ddit.finalproject.team2.myPack.LSY_IQuizService;
-import ddit.finalproject.team2.student.service.Lsh_ILectureService;
-import ddit.finalproject.team2.vo.Lsy_LectureInfos;
-import ddit.finalproject.team2.vo.ProfessorVo;
-import ddit.finalproject.team2.vo.UserVo;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Controller("professorController")
 @RequestMapping("/professorMain/")
@@ -113,6 +107,15 @@ public class MainController {
 		mv.setViewName("common/exclude/mantoman");
 		mv.getModel().put("id", au.getName());
 		mv.getModel().put("user", (UserVo)au.getPrincipal());
+		return mv;
+	}
+	
+	@GetMapping("searchGrade")
+	public ModelAndView goSearchGrade(ModelAndView mv, Authentication au){
+		mv.setViewName("professor/searchGrade");
+		UserVo user = (UserVo)au.getPrincipal();
+		System.out.println("id : " + user.getUser_id());
+		mv.getModel().put("user", user);
 		return mv;
 	}
 }
