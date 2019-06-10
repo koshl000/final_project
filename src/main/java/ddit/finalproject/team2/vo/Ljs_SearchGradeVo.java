@@ -20,6 +20,7 @@ public class Ljs_SearchGradeVo implements Serializable{
 	private String totalLecture;
 	private String completeLecture;
 	private String completeCredit;
+	private String totalGrade;
 	private String totalAverage;
 	private String accumulateAverage;
 	
@@ -27,4 +28,8 @@ public class Ljs_SearchGradeVo implements Serializable{
 	private OpenSemesterVo semester;
 	private List<LectureVo> lectureList;
 	private List<GradeVo> averageList;
+	
+	public void setSeme(String seme, String openseme_no){
+		this.seme = "<a href='searchGrade/"+openseme_no+"/detail'>"+seme+"</a>";
+	}
 }

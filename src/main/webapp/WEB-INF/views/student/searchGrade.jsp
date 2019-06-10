@@ -4,21 +4,6 @@
 		============================================ -->
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath }/notika/css/jquery.dataTables.min.css">
-<style>
-.sangyup {
-	display: inline;
-	float: right;
-}
-
-.dataTables_wrapper .dataTables_filter {
-	width: 45%;
-}
-
-.dataTables_wrapper .dataTables_filter input, .dataTables_wrapper .dataTables_filter label
-	{
-	width: 20%;
-}
-</style>
 
 <!--    메뉴 소개 영역 -->
 <div class="breadcomb-area">
@@ -49,10 +34,6 @@
 		<div class="row">
 			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 				<div class="data-table-list">
-					<div>
-						<span>이름</span><span>${user.user_name }</span> <span>학부</span><span>전산학부</span> <span>학과</span><span>콤퓨타</span>
-						<span>학년</span><span>4학년</span>
-					</div>
 					<div class="table-responsive">
 						<div id="data-table-basic_wrapper" class="dataTables_wrapper">
 							<div class="dataTables_length" id="data-table-basic_length">
@@ -69,7 +50,7 @@
 											<th>누적평점평균</th>
 										</tr>
 									</thead>
-									<tbody>
+									<tbody id="listBody">
 									</tbody>
 								</table>
 							</div>
@@ -88,9 +69,12 @@
 	src="${pageContext.request.contextPath }/notika/js/data-table/data-table-act.js"></script>
 <script>
 	$('#table').DataTable({
+		scrollY : '200px',
+		scrollCollapse : true,
+		paging : false,
 		ajax : {
 			type : 'get',
-			url : '${pageContext.request.contextPath}/searchGrade/${user.user_id}',
+			url : '${pageContext.request.contextPath}/searchGrade/list/${user.user_id}',
 			dataType : 'json'
 		}
 		, columns : [ {
@@ -104,9 +88,12 @@
 		}, {
 			data : "completeCredit"
 		}, {
+			data : "totalGrade"
+		},{
 			data : "totalAverage"
-		}, {
+		},{
 			data : "accumulateAverage"
-		} ],
+		} ]
 	});
+	
 </script>

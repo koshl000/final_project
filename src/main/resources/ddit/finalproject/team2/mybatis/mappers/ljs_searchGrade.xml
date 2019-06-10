@@ -31,4 +31,25 @@
 	<select id="selectStudent" parameterType="string" resultType="StudentVo">
 		SELECT CURRENT_YEAR FROM STUDENT WHERE USER_ID = #{user_id}
 	</select>
+	
+	<resultMap type="Ljs_GradeDetailVo" id="detailMap">
+		<id property="lecture.lecture_code" column="LECTURE_CODE"/>
+		<association property="lecture" autoMapping="true" javaType="LectureVo" />
+		<association property="grade" autoMapping="true" javaType="GradeVo" />
+	</resultMap>
+	<select id="selectGradeDetail" parameterType="Ljs_GradeDetailVo" resultMap="detailMap">
+		SELECT A.OPENSEME_NO, B.LECTURE_CODE, B.LECTURE_NAME, B.LECTURE_CREDIT
+			, B.LECTURE_COURSETYPE, B.USER_ID, B.LECTURE_CURRENT
+			, (SELECT USER_NAME FROM USERS U WHERE U.USER_ID = B.USER_ID) PROFESSOR_NAME
+			, C.ATTEND_NO, D.GRADE_NO, D.AVERAGE
+		FROM OPENSEMESTER A LEFT OUTER JOIN LECTURE B
+		ON(A.OPENSEME_NO = B.OPENSEME_NO)
+		LEFT OUTER JOIN ATTEND C
+		ON(B.LECTURE_CODE = C.LECTURE_CODE)
+		LEFT OUTER JOIN GRADE D
+		ON(C.ATTEND_NO = D.ATTEND_NO)
+		WHERE C.USER_ID = #{user_id} AND A.OPENSEME_NO = #{openseme_no}
+		ORDER BY B.LECTURE_CODE ASC
+	</select>
+	
 </mapper>

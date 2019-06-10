@@ -20,5 +20,5 @@ public interface IUserDao {
 	int confirmPassHp(UserVo userVo);
 
 	int changePass(UserVo userVo);
-
+	
 }
