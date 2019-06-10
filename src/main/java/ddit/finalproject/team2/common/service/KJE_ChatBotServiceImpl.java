@@ -47,15 +47,29 @@ public class KJE_ChatBotServiceImpl implements KJE_IChatBotService{
 				scheduleResponseList.add(scheduleResponse);
 			}else if(target.equals("개별일정")){
 				String user_id=semester.get("user_id");
-				List<KJE_ScheduleVo>ScheduleList = chatBotDao.selectSchedule(user_id);
-				for(int i = 0;i<ScheduleList.size();i++){
+				List<KJE_ScheduleVo>scheduleList = chatBotDao.selectSchedule(user_id);
+				for(int i = 0;i<scheduleList.size();i++){
 					KJE_ChatBotScheduleResponseVo scheduleResp = new KJE_ChatBotScheduleResponseVo();
 					scheduleResp.setScheduleName("개별일정");
-					scheduleResp.setScheduleName(ScheduleList.get(i).getLecture_name()+" "+ScheduleList.get(i).getSchedule_title());
-					scheduleResp.setStartSchedule(ScheduleList.get(i).getSchedule_start().substring(0,10));
-					scheduleResp.setEndSchedule(ScheduleList.get(i).getSchedule_end().substring(0, 10));
+					scheduleResp.setScheduleName(scheduleList.get(i).getLecture_name()+" "+scheduleList.get(i).getSchedule_title());
+					scheduleResp.setStartSchedule(scheduleList.get(i).getSchedule_start().substring(0,10));
+					scheduleResp.setEndSchedule(scheduleList.get(i).getSchedule_end().substring(0, 10));
 					scheduleResponseList.add(scheduleResp);
 				}
+			}else if(target.equals("과제물")){
+				String user_id=semester.get("user_id");
+				List<KJE_ScheduleVo>scheduleList = chatBotDao.selectAssignmentSchedule(user_id);
+				if(scheduleList.size()>0){
+					for(int i = 0;i<scheduleList.size();i++){
+						KJE_ChatBotScheduleResponseVo scheduleResp = new KJE_ChatBotScheduleResponseVo();
+						scheduleResp.setScheduleName("과제물");
+						scheduleResp.setScheduleName(scheduleList.get(i).getLecture_name()+" "+scheduleList.get(i).getSchedule_title());
+						scheduleResp.setStartSchedule(scheduleList.get(i).getSchedule_start().substring(0,10));
+						scheduleResp.setEndSchedule(scheduleList.get(i).getSchedule_end().substring(0, 10));
+						scheduleResponseList.add(scheduleResp);
+					}
+				}
+				
 			}
 			
 		}

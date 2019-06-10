@@ -64,4 +64,10 @@ public interface KJE_IattendApplyDao {
 	 */
 	public OpenSemesterVo selectAttendPeriod(String today); 
 	
+	public int plusLecture_current(String lecture_code);
+	
+	public int minusLecture_current(String attend_no);
+	
+	
+	
 }

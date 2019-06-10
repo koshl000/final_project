@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 
 <link rel="stylesheet" href="${pageContext.request.contextPath}/res/fullCalendar/fullcalendar/style_full.css"/>
 <script type="text/javascript" src="${pageContext.request.contextPath}/res/fullCalendar/fullcalendar/moment.min.js"></script>
@@ -9,7 +8,6 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/res/fullCalendar/fullcalendar/spectrum.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/res/fullCalendar/fullcalendar/frontStu.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.2/TweenMax.min.js"></script>
-<link rel="stylesheet" href="${pageContext.request.contextPath }/notika/css/datapicker/datepicker3.css">
 	
 	<!-- dialog CSS
 		============================================ -->
@@ -143,5 +141,3 @@ $(function(){
 </script>
 
 <script	src="${pageContext.request.contextPath }/notika/js/dialog/sweetalert2.min.js"></script>
-<script
-	src="${pageContext.request.contextPath }/notika/js/datapicker/bootstrap-datepicker.js"></script>
