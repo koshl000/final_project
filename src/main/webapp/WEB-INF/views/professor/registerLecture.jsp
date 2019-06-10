@@ -11,19 +11,25 @@
 	}
 </style>
 <script>
-	function openNewQuizPage(var class_identifying_code, var lecture_class, var lecture_code){
-		newPage = window.open('${path}professor/quiz/'+lecture_code+'/'+class_identifying_code+'/'+lecture_class, '',
+	function openNewQuizPage(class_identifying_code, lecture_class, lecture_code){
+		newPage = window.open('${path}professor/quiz/'+class_identifying_code+'/'+lecture_class+'/'+lecture_code, '',
 							  'width=800, height=700'); return false;
 	}
 	
-	function openMakeQuiz(var class_identifying_code, var lecture_class, var lecture_code){
-		MakeQuestionPage = window.open('${path}professor/createQuiz'+lecture_code+'/'+class_identifying_code+'/'+lecture_class, '',
+	function openMakeQuiz(class_identifying_code, lecture_class, lecture_code){
+		MakeQuestionPage = window.open('${path}professor/createQuiz/'+class_identifying_code+'/'+lecture_class+'/'+lecture_code, '',
 									   'width=800, height=700'); return false;
 	}
 	
 	function openMakeExam(){
 		MakeQuestionPage = window.open('${path}professor/createExam', '', 'width=800, height=700'); return false;
 	}
+	
+	function openQuizSt(class_identifying_code, lecture_class, lecture_code){
+		newPage = window.open('${path}student/quiz/'+class_identifying_code+'/'+lecture_class+'/'+lecture_code, '',
+		  'width=800, height=700'); return false;
+	}
+	
 	var identifier = "학생";
 	function openNewExamPage(){
 		if(identifier=="학생"){
@@ -68,20 +74,23 @@
 												</div>
 												<div style="display: inline-block; padding-left: 50px;">
 													<strong>동영상</strong>
-													<button class="btn-sm">보기</button>
+													<button class="btn-sm" onClick="openQuizSt(
+														'${lectureWeekClass.class_identifying_code}',
+														'${lectureWeekClass.lecture_class}',
+														'${lectureInfos.lecture_code}')">보기</button>
 													<button class="btn-sm">등록</button>
 													<button class="btn-sm">수정</button>
 												</div>
 													<div style="display: inline-block; padding-left: 50px;">
 														<strong>퀴즈</strong>
 														<button class="btn-sm" onClick="openNewQuizPage(
-														${lectureWeekClass.class_identifying_code},
-														${lectureWeekClass.lecture_class},
-														${lectureInfos.lecture_code })">보기</button>
+														'${lectureWeekClass.class_identifying_code}',
+														'${lectureWeekClass.lecture_class}',
+														'${lectureInfos.lecture_code}')">보기</button>
 														<button class="btn-sm" onClick="openMakeQuiz(
-														${lectureWeekClass.class_identifying_code},
-														${lectureWeekClass.lecture_class},
-														${lectureInfos.lecture_code })">등록</button>
+														'${lectureWeekClass.class_identifying_code}',
+														'${lectureWeekClass.lecture_class}',
+														'${lectureInfos.lecture_code}')">등록</button>
 												</div>
 												<div style="display: inline-block; padding-left: 50px;">
 													<strong>시험</strong>

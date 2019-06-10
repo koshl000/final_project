@@ -98,7 +98,8 @@ $(function(){
 		
 		
 			var btnType = $('#btnType').val();
-			var twoBtn = "<button id='preview'>미리보기</button><button type='submit' id='complete'>등록완료</button>";
+			var twoBtn = "<div class='row'>"+"<div class='col-xs-6 col-sm-6 btnSpace'>" +
+							"<button class='btn' disabled type='button' id='prev'>등록</button>";
 			if(btnType=='quiz'){
 				var result = makeQuestion(".container", btnType, 5, 4)
 				btnType = "quiz";
@@ -174,7 +175,7 @@ $(function(){
 	<div class="container">
 		<div class='row timeCnt'>
 			<div class="col-xs-12 col-sm-12 timeCnt">
-				<h4> 과목명(주차정보) - 퀴즈입력</h4>
+				<span><h3>${lectureInfos.lectureWeekInfos[0].lectureWeekClass[0].lecture_subname} / ${lectureInfos.lectureWeekInfos[0].lecture_week}주차 ${lectureInfos.lectureWeekInfos[0].lectureWeekClass[0].lecture_class}교시 : 퀴즈</h3></span>
 			</div>
 		</div>
 

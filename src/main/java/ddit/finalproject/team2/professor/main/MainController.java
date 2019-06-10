@@ -6,11 +6,8 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-<<<<<<< HEAD
 import org.apache.tiles.autotag.core.runtime.annotation.Parameter;
-=======
 import ddit.finalproject.team2.vo.UserVo;
->>>>>>> branch 'master' of https://github.com/loopy313/final_project.git
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
