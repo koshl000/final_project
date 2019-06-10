@@ -32,6 +32,18 @@ public class Jch_UserVo implements Serializable, UserDetails{
 	@NotNull private String user_authority;
 	@NotNull private String lower_organization;
 	
+	private String current_year;
+	private String enrollment;
+	private String stud_degree;
+	private String face_id;
+	private String admission;
+	
+	private String prof_degree;
+    private String degree_major;
+    private String main_major;
+    private String sub_major;
+    private String position;
+	
 	private String checkbox = "<input type='checkbox' name='smsCheck' class='checkbox' />";
 	private String button = "<button type='button' class='btn'>선택</button>";
 	private List<GrantedAuthority> authorities;

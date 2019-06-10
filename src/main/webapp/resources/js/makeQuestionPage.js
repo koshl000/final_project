@@ -13,9 +13,8 @@ function makeQuestionPage(identifier, boddy, btnType){
 		$('input:checkbox').attr('disabled', true);
 	} else if(identifier=="교수"&&btnType=='quiz'){
 		$(boddy).find('.coverEach').append(everyModiBtn);
-		$(boddy).find('.student').remove();
 //		$(boddy).after(twoButtonForPr);
-		$(boddy).find('.student').iCheck('destroy');
+		$(boddy).find('input:checkbox.student').iCheck('destroy');
 		$(boddy).find('.student').remove();
 		$('input:checkbox').attr('disabled', true);
 	} else if(identifier=="학생"){

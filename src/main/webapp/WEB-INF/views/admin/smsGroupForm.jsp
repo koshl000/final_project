@@ -356,7 +356,7 @@ input:focus {
 											<button type="button" class="btn btn-success notika-btn-success waves-effect smsGroupSave" >저장하기</button>
 										</c:otherwise>
 									</c:choose>
-									<button type="button" class="btn btn-success notika-btn-success waves-effect smsListDelete" >삭제하기</button>
+<!-- 									<button type="button" class="btn btn-success notika-btn-success waves-effect smsListDelete" >삭제하기</button> -->
 								</span>
 							</div>
 						</form>

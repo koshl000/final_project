@@ -12,8 +12,10 @@ import ddit.finalproject.team2.vo.Lsy_EmbraceQuizVo;
 import ddit.finalproject.team2.vo.Lsy_ExamProblemVo;
 import ddit.finalproject.team2.vo.Lsy_ExamQuestionVo;
 import ddit.finalproject.team2.vo.Lsy_ExamVo;
+import ddit.finalproject.team2.vo.Lsy_LectureInfos;
 import ddit.finalproject.team2.vo.Lsy_QuizProblemVo;
 import ddit.finalproject.team2.vo.Lsy_QuizQuestionVO;
+import ddit.finalproject.team2.vo.ProfessorVo;
 
 @Repository
 public interface LSY_QuizDAO {
@@ -41,4 +43,7 @@ public interface LSY_QuizDAO {
 	
 	public Lsy_ExamVo selectStudyCode(Map<String, String> examMap);
 	public Lsy_ExamVo selectExamList(Map<String, String> examMap);
+	public Lsy_LectureInfos selectLectureInfoForViews(String lecture_code);
+	public ProfessorVo selectProInfos(String user_id);
+	public List<Lsy_LectureInfos> selectLectureInfoForList(Map<String, String> proMap);
 } 

@@ -145,6 +145,8 @@
                             </li>
                             <li><a href="google-map.html">강의계획서관리</a>
                             </li>
+                            <li><a href="${pageContext.request.contextPath}/professorMain/MyLecture">강의페이지</a>
+                            </li>
                             <li><a href="${pageContext.request.contextPath}/professor/lectureList">강의목록</a>
                             </li>
                             <li><a href="${pageContext.request.contextPath }/subjectPage/lecture_code_1/lectureBoard">강의게시판</a>

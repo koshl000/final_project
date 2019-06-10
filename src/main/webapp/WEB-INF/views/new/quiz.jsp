@@ -361,9 +361,9 @@ img.visible {
 	</div>
 </div>
 <input id="qStart" type="hidden" value="1"/>
-<input id="identifier" type="hidden" value="학생"/>
-<input id="attend_no" type="hidden" value="${attend_no }"/>
-<input id="user_id" type="hidden" value="st_001"/>
+<input id="identifier" type="hidden" value="${userVo.user_authority}"/>
+<input id="attend_no" type="hidden" value="${attend_no}"/>
+<input id="user_id" type="hidden" value="${userVo.user_id}"/>
 <input id="btnType" type='hidden' value="${btnType}"/>
 <input id="class_identifying_code" type='hidden' value="${quizList[0].class_identifying_code}"/>
 <input id="lecture_code" type='hidden' value="${quizList[0].lecture_code}"/>
