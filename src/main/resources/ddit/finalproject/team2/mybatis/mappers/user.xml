@@ -1,50 +1,70 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ddit.finalproject.team2.common.dao.IUserDao">
-	<resultMap type="ddit.finalproject.team2.vo.UserVo" id="userMap" autoMapping="true">
-		<id property="user_id" column="USER_ID"/>
-		<collection property="attendNoList" autoMapping="true" ofType="ddit.finalproject.team2.vo.AttendVo">
-			<id property="attend_no" column="ATTEND_NO"/>
-		</collection>
-		<collection property="lectureList" autoMapping="true" ofType="ddit.finalproject.team2.vo.LectureVo">
-			<id property="lecture_code" column="LECTURE_CODE"/>
-		</collection>
-	</resultMap>
+   <resultMap type="ddit.finalproject.team2.vo.UserVo" id="userMap" autoMapping="true">
+      <id property="user_id" column="USER_ID"/>
+      <collection property="attendNoList" autoMapping="true" ofType="ddit.finalproject.team2.vo.AttendVo">
+         <id property="attend_no" column="ATTEND_NO"/>
+      </collection>
+      <collection property="lectureList" autoMapping="true" ofType="ddit.finalproject.team2.vo.LectureVo">
+         <id property="lecture_code" column="LECTURE_CODE"/>
+      </collection>
+   </resultMap>
 
-	<select id="selectUser" parameterType="string" resultMap="userMap">
-		SELECT USER_PASS, USER_NAME, USER_REGNO
-		, USER_HP, USER_MAIL
-		, USER_ADD1, USER_ADD2
-		, A.USER_ID, USER_PROFILE_PATH
-		, ATTEND_NO, B.LECTURE_CODE
-		, LECTURE_NAME
-		FROM USERS A LEFT OUTER JOIN ATTEND B
-		ON(A.USER_ID = B.USER_ID)
-		LEFT OUTER JOIN LECTURE C
-		ON(B.LECTURE_CODE = C.LECTURE_CODE)
-		WHERE A.USER_ID = #{user_id}
-	</select>
-	
-	<select id="selectUserList" resultType="ddit.finalproject.team2.vo.UserVo">
-		SELECT * 
-		FROM USERS
-	</select>
-	
-	<select id="findId" resultType="string" parameterType="ddit.finalproject.team2.vo.UserVo">
-		SELECT USER_ID 
-		FROM USERS
-		WHERE USER_NAME=#{user_name} AND USER_HP=#{user_hp}
-	</select>
-	
-	<select id="confirmHp" resultType="int" parameterType="ddit.finalproject.team2.vo.UserVo">
-		SELECT COUNT(*) FROM USERS WHERE USER_NAME=#{user_name} AND USER_HP=#{user_hp}
-	</select>
-	
-	<select id="confirmPassHp" resultType="int" parameterType="ddit.finalproject.team2.vo.UserVo">
-		SELECT COUNT(*) FROM USERS WHERE USER_ID=#{user_id} AND USER_HP=#{user_hp}
-	</select>
-	
-	<update id="changePass" parameterType="ddit.finalproject.team2.vo.UserVo">
-		UPDATE USERS SET USER_PASS=#{user_pass} WHERE USER_ID =#{user_id}
-	</update>
+   <select id="selectUser" parameterType="string" resultMap="userMap">
+      SELECT USER_PASS, USER_NAME, USER_REGNO
+      , USER_HP, USER_MAIL
+      , USER_ADD1, USER_ADD2
+      , A.USER_ID, USER_PROFILE_PATH
+      , ATTEND_NO, B.LECTURE_CODE
+      , LECTURE_NAME
+      FROM USERS A LEFT OUTER JOIN ATTEND B
+      ON(A.USER_ID = B.USER_ID)
+      LEFT OUTER JOIN LECTURE C
+      ON(B.LECTURE_CODE = C.LECTURE_CODE)
+      WHERE A.USER_ID = #{user_id}
+   </select>
+   
+   <select id="selectUserList" resultType="ddit.finalproject.team2.vo.UserVo">
+      SELECT * 
+      FROM USERS
+   </select>
+   
+   <select id="findId" resultType="string" parameterType="ddit.finalproject.team2.vo.UserVo">
+      SELECT USER_ID 
+      FROM USERS
+      WHERE USER_NAME=#{user_name} AND USER_HP=#{user_hp}
+   </select>
+   
+   <select id="confirmHp" resultType="int" parameterType="ddit.finalproject.team2.vo.UserVo">
+      SELECT COUNT(*) FROM USERS WHERE USER_NAME=#{user_name} AND USER_HP=#{user_hp}
+   </select>
+   
+   <select id="confirmPassHp" resultType="int" parameterType="ddit.finalproject.team2.vo.UserVo">
+      SELECT COUNT(*) FROM USERS WHERE USER_ID=#{user_id} AND USER_HP=#{user_hp}
+   </select>
+   
+   <update id="changePass" parameterType="ddit.finalproject.team2.vo.UserVo">
+      UPDATE USERS SET USER_PASS=#{user_pass} WHERE USER_ID =#{user_id}
+   </update>
+   
+   <select id="selectUserType" parameterType="string" resultType="string">
+      SELECT AUTHORITY FROM AUTHORITIES WHERE USER_ID = #{user_id}
+   </select>
+   
+   <select id="selectProfessor" parameterType="string" resultMap="userMap">
+      SELECT USER_PASS, USER_NAME, USER_REGNO
+         , USER_HP, USER_MAIL
+         , USER_ADD1, USER_ADD2
+         , A.USER_ID, USER_PROFILE_PATH
+         , C.LECTURE_CODE, LECTURE_NAME, LECTURE_COURSETYPE, LECTURE_CREDIT, LECTURE_CURRENT, LECTURE_CAPACITY
+         , B.ATTEND_NO
+      FROM USERS A 
+      LEFT OUTER JOIN LECTURE C
+      ON(A.USER_ID = C.USER_ID)
+      LEFT OUTER JOIN ATTEND B
+      ON(C.LECTURE_CODE = B.LECTURE_CODE)
+      WHERE A.USER_ID = #{user_id}
+      and C.LOWER_ORGANIZATION = (select prof_degree from professor where user_id = #{user_id})
+   </select>
 </mapper>

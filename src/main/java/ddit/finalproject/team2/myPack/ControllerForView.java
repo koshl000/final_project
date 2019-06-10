@@ -27,6 +27,7 @@ import ddit.finalproject.team2.vo.Lsy_EmbraceExamVo;
 import ddit.finalproject.team2.vo.Lsy_EmbraceQuizVo;
 import ddit.finalproject.team2.vo.Lsy_ExamQuestionVo;
 import ddit.finalproject.team2.vo.Lsy_ExamVo;
+import ddit.finalproject.team2.vo.Lsy_LectureInfos;
 import ddit.finalproject.team2.vo.Lsy_QuizAnswerVo;
 import ddit.finalproject.team2.vo.Lsy_QuizQuestionVO;
 import ddit.finalproject.team2.vo.UserVo;
@@ -54,21 +55,49 @@ public class ControllerForView {
 		}
 		
 		@GetMapping("/professor/register")
-		public ModelAndView dadsdad(ModelAndView mav, @Validated @ModelAttribute Lsy_QuizQuestionVO quizVo) {
+		public ModelAndView dadsdad(ModelAndView mav, @Validated @ModelAttribute Lsy_QuizQuestionVO quizVo,
+									@PathVariable String lecture_code, Authentication au) {
+			Lsy_LectureInfos lectureInfos = service.retrieveLectureInfoForViews(lecture_code);
+			mav.getModel().put("lectureInfos", lectureInfos);
 			mav.setViewName("professor/registerLecture");
 			return mav;
 		}
 		
 		//quiz 보기 클릭했을 때
-				@GetMapping("/professor/quiz")
-				public String sda(@Validated @ModelAttribute Lsy_QuizQuestionVO quizVo, Model model){
+				@GetMapping("/professor/quiz/{class_identifying_code}/{lecture_class}/{lecture_code}")
+				public ModelAndView sda(@Validated @ModelAttribute Lsy_QuizQuestionVO quizVo, ModelAndView mav,
+								@PathVariable String class_identifying_code,
+								@PathVariable String lecture_class,
+								@PathVariable String lecture_code, Authentication au){
+					mav.getModel().put("userVo", (UserVo)au.getPrincipal());
+					mav.getModel().put("btnType", "quiz");
 					quizVo.setClass_identifying_code("11");
 					quizVo.setLecture_code("lecture_code_1");
-					model.addAttribute("btnType", "quiz");
+					mav.getModel().put("start", 1);
+					mav.getModel().put("end", 5);
+					//학생, 교수 구분해서 정보 가져오기.
+//					if(((UserVo)au.getPrincipal()).);
+//					model.addAttribute("attend_no", "1");
+					List<String> otherType = new ArrayList<String>();
+					otherType.add("①"); otherType.add("②"); otherType.add("③"); otherType.add("④");
+					List<Lsy_QuizQuestionVO> thisQuiz = service.retreiveQuiz(quizVo);
+					mav.getModel().put("quizList", thisQuiz);
+					mav.getModel().put("numList", otherType);
+					mav.setViewName("new/quiz");
+					return mav;
+				}
+				
+				@GetMapping("/student/quiz")
+				public String sda(@Validated @ModelAttribute Lsy_QuizQuestionVO quizVo, Model model,
+						@PathVariable String lecture_code, @PathVariable String class_code,
+						@PathVariable String btnType, @PathVariable String attend_no){
+					quizVo.setClass_identifying_code(class_code);
+					quizVo.setLecture_code(lecture_code);
+					model.addAttribute("btnType", btnType);
 //					mav.addObject("btnType", "quiz");
 					model.addAttribute("start", 1);
 					model.addAttribute("end", 5);
-					model.addAttribute("attend_no", "1");
+					model.addAttribute("attend_no", attend_no);
 					List<String> otherType = new ArrayList<String>();
 					otherType.add("①"); otherType.add("②"); otherType.add("③"); otherType.add("④");
 					model.addAttribute("number", 0);
@@ -82,7 +111,7 @@ public class ControllerForView {
 				
 				//quiz 등록 클릭했을 때
 				@GetMapping("/professor/createQuiz")
-				public String sdda(@Validated @ModelAttribute Lsy_QuizQuestionVO quizVo, Model model){
+				public String sdda(@Validated @ModelAttribute Lsy_QuizQuestionVO quizVo, Model model, Authentication au){
 					quizVo.setClass_identifying_code("11");
 					quizVo.setLecture_code("lecture_code_1");
 					model.addAttribute("btnType", "quiz");
@@ -119,8 +148,9 @@ public class ControllerForView {
 			return "professor/quizz";
 		}
 		
-		@GetMapping("/professor/showQuiz")
-		public String showQuiz(@Validated @ModelAttribute Lsy_QuizQuestionVO quizVo, Model model) {
+		@GetMapping("/professor/showQuiz/{lecture_code}/{class_code}/{btnType}")
+		public String showQuiz(@Validated @ModelAttribute Lsy_QuizQuestionVO quizVo, Model model,
+							@PathVariable String lecture_code, @PathVariable String class_code, @PathVariable String btnType) {
 			quizVo.setClass_identifying_code("11");
 			quizVo.setLecture_code("lecture_code_1");
 			model.addAttribute("btnType", "quiz");
@@ -149,13 +179,16 @@ public class ControllerForView {
 			return "new/survey";
 		}
 
+//		@GetMapping("/professor/showExam/{lecture_code}/{examType}")
 		@GetMapping("/professor/showExam")
-		public String dsada2231(Model model) {
+//		public String dsada2231(Model model, @PathVariable String lecture_code, @PathVariable String examType) {
+		public String showExamSt(Model model) {
 			HashMap<String, String> examMap = new HashMap<String, String>();
+//			examMap.put("examType", examType);
 			examMap.put("examType", "중간");
 			//jsp에서 렉쳐코드와 시험타입 쏴줄것
 			examMap.put("lecture_code", "CS001");
-			model.addAttribute("success", "success");
+//			model.addAttribute("success", "success");
 			model.addAttribute("btnType", "exam");
 			//au에서 값꺼내서 넣기
 			model.addAttribute("identifier", "교수");

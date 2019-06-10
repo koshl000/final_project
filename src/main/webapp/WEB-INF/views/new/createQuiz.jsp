@@ -100,27 +100,25 @@ $(function(){
 			var btnType = $('#btnType').val();
 			var twoBtn = "<button id='preview'>미리보기</button><button type='submit' id='complete'>등록완료</button>";
 			if(btnType=='quiz'){
-				var result = makeQuestion("#boddy", btnType, 5, 4)
-				alert(result);
+				var result = makeQuestion(".container", btnType, 5, 4)
 				btnType = "quiz";
 				$("#quiz").prop("disabled", true);
-				$("#boddy").append(result)
-				  		  .after(twoBtn);
+				$("#boddy").after(twoBtn);
 				$('#boddy').find('a').hide();
-				console.log(aTags);
 				$(".lecture_code").val('lecture_code_1');
 				$(".lecture_week").val('1');
-			} else if(btnType=='test'){
-				var result = makeQuestion("#boddy", "test", 2, 4)
-				alert(result);
-				$("#quiz").remove();
-				$("#survey").remove();
-				btnType = "test";
-				$("#test").prop("disabled", true);
-				$("#boddy").append(result)
-				  		  .after(twoBtn);
-				$("#test").after(newSelect);
-			}
+			} 
+// 			else if(btnType=='test'){
+// 				var result = makeQuestion("#boddy", "test", 2, 4)
+// 				alert(result);
+// 				$("#quiz").remove();
+// 				$("#survey").remove();
+// 				btnType = "test";
+// 				$("#test").prop("disabled", true);
+// 				$("#boddy").append(result)
+// 				  		  .after(twoBtn);
+// 				$("#test").after(newSelect);
+// 			}
 			
 			$('#boddy .i-checks').iCheck({
 				checkboxClass: 'icheckbox_square-green',
@@ -176,49 +174,23 @@ $(function(){
 	<div class="container">
 		<div class='row timeCnt'>
 			<div class="col-xs-12 col-sm-12 timeCnt">
-				<span>퀴즈인지 시험인지 구분할 것 / ${quizList[0].lecture_code} / 주차와 차시 or 주차와 시험구분</span>
-				<span style="font-size: 10pt; font-weight: 500" class="timee"> 
-				<span style="padding-left: 8px; font-weight: 500" class="timee">Timer</span>
-				<span id="min" style="width: 15px; font-weight: 500; text-align: right" class="timee">
-				</span>분
-				<span id="sec" style="width: 15px; font-weight: 500; text-align: right" class="timee">
-				</span>초</span>
+				<h4> 과목명(주차정보) - 퀴즈입력</h4>
 			</div>
 		</div>
 
-		<script type="text/javascript" language="javascript">
-			$("#takeExam").on('click', function(){
-				$('.timeCnt').show();
-				updateTime();
-			})
-			function updateTime() {
-				var now = new Date();
-				var t = now.getTime() - startDate.getTime();
-				var s = Math.round(t / 1000);
-
-				min.innerHTML = Math.floor(s / 60);
-				sec.innerHTML = s % 60;
-				setTimeout("updateTime()", 500);
-			}
-			var startDate = new Date();
-// 			updateTime();
-		</script>
 		<div class='row' id='boddy'>
-			<div class="col-xs-4 col-sm-4 left">
+			<div class="col-xs-1 col-sm-1 veryLeft">
 			</div>
-			<div class="col-xs-4 col-sm-4 center">
+			<div class="col-xs-5 col-sm-5 left">
 			</div>
-			
-			<div class="col-xs-4 col-sm-4 right">
+			<div class="col-xs-5 col-sm-5 center">
 			</div>
-				
-			<span id='testTextA'></span>
+			<div class="col-xs-1 col-sm-1 right">
+			</div>
 		</div>
 	</div>
 </div>
-<input id="qStart" type="hidden" value="1"/>
 <input id="identifier" type="hidden" value="교수"/>
-<input id="attend_no" type="hidden" value="1"/>
 <input id="user_id" type="hidden" value="st_001"/>
 <input id="btnType" type='hidden' value="${btnType}"/>
 <input id="class_identifying_code" type='hidden' value="${quizList[0].class_identifying_code}"/>
