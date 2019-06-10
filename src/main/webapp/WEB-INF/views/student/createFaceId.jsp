@@ -164,6 +164,7 @@ $(function() {
 		}
 </style>
 
+
 <div class="modal fade" id="faceModal" role="dialog">
     <div class="modal-dialog modal-large">
         <div class="modal-content">
