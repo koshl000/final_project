@@ -13,10 +13,29 @@
 <title>CreateFaceId</title>
 <script type="text/javascript"
 	src="${pageContext.request.contextPath}/res/js/webcam.min.js"></script>
+<!-- dialog CSS
+		============================================ -->
+    <link rel="stylesheet" href="${pageContext.request.contextPath }/notika/css/dialog/sweetalert2.min.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath }/notika/css/dialog/dialog.css">	
 
 <script type="text/javascript">
+$(function() {
+	
+	if (!($('.modal.in').length)) {
+		$('.modal-dialog').css({
+			top : 0,
+			left : 0
+		});
+	}
+	$('#faceModal').modal({
+		backdrop : false,
+		show : true
+	});
+
+//   $("#faceModal").modal({backdrop: 'static', keyboard: false});
+	
 	var fac1;
-	function take_snapshot() {
+	 $("#createFaceid").on('click', function(){
 		var data1;
 		// take snapshot and get image data
 		Webcam.snap(function(data_uri) {
@@ -69,7 +88,7 @@
 							beforeSend : function(xhrObj) {
 								// Request headers
 								xhrObj.setRequestHeader("Content-Type","application/octet-stream");
-								xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key","b74721472f9443ceb2f7902b00ce7724");//5월 21일까지 유효
+								xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key","71d36159ce92459f8b72ffa1184ad667");
 							},
 							type : "POST",
 							// Request body
@@ -88,10 +107,10 @@
 											dataType : "text",
 											success : function(resp) {
 												if (resp == "success") {
-													alert("FaceID 생성에 성공하였습니다.");
+													swal("FaceID 생성","FaceID 생성에 성공하였습니다", "success"); 
 													location.href = '${pageContext.request.contextPath}/chooseMain';
 												}else{
-													alert("FaceID 생성에 실패하였습니다. 정면을 보고 다시 촬영해주시기 바랍니다.");
+													swal("FaceID 생성 실패","FaceID 생성에 실패하였습니다. 정면을 보고 다시 촬영해주시기 바랍니다.", "error"); 
 												}
 											},
 											error : function(
@@ -101,8 +120,7 @@
 										});
 
 											}else{
-												alert("FaceID 생성에 실패하였습니다.");
-												alert("정면을 보고 다시 촬영해주시기 바랍니다.");
+												swal("FaceID 생성 실패","FaceID 생성에 실패하였습니다. 정면을 보고 다시 촬영해주시기 바랍니다.", "error"); 
 											}
 										}
 									}).done(function(data) {
@@ -112,7 +130,9 @@
 							});
 				});
 
-	}
+	});
+	
+});
 </script>
 <style type="text/css">
 		body {
@@ -143,15 +163,16 @@
 		/* 	background: #ccc; */
 		}
 </style>
-<div class="container">
-	<div class="row">
-		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-			<h1>출석 확인을 위한 FaceId 생성 페이지입니다.</h1>
-			<h3>카메라정면을 바라보고 FaceId생성 버튼을 눌러주세요.</h3>
-			<form>
-				<input type=button value="FaceId 생성" onClick="take_snapshot()">
-			</form>
-			<div id="my_camera">webCam</div>
+
+<div class="modal fade" id="faceModal" role="dialog">
+    <div class="modal-dialog modal-large">
+        <div class="modal-content">
+            <div class="modal-header">
+              <h3>출석 확인을 위한 FaceId 생성 페이지입니다.</h3>
+            </div>
+            <div class="modal-body">
+            <h4>카메라정면을 바라보고 FaceId생성 버튼을 눌러주세요.</h4>
+			<div id="my_camera" style="float:left; margin-right:50px "></div>
 			<div id="results"></div>
 			<!-- Configure a few settings and attach camera -->
 			<script language="JavaScript">
@@ -175,12 +196,14 @@
 
 				Webcam.attach('#my_camera');
 			</script>
-
-			<!-- A button for taking snaps -->
-			
-
-			<br /> <br />
-		</div>
-	</div>
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="createFaceid">faceId생성</button>
+            </div>
+        </div>
+    </div>
 </div>
 
+
+<script	src="${pageContext.request.contextPath }/notika/js/dialog/sweetalert2.min.js"></script>
