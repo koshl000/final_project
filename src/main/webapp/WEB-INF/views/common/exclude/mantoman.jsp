@@ -34,15 +34,16 @@
 </div>
 <div id="frame">
     <div id="half_frame">
-        <iframe src="/professor/showExam?lecture_code=CS001&examtype=중간}" style="width: 100%;height: 100%;"></iframe>
+        <iframe src="${pageContext.request.contextPath}/professor/showExam" style="width: 100%;height: 100%;"></iframe>
     </div>
     <div id="half_frame">
         <div id="sidepanel">
             <div id="profile">
                 <div class="wrap">
-                    <img id="profile-img" src="http://emilcarlsson.se/assets/mikeross.png" class="online"
+                    <%--현재유저--%>
+                    <img id="profile-img" src="${pageContext.request.contextPath}/res/images/male.png" class="online"
                          alt=""/>
-                    <p>Mike Ross</p>
+                    <p>${user.user_id}(${user.user_name})</p>
                     <div id="status-options">
                         <ul>
                             <li id="status-online" class="active"><span class="status-circle"></span>
@@ -55,51 +56,52 @@
                     </div>
                 </div>
             </div>
+            <%--수강중인 유저--%>
             <div id="contacts">
                 <ul>
-                    <li class="contact">
-                        <div class="wrap">
-                            <span class="contact-status online"></span>
-                            <img src="http://emilcarlsson.se/assets/louislitt.png" alt=""/>
-                            <div class="meta">
-                                <p class="name">Louis Litt</p>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="contact active">
-                        <div class="wrap">
-                            <span class="contact-status busy"></span>
-                            <img src="http://emilcarlsson.se/assets/harveyspecter.png" alt=""/>
-                            <div class="meta">
-                                <p class="name">Harvey Specter</p>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="contact">
-                        <div class="wrap">
-                            <span class="contact-status"></span>
-                            <img src="http://emilcarlsson.se/assets/danielhardman.png" alt=""/>
-                            <div class="meta">
-                                <p class="name">Daniel Hardman</p>
-                            </div>
-                        </div>
-                    </li>
+                    <%--                    <li class="contact">--%>
+                    <%--                        <div class="wrap">--%>
+                    <%--                            <span class="contact-status online"></span>--%>
+                    <%--                            <img src="${pageContext.request.contextPath }/res/images/male.png" alt=""/>--%>
+                    <%--                            <div class="meta">--%>
+                    <%--                                <p class="name">${user.user_name}(${user.user_id})</p>--%>
+                    <%--                            </div>--%>
+                    <%--                        </div>--%>
+                    <%--                    </li>--%>
+                    <%--                    <li class="contact active">--%>
+                    <%--                        <div class="wrap">--%>
+                    <%--                            <span class="contact-status busy"></span>--%>
+                    <%--                            <img src="http://emilcarlsson.se/assets/harveyspecter.png" alt=""/>--%>
+                    <%--                            <div class="meta">--%>
+                    <%--                                <p class="name">Harvey Specter</p>--%>
+                    <%--                            </div>--%>
+                    <%--                        </div>--%>
+                    <%--                    </li>--%>
+                    <%--                    <li class="contact">--%>
+                    <%--                        <div class="wrap">--%>
+                    <%--                            <span class="contact-status"></span>--%>
+                    <%--                            <img src="http://emilcarlsson.se/assets/danielhardman.png" alt=""/>--%>
+                    <%--                            <div class="meta">--%>
+                    <%--                                <p class="name">Daniel Hardman</p>--%>
+                    <%--                            </div>--%>
+                    <%--                        </div>--%>
+                    <%--                    </li>--%>
                 </ul>
             </div>
         </div>
         <div class="content">
             <div class="messages">
                 <ul>
-                    <li class="sent">
-                        <img src="http://emilcarlsson.se/assets/mikeross.png" alt=""/>
-                        <p>How the hell am I supposed to get a jury to believe you when I am not even sure that
-                            I
-                            do?!</p>
-                    </li>
-                    <li class="replies">
-                        <img src="http://emilcarlsson.se/assets/harveyspecter.png" alt=""/>
-                        <p>When you're backed against the wall, break the god damn thing down.</p>
-                    </li>
+                    <%--                    <li class="sent">--%>
+                    <%--                        <img src="http://emilcarlsson.se/assets/mikeross.png" alt=""/>--%>
+                    <%--                        <p>How the hell am I supposed to get a jury to believe you when I am not even sure that--%>
+                    <%--                            I--%>
+                    <%--                            do?!</p>--%>
+                    <%--                    </li>--%>
+                    <%--                    <li class="replies">--%>
+                    <%--                        <img src="http://emilcarlsson.se/assets/harveyspecter.png" alt=""/>--%>
+                    <%--                        <p>When you're backed against the wall, break the god damn thing down.</p>--%>
+                    <%--                    </li>--%>
                 </ul>
             </div>
             <div class="message-input">
@@ -241,6 +243,65 @@
 </script>
 <%--문자채팅 및 유저 리스트--%>
 <script>
+    var socket = io('https://localhost:9003');
+
+    var userInfo = {
+        user_id: '${user.user_id}',
+        user_name: '${user.user_name}'
+    };
+
+    function user_info(id, name) {
+        var out =
+            "<li class=\"contact\">\n" +
+            "   <div class=\"wrap\">\n" +
+            "       <span class=\"contact-status online\"></span>\n" +
+            "       <img src=\"${pageContext.request.contextPath}/res/images/male.png\" alt=\"\"/>\n" +
+            "       <div class=\"meta\">\n" +
+            "       <p class=\"name\">" + name + "(" + id + ")</p>\n" +
+            "       </div>\n" +
+            "   </div>\n" +
+            "</li>";
+        return out;
+    }
+
+    function message(msg) {
+        var out =
+            "<li class=\"replies\">\n" +
+            "   <img src=\"\" alt=\"\"/>\n" +
+            "   <p>" + msg + "</p>\n" + ``
+        return out;
+    }
+
+    socket.on('connect', function () {
+        console.log('connected....');
+    });
+
+    socket.emit('userInfo', userInfo);
+    socket.on('userInfo', function (users) {
+        console.log('userinfo event...');
+        $('#contacts ul').empty();
+        for (var i = 0; i<users.user_id.length; ++i) {
+            $('#contacts ul').append(user_info(users.user_id[i], users.user_name[i]));
+        }
+
+    });
+    socket.on('chat message', function (msg) {
+        $('.messages ul').append(message(msg));
+    });
+
+    socket.on('disconnect', function (userInfo) {
+    });
+
+
+    function newMessage(message) {
+        if ($.trim(message) == '') {
+            return false;
+        }
+        $('<li class="sent"><img src="http://emilcarlsson.se/assets/mikeross.png" alt="" /><p>' + message + '</p></li>').appendTo($('.messages ul'));
+        $('.message-input input').val(null);
+        $(".messages").animate({scrollTop: $(document).height()}, "fast");
+    }
+
     $(".messages").animate({scrollTop: $(document).height()}, "fast");
 
     $("#profile-img").click(function () {
@@ -267,19 +328,11 @@
         $("#status-options").removeClass("active");
     });
 
-    function newMessage() {
-        message = $(".message-input input").val();
-        if ($.trim(message) == '') {
-            return false;
-        }
-        $('<li class="sent"><img src="http://emilcarlsson.se/assets/mikeross.png" alt="" /><p>' + message + '</p></li>').appendTo($('.messages ul'));
-        $('.message-input input').val(null);
-        $('.contact.active .preview').html('<span>You: </span>' + message);
-        $(".messages").animate({scrollTop: $(document).height()}, "fast");
-    }
-
     $('.submit').click(function () {
-        newMessage();
+        message = $(".message-input input").val();
+        socket.emit('chat message', message);
+        newMessage(message);
+
     });
 
     $(window).on('keydown', function (e) {
@@ -289,35 +342,6 @@
         }
     });
 </script>
-<%--<script>--%>
-<%--    var socket = io('https://localhost:9003');--%>
-
-<%--    var userInfo = {--%>
-<%--        user_id: '${user.user_id}',--%>
-<%--        user_name: '${user.user_name}'--%>
-<%--    };--%>
-
-<%--    socket.emit('userInfo', userInfo);--%>
-<%--    $('form').submit(function (e) {--%>
-<%--        e.preventDefault(); // prevents page reloading--%>
-<%--        socket.emit('chat message', $('#m').val());--%>
-<%--        $('#m').val('');--%>
-<%--        return false;--%>
-<%--    });--%>
-<%--    socket.on('connect', function () {--%>
-<%--    });--%>
-<%--    socket.on('userInfo', function (users) {--%>
-<%--        $('.userInfo').html('');--%>
-<%--        for (var i = 0; i < users.userid.length; ++i) {--%>
-<%--            $('.userInfo').append(users.user_id[i] + '(' + users.user_name[i] + ')<br>');--%>
-<%--        }--%>
-<%--    });--%>
-<%--    socket.on('chat message', function (msg) {--%>
-<%--        $('#messages').append($('<li>').text(msg));--%>
-<%--    });--%>
-<%--    socket.on('disconnect', function (userInfo) {--%>
-<%--    });--%>
-<%--</script>--%>
 
 </body>
 </html>
