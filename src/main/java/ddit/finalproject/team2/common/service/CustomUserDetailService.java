@@ -12,31 +12,32 @@ import org.springframework.stereotype.Service;
 
 import ddit.finalproject.team2.common.dao.IAuthDao;
 import ddit.finalproject.team2.common.dao.IUserDao;
+import ddit.finalproject.team2.util.constant.AuthConstants;
 import ddit.finalproject.team2.vo.UserVo;
 
 @Service
 public class CustomUserDetailService implements UserDetailsService{
-	
-	@Inject
-	IUserDao userDao;
-	@Inject
-	IAuthDao authDAO;
-	
-	@Override
-	public UserDetails loadUserByUsername(String user_id) throws UsernameNotFoundException {
-		UserVo user = null;
-		user = userDao.selectUser(user_id);
-		if(user==null){
-			throw new UsernameNotFoundException(user_id+"에 해당하는 회원 없음");
-		}
-		List<GrantedAuthority> authorities = authDAO.selectAuthoritiesByUsername(user_id);
-		user.setAuthorities(authorities);
-		return user;
-	}
+   
+   @Inject
+   IUserDao userDao;
+   @Inject
+   IAuthDao authDAO;
+   
+   @Override
+   public UserDetails loadUserByUsername(String user_id) throws UsernameNotFoundException {
+      UserVo user = null;
+      String type = userDao.selectUserType(user_id);
+      if(AuthConstants.ROLE_PROFESSOR.equals(type)){
+         user = userDao.selectProfessor(user_id);
+      }else{
+         user = userDao.selectUser(user_id);
+      }
+      if(user==null){
+         throw new UsernameNotFoundException(user_id+"에 해당하는 회원 없음");
+      }
+      List<GrantedAuthority> authorities = authDAO.selectAuthoritiesByUsername(user_id);
+      user.setAuthorities(authorities);
+      return user;
+   }
 
 }
-
-
-
-
-

@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -21,9 +22,14 @@ public class LogoutSuccess extends SimpleUrlLogoutSuccessHandler {
 
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        UserVo user=(UserVo)authentication.getPrincipal();
-        List<WebSocketSession> list=socketSessionMap.get(user.getUser_id());
-        list.get(0).sendMessage(new TextMessage(user.getUser_id()));
+        UserVo user = (UserVo) authentication.getPrincipal();
+        socketSessionMap.remove(user.getUser_id());
+        for(Map.Entry<String, CopyOnWriteArrayList<WebSocketSession>> e :socketSessionMap.entrySet()){
+            List<WebSocketSession> list = e.getValue();
+            for (WebSocketSession w : list) {
+                w.sendMessage(new TextMessage(user.getUser_id()));
+            }
+        }
 
         super.onLogoutSuccess(request, response, authentication);
     }

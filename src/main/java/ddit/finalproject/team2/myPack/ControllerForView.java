@@ -21,12 +21,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import ddit.finalproject.team2.util.AuthorityUtil;
 import ddit.finalproject.team2.vo.Lsy_EmbraceAnswer;
 import ddit.finalproject.team2.vo.Lsy_EmbraceExamAnswer;
 import ddit.finalproject.team2.vo.Lsy_EmbraceExamVo;
 import ddit.finalproject.team2.vo.Lsy_EmbraceQuizVo;
 import ddit.finalproject.team2.vo.Lsy_ExamQuestionVo;
 import ddit.finalproject.team2.vo.Lsy_ExamVo;
+import ddit.finalproject.team2.vo.Lsy_LectureInfos;
 import ddit.finalproject.team2.vo.Lsy_QuizAnswerVo;
 import ddit.finalproject.team2.vo.Lsy_QuizQuestionVO;
 import ddit.finalproject.team2.vo.UserVo;
@@ -47,64 +49,122 @@ public class ControllerForView {
 			}
 			int result = service.createStAnswer(answerList);
 			if(result>0) {
-				model.addAttribute("result", "실패");
+				model.addAttribute("close", "close");
 				return "new/quiz";
 			}
 			return null;
 		}
 		
-		@GetMapping("/professor/register")
-		public ModelAndView dadsdad(ModelAndView mav, @Validated @ModelAttribute Lsy_QuizQuestionVO quizVo) {
+		@GetMapping("/professor/register/{lecture_code}")
+		public ModelAndView dadsdad(ModelAndView mav, @Validated @ModelAttribute Lsy_QuizQuestionVO quizVo,
+									@PathVariable String lecture_code, Authentication au) {
+			Lsy_LectureInfos lectureInfos = service.retrieveLectureInfoForViews(lecture_code);
+			mav.getModel().put("lectureInfos", lectureInfos);
 			mav.setViewName("professor/registerLecture");
 			return mav;
 		}
 		
 		//quiz 보기 클릭했을 때
-				@GetMapping("/professor/quiz")
-				public String sda(@Validated @ModelAttribute Lsy_QuizQuestionVO quizVo, Model model){
+				@GetMapping("/professor/quiz/{class_identifying_code}/{lecture_class}/{lecture_code}")
+				public ModelAndView showQuizPro(@Validated @ModelAttribute Lsy_QuizQuestionVO quizVo, ModelAndView mav,
+								@PathVariable String class_identifying_code,
+								@PathVariable String lecture_class,
+								@PathVariable String lecture_code, Authentication au){
+					System.out.println("왔다오ㅓㅏㅆ어");
+					Map<String, String> lectureMap = new HashMap<String, String>();
+					lectureMap.put("lecture_code", lecture_code);
+					lectureMap.put("class_identifying_code", class_identifying_code);
+					Lsy_LectureInfos lectureInfos = service.retrieveLectureInfoForOneViews(lectureMap);
+					System.out.println(lectureInfos);
+					mav.getModel().put("lectureInfos", lectureInfos);
+					mav.getModel().put("userVo", (UserVo)au.getPrincipal());
+					List<String> auth = AuthorityUtil.getAuthorityList(au);
+					mav.getModel().put("btnType", "quiz");
+					mav.getModel().put("identifier", auth);
 					quizVo.setClass_identifying_code("11");
 					quizVo.setLecture_code("lecture_code_1");
-					model.addAttribute("btnType", "quiz");
-//					mav.addObject("btnType", "quiz");
-					model.addAttribute("start", 1);
-					model.addAttribute("end", 5);
-					model.addAttribute("attend_no", "1");
+					mav.getModel().put("start", 1);
+					mav.getModel().put("end", 5);
+					//학생, 교수 구분해서 정보 가져오기.
+//					model.addAttribute("attend_no", "1");
 					List<String> otherType = new ArrayList<String>();
 					otherType.add("①"); otherType.add("②"); otherType.add("③"); otherType.add("④");
-					model.addAttribute("number", 0);
 					List<Lsy_QuizQuestionVO> thisQuiz = service.retreiveQuiz(quizVo);
-					model.addAttribute("quizList", thisQuiz);
-					model.addAttribute("numList", otherType);
-//					mav.addObject("oneQuiz", thisQuiz);
-//					mav.setViewName("new/showQuiz");
-					return "new/quiz";
+					mav.getModel().put("quizList", thisQuiz);
+					mav.getModel().put("numList", otherType);
+					mav.setViewName("new/quiz");
+					return mav;
+				}
+				
+				@GetMapping("/student/quiz/{class_identifying_code}/{lecture_class}/{lecture_code}")
+				public ModelAndView showQuizStudent(@Validated @ModelAttribute Lsy_QuizQuestionVO quizVo, ModelAndView mav,
+								@PathVariable String class_identifying_code,
+								@PathVariable String lecture_class,
+								@PathVariable String lecture_code, Authentication au){
+					System.out.println("왔다오ㅓㅏㅆ어");
+					Map<String, String> lectureMap = new HashMap<String, String>();
+					lectureMap.put("lecture_code", lecture_code);
+					lectureMap.put("class_identifying_code", class_identifying_code);
+					Lsy_LectureInfos lectureInfos = service.retrieveLectureInfoForOneViews(lectureMap);
+					System.out.println(lectureInfos);
+					mav.getModel().put("lectureInfos", lectureInfos);
+					mav.getModel().put("userVo", (UserVo)au.getPrincipal());
+					List<String> auth = AuthorityUtil.getAuthorityList(au);
+					mav.getModel().put("btnType", "quiz");
+					mav.getModel().put("identifier", auth);
+					quizVo.setClass_identifying_code("11");
+					quizVo.setLecture_code("lecture_code_1");
+					mav.getModel().put("start", 1);
+					mav.getModel().put("end", 5);
+					//학생, 교수 구분해서 정보 가져오기.
+//					model.addAttribute("attend_no", "1");
+					List<String> otherType = new ArrayList<String>();
+					otherType.add("①"); otherType.add("②"); otherType.add("③"); otherType.add("④");
+					List<Lsy_QuizQuestionVO> thisQuiz = service.retreiveQuiz(quizVo);
+					mav.getModel().put("quizList", thisQuiz);
+					mav.getModel().put("numList", otherType);
+					mav.setViewName("new/quiz");
+					return mav;
 				}
 				
 				//quiz 등록 클릭했을 때
-				@GetMapping("/professor/createQuiz")
-				public String sdda(@Validated @ModelAttribute Lsy_QuizQuestionVO quizVo, Model model){
-					quizVo.setClass_identifying_code("11");
-					quizVo.setLecture_code("lecture_code_1");
-					model.addAttribute("btnType", "quiz");
-					model.addAttribute("start", 0);
-					model.addAttribute("end", 5);
+				@GetMapping("/professor/createQuiz/{class_identifying_code}/{lecture_class}/{lecture_code}")
+				public ModelAndView sddsada(@Validated @ModelAttribute Lsy_QuizQuestionVO quizVo, ModelAndView mav,
+						@PathVariable String class_identifying_code,
+						@PathVariable String lecture_class,
+						@PathVariable String lecture_code, Authentication au){
+					Map<String, String> lectureMap = new HashMap<String, String>();
+					lectureMap.put("lecture_code", lecture_code);
+					lectureMap.put("class_identifying_code", class_identifying_code);
+					Lsy_LectureInfos lectureInfos = service.retrieveLectureInfoForOneViews(lectureMap);
+					System.out.println(lectureInfos);
+					mav.getModel().put("lectureInfos", lectureInfos);
+					mav.getModel().put("class_identifying_code", class_identifying_code);
+					mav.getModel().put("lecture_code", lecture_code);
+					mav.getModel().put("btnType", "quiz");
+					mav.getModel().put("start", 0);
+					mav.getModel().put("end", 5);
 					List<String> otherType = new ArrayList<String>();
 					otherType.add("①"); otherType.add("②"); otherType.add("③"); otherType.add("④");
-					model.addAttribute("numList", otherType);
-					return "new/createQuiz";
+					mav.getModel().put("numList", otherType);
+					mav.setViewName("new/createQuiz");
+					return mav;
 				}
 		
 		//문제 하나를 수정했을 때 발생하는 post 이벤트
 		@PostMapping(value="/professor/resetOneQuiz", produces="application/json;charset=utf-8")
 		@ResponseBody
 		public Lsy_QuizQuestionVO resetOneQuiz(@Validated @RequestBody Lsy_QuizQuestionVO quizVo, BindingResult errors) {
+			int result = 0;
+			System.out.println(quizVo.getQuestion_no());
 			if(errors.hasErrors()) {
 				System.out.println("에러가 있다.");
+			} else {
+				result = service.updateQuiz(quizVo);
 			}
-			int result = service.updateQuiz(quizVo);
 			Lsy_QuizQuestionVO thisQuiz = new Lsy_QuizQuestionVO();
 			if(result > 0) {
-				thisQuiz = service.retrieveOneQuiz(quizVo);
+				thisQuiz = service.retrieveOneQuiz(quizVo.getQuestion_no());
 			}
 			return thisQuiz;
 		}
@@ -119,29 +179,30 @@ public class ControllerForView {
 			return "professor/quizz";
 		}
 		
-		@GetMapping("/professor/showQuiz")
-		public String showQuiz(@Validated @ModelAttribute Lsy_QuizQuestionVO quizVo, Model model) {
-			quizVo.setClass_identifying_code("11");
-			quizVo.setLecture_code("lecture_code_1");
-			model.addAttribute("btnType", "quiz");
-//			mav.addObject("btnType", "quiz");
-			List<Lsy_QuizQuestionVO> thisQuiz = service.retreiveQuiz(quizVo);
-			model.addAttribute("oneQuiz", thisQuiz);
-//			mav.addObject("oneQuiz", thisQuiz);
-//			mav.setViewName("new/showQuiz");
-			return "new/showQuiz";
-		}
+//		@GetMapping("/professor/showQuiz/{lecture_code}/{class_code}/{btnType}")
+//		public String showQuiz(@Validated @ModelAttribute Lsy_QuizQuestionVO quizVo, Model model,
+//							@PathVariable String lecture_code, @PathVariable String class_code, @PathVariable String btnType) {
+//			quizVo.setClass_identifying_code("11");
+//			quizVo.setLecture_code("lecture_code_1");
+//			model.addAttribute("btnType", "quiz");
+////			mav.addObject("btnType", "quiz");
+//			List<Lsy_QuizQuestionVO> thisQuiz = service.retreiveQuiz(quizVo);
+//			model.addAttribute("oneQuiz", thisQuiz);
+////			mav.addObject("oneQuiz", thisQuiz);
+////			mav.setViewName("new/showQuiz");
+//			return "new/showQuiz";
+//		}
 		
-		@GetMapping("/professor/show")
-		public ModelAndView showQuiz2222(@Validated @ModelAttribute Lsy_QuizQuestionVO quizVo, ModelAndView mav) {
-			quizVo.setClass_identifying_code("11");
-			quizVo.setLecture_code("lecture_code_1");
-			mav.addObject("btnType", "quiz");
-			List<Lsy_QuizQuestionVO> thisQuiz = service.retreiveQuiz(quizVo);
-			mav.addObject("quizList", thisQuiz);
-			mav.setViewName("professor/quizTextPage4");
-			return mav;
-		}
+//		@GetMapping("/professor/show")
+//		public ModelAndView showQuiz2222(@Validated @ModelAttribute Lsy_QuizQuestionVO quizVo, ModelAndView mav) {
+//			quizVo.setClass_identifying_code("11");
+//			quizVo.setLecture_code("lecture_code_1");
+//			mav.addObject("btnType", "quiz");
+//			List<Lsy_QuizQuestionVO> thisQuiz = service.retreiveQuiz(quizVo);
+//			mav.addObject("quizList", thisQuiz);
+//			mav.setViewName("professor/quizTextPage4");
+//			return mav;
+//		}
 		
 		@GetMapping("/new/createSurvey")
 		public String dsada21(Model model) {
@@ -149,13 +210,16 @@ public class ControllerForView {
 			return "new/survey";
 		}
 
+//		@GetMapping("/professor/showExam/{lecture_code}/{examType}")
 		@GetMapping("/professor/showExam")
-		public String dsada2231(Model model) {
+//		public String dsada2231(Model model, @PathVariable String lecture_code, @PathVariable String examType) {
+		public String showExamSt(Model model) {
 			HashMap<String, String> examMap = new HashMap<String, String>();
+//			examMap.put("examType", examType);
 			examMap.put("examType", "중간");
 			//jsp에서 렉쳐코드와 시험타입 쏴줄것
 			examMap.put("lecture_code", "CS001");
-			model.addAttribute("success", "success");
+//			model.addAttribute("success", "success");
 			model.addAttribute("btnType", "exam");
 			//au에서 값꺼내서 넣기
 			model.addAttribute("identifier", "교수");
@@ -234,20 +298,20 @@ public class ControllerForView {
 			return null;
 		}
 		
-		@PostMapping(value="/professor/showQuizz", produces="application/json;charset=utf-8")
-		@ResponseBody
-		public Lsy_QuizQuestionVO showQuizz(@Validated @RequestBody Lsy_QuizQuestionVO quizVo, BindingResult errors) {
-			if(errors.hasErrors()) {
-				System.out.println("에러가 있다.");
-			}
-			int result = service.updateQuiz(quizVo);
-			Lsy_QuizQuestionVO thisQuiz = new Lsy_QuizQuestionVO();
-			if(result > 0) {
-				thisQuiz = service.retrieveOneQuiz(quizVo);
-				System.out.println(thisQuiz);
-			}
-			return thisQuiz;
-		}
+//		@PostMapping(value="/professor/showQuizz", produces="application/json;charset=utf-8")
+//		@ResponseBody
+//		public Lsy_QuizQuestionVO showQuizz(@Validated @RequestBody Lsy_QuizQuestionVO quizVo, BindingResult errors) {
+//			if(errors.hasErrors()) {
+//				System.out.println("에러가 있다.");
+//			}
+//			int result = service.updateQuiz(quizVo);
+//			Lsy_QuizQuestionVO thisQuiz = new Lsy_QuizQuestionVO();
+//			if(result > 0) {
+//				thisQuiz = service.retrieveOneQuiz(quizVo);
+//				System.out.println(thisQuiz);
+//			}
+//			return thisQuiz;
+//		}
 		
 		@PostMapping("/professor/createExamAnswer")
 		public String sdad(@Validated @ModelAttribute Lsy_EmbraceExamAnswer answerList, BindingResult errors, Model model) {

@@ -36,7 +36,7 @@
 		
 		<logout logout-url="/logout" success-handler-ref="logoutHandler" invalidate-session="false"/>
 		
-		<intercept-url pattern="/**" access="permitAll" requires-channel="https"/>
+		<intercept-url pattern="/**" access="permitAll"/>
 		<custom-filter ref="authorityCheckFilter"
 			after="LAST"
 		/>
@@ -44,15 +44,6 @@
 	</http>
 	
 </beans:beans>
-
-
-
-
-
-
-
-
-
 
 
 

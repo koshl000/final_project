@@ -19,9 +19,11 @@ import ddit.finalproject.team2.vo.Lsy_EmbraceQuizVo;
 import ddit.finalproject.team2.vo.Lsy_ExamProblemVo;
 import ddit.finalproject.team2.vo.Lsy_ExamQuestionVo;
 import ddit.finalproject.team2.vo.Lsy_ExamVo;
+import ddit.finalproject.team2.vo.Lsy_LectureInfos;
 import ddit.finalproject.team2.vo.Lsy_QuizAnswerVo;
 import ddit.finalproject.team2.vo.Lsy_QuizProblemVo;
 import ddit.finalproject.team2.vo.Lsy_QuizQuestionVO;
+import ddit.finalproject.team2.vo.ProfessorVo;
 
 
 @Service
@@ -124,8 +126,8 @@ public class LSY_QuizServiceImpl implements LSY_IQuizService{
 	}
 	
 	@Override
-	public Lsy_QuizQuestionVO retrieveOneQuiz(Lsy_QuizQuestionVO oneQuiz) {
-		Lsy_QuizQuestionVO oneQuizz = quizDao.selectOneQuiz(oneQuiz);
+	public Lsy_QuizQuestionVO retrieveOneQuiz(String question_no) {
+		Lsy_QuizQuestionVO oneQuizz = quizDao.selectOneQuiz(question_no);
 		return oneQuizz;
 	}
 
@@ -255,4 +257,46 @@ public class LSY_QuizServiceImpl implements LSY_IQuizService{
 		}
 		return 0;
 	}
+
+	@Override
+	public Lsy_LectureInfos retrieveLectureInfoForViews(String lecture_code) {
+		Lsy_LectureInfos lectureInfoVo = quizDao.selectLectureInfoForViews(lecture_code);
+		if(lectureInfoVo!=null) {
+			return lectureInfoVo;
+		}
+		return null;
+	}
+
+	@Override
+	public ProfessorVo retrieveProInfos(String user_id) {
+		ProfessorVo proInfos = quizDao.selectProInfos(user_id);
+		if(proInfos!=null) {
+			return proInfos;
+		}
+		return null;
+	}
+
+	@Override
+	public Lsy_LectureInfos retreiveLectureInfoForList(Map<String, String> proMap) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Lsy_LectureInfos retrieveLectureInfoForOneViews(Map<String, String> lectureMap) {
+		Lsy_LectureInfos result = quizDao.selectLectureInfoForOneViews(lectureMap);
+		if(result!=null) {
+			return result;
+		}
+		return null;
+	}
+
+//	@Override
+//	public List<Lsy_LectureInfos> retreiveLectureInfoForList(Map<String, String> proMap) {
+//		List<Lsy_LectureInfos> lectureInfo = quizDao.selectLectureInfoForList(proMap);
+//		if(lectureInfo!=null) {
+//			return lectureInfo;
+//		}
+//		return null;
+//	}
 }

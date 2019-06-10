@@ -21,7 +21,8 @@ function echoTest(){
 			console.log("에러 발생, 에러코드는 종료 후 종료코드 확인.");
 		};
 		
-		sockJS.onmessage = function(messageEvt){
+		sockJS.onmessage = function(message){
+		    console.log('onmessage');
 			writeMessage(message);
 		};
 		
@@ -31,10 +32,5 @@ function echoTest(){
 }
 
 function writeMessage(message){
-	$.notify(
-		message,
-		{className : 'info',
-		position : 'bottom right'}
-	);
 }
 </script>

@@ -8,19 +8,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
+import ddit.finalproject.team2.common.dao.KJE_IStudentDao;
 import ddit.finalproject.team2.common.service.KJE_IFaceIdService;
 import ddit.finalproject.team2.vo.StudentVo;
 
-@Controller
-@RequestMapping("/createFaceId")
+@RestController
 public class faceIdCreateController {
 	
 	@Inject
 	KJE_IFaceIdService faceIdService;
 	
-	@RequestMapping(method=RequestMethod.POST)
-	@ResponseBody
+	@Inject
+	KJE_IStudentDao studentDao;
+	
+	
+	@RequestMapping(value="/createFaceId", method=RequestMethod.POST)
 	public String cFaceId(
 			Authentication authentication,
 			@RequestParam String faceId
@@ -40,5 +44,19 @@ public class faceIdCreateController {
 	}
 	
 	
+	@RequestMapping(value="/getFaceId")
+	public String getFaceId(Authentication au){
+		
+		String result=null;
+		String user_Id =au.getName(); 
+		result = studentDao.selectFaceId(user_Id);
+		return result;
+	}
+	
+	
 }
+	
+	
+	
+
 

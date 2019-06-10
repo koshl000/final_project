@@ -177,12 +177,19 @@ img.visible {
 						value:valueDa
 					}).appendTo("#yaoZhuannSong");
 				}
-				console.log($("#yaoZhuannSong").find("[name='"+name2+"']").attr('name').length)
-			})
-// 			console.log($("#yaoZhuannSong").find("[name="+name2+"]"));
-		//	alert("정말 제출하시겠습니까?");
-			$("#yaoZhuannSong").submit();
-	})
+			});
+			console.log($('#yaoZhuannSong').html())
+			if($('#identifier').val()=='ROLE_PROFESSOR'){
+				alert("등록하시겠습니까?");
+				$("#yaoZhuannSong").attr("action", "${pageContext.request.contextPath}/student/submit");
+				$("#yaoZhuannSong").submit();
+			} else if($('#identifier').val()=='ROLE_STUDENT'){
+				alert("제출 이후에는 수정이 불가합니다.\n제출하시겠습니까?")
+				$("#yaoZhuannSong").attr("action", "${pageContext.request.contextPath}/student/submit");
+				$("#yaoZhuannSong").submit();
+				console.log($('#yaoZhuannSong').html())
+			}
+		});
 	
 	$("body").on("click", ".mod", function(event){
 		event.preventDefault();
@@ -249,8 +256,9 @@ img.visible {
 					checkBoxes.attr('disabled', true);
 					inputTexts.attr('type', 'hidden');
 					aTags.show();
+					var otherType = ["①", "②", "③", "④"];
 					for (var i = 0; i < resp.problemList.length; i++) {
-						$(aTags[i]).text(resp.problemList[i].quizProblem_content);
+						$(aTags[i]).text(otherType[i]+resp.problemList[i].quizProblem_content);
 					}
 		    	}
 			},
@@ -266,7 +274,7 @@ img.visible {
 	<div class="container">
 		<div class='row timeCnt'>
 			<div class="col-xs-12 col-sm-12 timeCnt">
-				<span>퀴즈인지 시험인지 구분할 것 / ${quizList[0].lecture_code} / 주차와 차시 or 주차와 시험구분</span>
+				<span><h3>${lectureInfos.lectureWeekInfos[0].lectureWeekClass[0].lecture_subname} / ${lectureInfos.lectureWeekInfos[0].lecture_week}주차 ${lectureInfos.lectureWeekInfos[0].lectureWeekClass[0].lecture_class}교시 : 퀴즈</h3></span>
 				<span style="font-size: 10pt; font-weight: 500" class="timee"> 
 				<span style="padding-left: 8px; font-weight: 500" class="timee">Timer</span>
 				<span id="min" style="width: 15px; font-weight: 500; text-align: right" class="timee">
@@ -296,12 +304,13 @@ img.visible {
 		<c:set var="idx" value="1" />
 		<c:set var='idx2' value='0'/>
 		<div class='row' id='boddy'>
-			<div class="col-xs-4 col-sm-4 left">
+			<div class="col-xs-1 col-sm-1 veryLeft">
 			</div>
-			<div class="col-xs-4 col-sm-4 center">
+			<div class="col-xs-5 col-sm-5 left">
 			</div>
-			
-			<div class="col-xs-4 col-sm-4 right">
+			<div class="col-xs-5 col-sm-5 center">
+			</div>
+			<div class="col-xs-1 col-sm-1 right">
 			</div>
 			
 				<c:forEach var="quiz" items="${quizList}" varStatus="vs">
@@ -361,9 +370,9 @@ img.visible {
 	</div>
 </div>
 <input id="qStart" type="hidden" value="1"/>
-<input id="identifier" type="hidden" value="학생"/>
-<input id="attend_no" type="hidden" value="${attend_no }"/>
-<input id="user_id" type="hidden" value="st_001"/>
+<input id="identifier" type="hidden" value="ROLE_STUDENT"/>
+<input id="attend_no" type="hidden" value="${attend_no}"/>
+<input id="user_id" type="hidden" value="${userVo.user_id}"/>
 <input id="btnType" type='hidden' value="${btnType}"/>
 <input id="class_identifying_code" type='hidden' value="${quizList[0].class_identifying_code}"/>
 <input id="lecture_code" type='hidden' value="${quizList[0].lecture_code}"/>

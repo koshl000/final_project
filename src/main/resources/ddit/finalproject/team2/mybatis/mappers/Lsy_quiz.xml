@@ -19,6 +19,15 @@
 		</collection>
 	</resultMap>
 	
+	<resultMap type="ddit.finalproject.team2.vo.Lsy_LectureInfos" id="lectureInfo" autoMapping="true">
+		<id property="lecture_code" column="LECTURE_CODE"/>
+		<collection property="lectureWeekInfos" autoMapping="true" ofType="ddit.finalproject.team2.vo.Lsy_LectureWeekVo">
+			<id property="lecture_week" column="LECTURE_WEEK"/>
+			<collection property="lectureWeekClass" autoMapping="true" ofType="ddit.finalproject.team2.vo.Lsy_LectureWeekClassVo">
+			</collection>
+		</collection>
+	</resultMap>
+	
 	<select id="keyNextVal" resultType="String">
 		<![CDATA[
 		select quizseq.nextval
@@ -164,14 +173,6 @@
 		select * from dual
 	</insert>
 	
-	
-	<update id="updateQuizProblems" parameterType="ddit.finalproject.team2.vo.Lsy_QuizProblemVo">`
-		update quizproblem
-		set quizProblem_content = #{quizProblem_content}
-		where question_no = #{question_no}
-		and quizProblem_no = #{quizProblem_no}
-	</update>
-	
 	<update id="updateQuiz" parameterType="ddit.finalproject.team2.vo.Lsy_QuizQuestionVO">
 		update quizquestion
 		set  question_no = #{question_no}, question_content = #{question_content}, 
@@ -180,6 +181,14 @@
 		and lecture_code = #{lecture_code}
 		and class_identifying_code = #{class_identifying_code}
 	</update>
+	
+	<update id="updateQuizProblems" parameterType="ddit.finalproject.team2.vo.Lsy_QuizProblemVo">
+		update quizproblem
+		set quizProblem_content = #{quizProblem_content}
+		where question_no = #{question_no}
+		and quizProblem_no = #{quizProblem_no}
+	</update>
+	
 	
 	<update id="updateExam" parameterType="ddit.finalproject.team2.vo.Lsy_ExamQuestionVo">
 		update EXAMQUESTION
@@ -208,9 +217,37 @@
 	</select>
 	
 	<select id="selectOneQuiz" parameterType="ddit.finalproject.team2.vo.Lsy_QuizQuestionVO" resultMap="allQ">
-		select * 
-		from quizquestion q inner join quizproblem p
-		on q.question_no = #{question_no}
+		select * from quizquestion q inner join quizproblem p on q.question_no = p.question_no
+		where q.question_no = #{lecture_code}
+	</select>
+	
+	<select id="selectLectureInfoForViews" parameterType="String" resultMap="lectureInfo">
+		select *
+		from lecture l inner join lectureweek lw on l.lecture_code = lw.lecture_code
+		where l.lecture_code = #{lecture_code}
+	</select>
+	
+	<select id="selectLectureInfoForOneViews" parameterType="java.util.HashMap" resultMap="lectureInfo">
+		select *
+		from lecture l inner join lectureweek lw on l.lecture_code = lw.lecture_code
+		where l.lecture_code = #{lecture_code}
+		and lw.class_identifying_code = #{class_identifying_code}
+	</select>
+	
+	<select id="selectLectureInfoForList" parameterType="java.util.HashMap" resultType="ddit.finalproject.team2.vo.Lsy_LectureInfos">
+		select l.lecture_code, l.user_id, l.lecture_coursetype, l.lecture_name, l.lecture_credit,
+        l.lecture_target||'학년' lecture_target, l.lecture_current||'/'||l.lecture_capacity lecture_capacity,
+        l.lower_organization, lw.lecture_class||'교시' lecture_class,
+        lw.lecture_week||'주' lecture_week, lw.lecture_subname
+		from lecture l inner join lectureweek lw on l.lecture_code = lw.lecture_code
+		where l.user_id = #{user_id}
+		and l.lower_organization = #{prof_degree}
+	</select>
+	
+	<select id="selectProInfos" resultType="ddit.finalproject.team2.vo.ProfessorVo">
+		select *
+		from professor
+		where user_id = #{user_id}
 	</select>
 	
 	<select id="selectQuizList" parameterType="ddit.finalproject.team2.vo.Lsy_QuizQuestionVO" resultMap="allQ">

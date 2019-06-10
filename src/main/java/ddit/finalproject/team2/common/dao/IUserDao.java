@@ -9,16 +9,20 @@ import ddit.finalproject.team2.vo.UserVo;
 @Repository
 public interface IUserDao {
 
-	UserVo selectUser(String user_id);
-	
-	List<UserVo> selectUserList();
+   UserVo selectUser(String user_id);
+   
+   List<UserVo> selectUserList();
 
-	public String findId(UserVo user);
+   public String findId(UserVo user);
 
-	int confirmHp(UserVo userVo);
+   int confirmHp(UserVo userVo);
 
-	int confirmPassHp(UserVo userVo);
+   int confirmPassHp(UserVo userVo);
 
-	int changePass(UserVo userVo);
+   int changePass(UserVo userVo);
+   
+   String selectUserType(String user_id);
+   
+   UserVo selectProfessor(String user_id);
 	
 }

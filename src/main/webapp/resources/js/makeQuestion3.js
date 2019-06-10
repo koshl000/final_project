@@ -12,20 +12,21 @@ function makeQuestion(formRange, btn, Qnum, Anum){
 	var source = "";
 	if(btnType=="quiz"){
 		for (var idx = 0; idx < Qnum; idx++) {
-			if(idx%5==0||idx%5==1||idx%5==2){
+			if(idx%5==1||idx%5==2||idx%5==3){
 				source = "";
 				source += "<div id='"+btnType+"Body' class='questionBody'>" +
 				"<span id='spanYet'>questionNo번</span>" +
 				"<input type='hidden' id='lecture_week' class='lecture_week' name='"+btnType+"List[questionNum].lecture_week'/>" +
 				"<input type='hidden' id='lecture_class' name='"+btnType+"List[questionNum].lecture_class'/>" +
 				"<input type='hidden' class='class_identifying_code' name='"+btnType+"List[questionNum].class_identifying_code'/>" +
+				"<div class='col-lg-6 col-md-6 col-sm-6 col-xs-12'><div class='nk-int-st'>" +
 				"<span id='contentYet'>questionNo번</span>" +
 				"<textarea name='"+btnType+"List[questionNum].question_content' class='QContent form-control auto-size' rows='10' placeholder='문제를 입력하세요'/>" +
 				"</textarea></div></div>";
 				for (var idx2 = 0; idx2 < Anum; idx2++) {
 					source += "<input name='"+btnType+"List[questionNum].question_answer' type='checkbox' class='i-checks QAnswer' value='problem_nno'/>" +
-					"<input type='hidden' name='"+btnType+"List[questionNum].problemList[problem_Num].question_no' value='questionNo'/>" +
-					"<input type='hidden' name='"+btnType+"List[questionNum].problemList[problem_Num].quizProblem_no' value='problem_nno'/>" +
+					"<input type='hidden' name='"+btnType+"List[questionNum].problemList[problem_Num].question_no' value='questionNo'>" +
+					"<input type='hidden' name='"+btnType+"List[questionNum].problemList[problem_Num].quizProblem_no' value='problem_nno'>" +
 					"<input name='"+btnType+"List[questionNum].problemList[problem_Num].quizProblem_content' class='PContent' type='text' placeholder='선택지를 입력하세요'/><br/>" +
 					"</div>";
 					source = source.replace(/questionNo/g, (idx+1)); // 보여지는 문제번호
@@ -33,20 +34,21 @@ function makeQuestion(formRange, btn, Qnum, Anum){
 					source = source.replace(/problem_nno/g, (idx2+1)); // 보여지는 선택지 번호
 					source = source.replace(/problem_Num/g, idx2); // 실제 스프링으로 넘어갈 선택지_배열의 인덱스값
 				} $(left).append(source);
-			} else if(idx%5==3||idx%5==4){
+			} else if(idx%5==4||idx%5==0){
 				source = "";
 				source += "<div id='"+btnType+"Body' class='questionBody'>" +
 				"<span id='spanYet'>questionNo번</span>" +
 				"<input type='hidden' id='lecture_week' class='lecture_week' name='"+btnType+"List[questionNum].lecture_week'/>" +
 				"<input type='hidden' id='lecture_class' name='"+btnType+"List[questionNum].lecture_class'/>" +
 				"<input type='hidden' class='class_identifying_code' name='"+btnType+"List[questionNum].class_identifying_code'/>" +
+				"<div class='col-lg-6 col-md-6 col-sm-6 col-xs-12'><div class='nk-int-st'>" +
 				"<span id='contentYet'>questionNo번</span>" +
 				"<textarea name='"+btnType+"List[questionNum].question_content' class='QContent form-control auto-size' rows='10' placeholder='문제를 입력하세요'/>" +
 				"</textarea></div></div>";
 				for (var idx2 = 0; idx2 < Anum; idx2++) {
 					source += "<input name='"+btnType+"List[questionNum].question_answer' type='checkbox' class='i-checks QAnswer' value='problem_nno'/>" +
-					"<input type='hidden' name='"+btnType+"List[questionNum].problemList[problem_Num].question_no' value='questionNo'/>" +
-					"<input type='hidden' name='"+btnType+"List[questionNum].problemList[problem_Num].quizProblem_no' value='problem_nno'/>" +
+					"<input type='hidden' name='"+btnType+"List[questionNum].problemList[problem_Num].question_no' value='questionNo'>" +
+					"<input type='hidden' name='"+btnType+"List[questionNum].problemList[problem_Num].quizProblem_no' value='problem_nno'>" +
 					"<input name='"+btnType+"List[questionNum].problemList[problem_Num].quizProblem_content' class='PContent' type='text' placeholder='선택지를 입력하세요'/><br/>" +
 					"</div>";
 					source = source.replace(/questionNo/g, (idx+1)); // 보여지는 문제번호

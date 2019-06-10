@@ -3,18 +3,33 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="path" value="${pageContext.request.contextPath}/"></c:set>
 
+
+<style>
+	#classesName{
+		display:inline-block;
+		width:400px;
+	}
+</style>
 <script>
-	function openNewQuizPage(){
-		newPage = window.open('${path}professor/quiz', '', 'width=800, height=700'); return false;
+	function openNewQuizPage(class_identifying_code, lecture_class, lecture_code){
+		newPage = window.open('${path}professor/quiz/'+class_identifying_code+'/'+lecture_class+'/'+lecture_code, '',
+							  'width=800, height=700'); return false;
 	}
 	
-	function openMakeQuiz(){
-		MakeQuestionPage = window.open('${path}professor/createQuiz', '', 'width=800, height=700'); return false;
+	function openMakeQuiz(class_identifying_code, lecture_class, lecture_code){
+		MakeQuestionPage = window.open('${path}professor/createQuiz/'+class_identifying_code+'/'+lecture_class+'/'+lecture_code, '',
+									   'width=800, height=700'); return false;
 	}
 	
 	function openMakeExam(){
 		MakeQuestionPage = window.open('${path}professor/createExam', '', 'width=800, height=700'); return false;
 	}
+	
+	function openQuizSt(class_identifying_code, lecture_class, lecture_code){
+		newPage = window.open('${path}student/quiz/'+class_identifying_code+'/'+lecture_class+'/'+lecture_code, '',
+		  'width=800, height=700'); return false;
+	}
+	
 	var identifier = "학생";
 	function openNewExamPage(){
 		if(identifier=="학생"){
@@ -36,105 +51,107 @@
 			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 				<div class="accordion-wn-wp">
 					<div class="accordion-hd">
-						<h2>과목명</h2>
+							<h2>${lectureInfos.lecture_name}</h2>
 					</div>
-					<div class="row">
-						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-							<div class="accordion-stn">
-								<div class="panel-group" data-collapse-color="nk-green"
-									id="accordionGreen" role="tablist" aria-multiselectable="true">
-									<div class="panel panel-collapse notika-accrodion-cus">
-										<div class="panel-heading active" role="tab">
-											<h2 class="panel-title">
-												<a data-toggle="collapse" data-parent="#accordionGreen"
-													href="#accordionGreen-one" aria-expanded="true" class="">
-													1주차 </a>
-												<!-- 													<div style="display:inline-block; padding-left:50px;"><h4><a>자바시작하기</a></h4></div> -->
-											</h2>
-										</div>
-										<div id="accordionGreen-one"
-											class="collapse in animated flipInX" role="tabpanel"
-											aria-expanded="true" style="">
-											<div class="panel-body">
-												<div>
-													<div style="display: inline-block; padding-left: 20px;">
-														<strong>강좌명1</strong>
-													</div>
-													<div style="display: inline-block; padding-left: 50px;">
-														<strong>동영상</strong>
-														<button class="btn-sm">보기</button>
-														<button class="btn-sm">등록</button>
-														<button class="btn-sm">수정</button>
-													</div>
+					<div class="accordion-stn">
+                    	<div class="panel-group" data-collapse-color="nk-green" id="accordionGreen" role="tablist" aria-multiselectable="true">
+							<c:forEach items="${lectureInfos.lectureWeekInfos}" var="weekInfo" varStatus="vs">
+								<div class="panel panel-collapse notika-accrodion-cus">
+			                    	<div class="panel-heading" role="tab">
+			                        	<h4 class="panel-title">
+			                            <a class="collapsed" data-toggle="collapse" data-parent="#accordionGreen" href="#accordionGreen-${vs.count}" aria-expanded="false">
+											${vs.count}주차
+										</a>
+			                            </h4>
+			                        </div>
+			                		<div id="accordionGreen-${vs.count}" class="collapse" role="tabpanel">
+			                			<c:forEach items="${weekInfo.lectureWeekClass}" var="lectureWeekClass">
+				                        	<div class="panel-body">
+				                            	<div style="display: inline-block; padding-left: 20px;">
+													<span style="display:inline-block; padding-right:20px;">
+													${lectureWeekClass.lecture_class}교시 </span>
+													<strong id="classesName">${lectureWeekClass.lecture_subname }</strong>
+												</div>
+												<div style="display: inline-block; padding-left: 50px;">
+													<strong>동영상</strong>
+													<button class="btn-sm" onClick="openQuizSt(
+														'${lectureWeekClass.class_identifying_code}',
+														'${lectureWeekClass.lecture_class}',
+														'${lectureInfos.lecture_code}')">보기</button>
+													<button class="btn-sm">등록</button>
+													<button class="btn-sm">수정</button>
+												</div>
 													<div style="display: inline-block; padding-left: 50px;">
 														<strong>퀴즈</strong>
-														<button class="btn-sm" onClick="openNewQuizPage()">보기</button>
-														<button class="btn-sm" onClick="openMakeQuiz()">등록</button>
-													</div>
-													<div style="display: inline-block; padding-left: 50px;">
-														<strong>시험</strong>
-														<button class="btn-sm" onClick="openNewExamPage()">보기</button>
-														<button class="btn-sm" onClick="openMakeExam()">등록</button>
-													</div>
-													<div style="display: inline-block; padding-left: 50px;">
-														<strong>설문</strong>
-														<button class="btn-sm" onClick="">보기</button>
-														<button class="btn-sm" onClick="openMakeSurvey()">등록</button>
-													</div>
+														<button class="btn-sm" onClick="openNewQuizPage(
+														'${lectureWeekClass.class_identifying_code}',
+														'${lectureWeekClass.lecture_class}',
+														'${lectureInfos.lecture_code}')">보기</button>
+														<button class="btn-sm" onClick="openMakeQuiz(
+														'${lectureWeekClass.class_identifying_code}',
+														'${lectureWeekClass.lecture_class}',
+														'${lectureInfos.lecture_code}')">등록</button>
 												</div>
-												<div>
-													<div style="display: inline-block; padding-left: 20px;">
-														<strong>강좌명2</strong>
-														<div style="display: inline-block; padding-left: 50px;">
-															<strong>동영상</strong>
-															<button class="btn-sm">보기</button>
-															<button class="btn-sm">등록</button>
-															<button class="btn-sm">수정</button>
-														</div>
-														<div style="display: inline-block; padding-left: 50px;">
-															<strong>퀴즈</strong>
-															<button class="btn-sm">보기</button>
-															<button class="btn-sm">등록</button>
-															<button class="btn-sm">수정</button>
-														</div>
-														<div style="display: inline-block; padding-left: 50px;">
-															<strong>시험</strong>
-															<button class="btn-sm">보기</button>
-															<button class="btn-sm">등록</button>
-															<button class="btn-sm">수정</button>
-														</div>
-													</div>
-													<div>
-														<div style="display: inline-block; padding-left: 20px;">
-															<strong>강좌명3</strong>
-															<div style="display: inline-block; padding-left: 50px;">
-																<strong>동영상</strong>
-																<button class="btn-sm">보기</button>
-																<button class="btn-sm">등록</button>
-																<button class="btn-sm">수정</button>
-															</div>
-															<div style="display: inline-block; padding-left: 50px;">
-																<strong>퀴즈</strong>
-																<button class="btn-sm">보기</button>
-																<button class="btn-sm">등록</button>
-																<button class="btn-sm">수정</button>
-															</div>
-															<div style="display: inline-block; padding-left: 50px;">
-																<strong>시험</strong>
-																<button class="btn-sm">보기</button>
-																<button class="btn-sm">등록</button>
-																<button class="btn-sm">수정</button>
-															</div>
-														</div>
-													</div>
+												<div style="display: inline-block; padding-left: 50px;">
+													<strong>시험</strong>
+													<button class="btn-sm" onClick="openNewExamPage()">보기</button>
+													<button class="btn-sm" onClick="openMakeExam()">등록</button>
 												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
+				                            </div>
+			                            </c:forEach>
+			                        </div>
+			                     </div>
+			                </c:forEach>
+				
+				
+<!-- 					<div class="accordion-hd"> -->
+<%-- 						<h2>${lectureInfos.lecture_name}</h2> --%>
+<!-- 					</div> -->
+<%-- 					<c:forEach items="${lectureInfos.lectureWeekInfos}" var="weekInfo" varStatus="vs"> --%>
+<!-- 						<div class="row"> -->
+<!-- 							<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> -->
+<!-- 								<div class="accordion-stn"> -->
+<!-- 									<div class="panel-group" data-collapse-color="nk-green" -->
+<!-- 										id="accordionGreen" role="tablist" aria-multiselectable="true"> -->
+<!-- 										<div class="panel panel-collapse notika-accrodion-cus"> -->
+<!-- 											<div class="panel-heading active" role="tab"> -->
+<!-- 												<h2 class="panel-title"> -->
+<!-- 													<a data-toggle="collapse" data-parent="#accordionGreen" -->
+<!-- 														href="#accordionGreen-one" aria-expanded="true" class=""> -->
+<%-- 														${vs.count}주차 </a> --%>
+<!-- 												</h2> -->
+<!-- 											</div> -->
+<%-- 											<c:forEach items="${weekInfo.lectureWeekClass}" var="lectureWeekClass"> --%>
+<!-- 												<div id="accordionGreen-one" class="collapse in animated flipInX" role="tabpanel" aria-expanded="true" style=""> -->
+<!-- 													<div class="panel-body"> -->
+<!-- 														<div> -->
+<!-- 															<div style="display: inline-block; padding-left: 20px;"> -->
+<%-- 																<strong>${lectureWeekClass.lecture_subname }</strong> --%>
+<!-- 															</div> -->
+<!-- 															<div style="display: inline-block; padding-left: 50px;"> -->
+<!-- 																<strong>동영상</strong> -->
+<!-- 																<button class="btn-sm">보기</button> -->
+<!-- 																<button class="btn-sm">등록</button> -->
+<!-- 																<button class="btn-sm">수정</button> -->
+<!-- 															</div> -->
+<!-- 															<div style="display: inline-block; padding-left: 50px;"> -->
+<!-- 																<strong>퀴즈</strong> -->
+<!-- 																<button class="btn-sm" onClick="openNewQuizPage()">보기</button> -->
+<!-- 																<button class="btn-sm" onClick="openMakeQuiz()">등록</button> -->
+<!-- 															</div> -->
+<!-- 															<div style="display: inline-block; padding-left: 50px;"> -->
+<!-- 																<strong>시험</strong> -->
+<!-- 																<button class="btn-sm" onClick="openNewExamPage()">보기</button> -->
+<!-- 																<button class="btn-sm" onClick="openMakeExam()">등록</button> -->
+<!-- 															</div> -->
+<%-- 											</c:forEach> --%>
+<!-- 										</div> -->
+<!-- 									</div> -->
+<!-- 								</div> -->
+<!-- 							</div> -->
+<!-- 						</div> -->
+<%-- 					</c:forEach> --%>
+					</div></div>
 				</div>
 			</div>
 		</div>
