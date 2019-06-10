@@ -1,39 +1,29 @@
 
 package ddit.finalproject.team2.student.controller.subjectpage;
 
+import ddit.finalproject.team2.admin.service.KJE_IStatisticsService;
+import ddit.finalproject.team2.common.service.Lsh_IOpenSemeService;
+import ddit.finalproject.team2.student.dao.KJE_IStatisticsStuDao;
+import ddit.finalproject.team2.student.service.Lsh_ILectureService;
+import ddit.finalproject.team2.vo.UserVo;
+import org.apache.log4j.Logger;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.web.socket.WebSocketSession;
+
+import javax.annotation.Resource;
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-
-import javax.annotation.Resource;
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import lombok.extern.java.Log;
-import lombok.extern.log4j.Log4j;
-import lombok.extern.log4j.Log4j2;
-import org.apache.log4j.Logger;
-import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
-
-import ddit.finalproject.team2.admin.service.KJE_IStatisticsService;
-import ddit.finalproject.team2.student.dao.KJE_IStatisticsStuDao;
-import ddit.finalproject.team2.student.service.Lsh_ILectureService;
-import ddit.finalproject.team2.vo.UserVo;
-import org.springframework.web.socket.WebSocketSession;
 
 /**
  * @author 이종선
@@ -55,12 +45,15 @@ public class SubjectPageController {
 
     @Inject
     KJE_IStatisticsService statisticsService;
-    
+
     @Inject
     KJE_IStatisticsStuDao statisticsstudao;
-    
+
     @Inject
     Lsh_ILectureService lectureService;
+
+    @Inject
+    Lsh_IOpenSemeService openService;
 
     @Resource(name = "socketSessionMap")
     ConcurrentMap<String, CopyOnWriteArrayList<WebSocketSession>> smap;
@@ -82,7 +75,7 @@ public class SubjectPageController {
         userinfo.put("acc_ip", request.getRemoteAddr());
         statisticsService.recodeLectureAccessStats(userinfo);
         mv.setViewName("student/submenu/eduGoal");
-        mv.getModel().put("user", (UserVo)authentication.getPrincipal());
+        mv.getModel().put("user", (UserVo) authentication.getPrincipal());
         return mv;
     }
 
@@ -94,7 +87,7 @@ public class SubjectPageController {
     @GetMapping("professorIntro")
     public ModelAndView goIntroduction(ModelAndView mv, Authentication authentication) {
         mv.setViewName("student/submenu/professorIntro");
-        mv.getModel().put("user", (UserVo)authentication.getPrincipal());
+        mv.getModel().put("user", (UserVo) authentication.getPrincipal());
         return mv;
     }
 
@@ -108,22 +101,24 @@ public class SubjectPageController {
     @GetMapping("lecturePage/{class_identifying_code}")
     @Transactional
     public ModelAndView goContinueLectureList(ModelAndView mv, Authentication au, HttpServletRequest req, @PathVariable String lecture_code,
-                                              @PathVariable String class_identifying_code,@RequestParam(required = false) String first) {
+                                              @PathVariable String class_identifying_code) {
         Map<String, String> map = new HashMap<>();
         map.put("lecture_code", lecture_code);
         map.put("user_id", au.getName());
         map.put("class_identifying_code", class_identifying_code);
-        map.put("replay_time", "0");
         map.put("isplaying", class_identifying_code);
         mv.setViewName("student/exclude/lecturePage");
         mv.getModel().put("videoList", lectureService.selectVideoListbyLecture(map));
-        mv.getModel().put("completeList", lectureService.selectAbsenceYN(map));
-        if(first!=null && first.equals("y")){
+        mv.getModel().put("completeList", lectureService.selectAbsenceListYN(map));
+        mv.getModel().put("period", openService.selectOPenPeriod(lecture_code));
+        String s=req.getHeader("referer");
+        if(req.getHeader("referer")!=null && !req.getHeader("referer").contains("lecturePage")){
             mv.getModel().put("continuePlay", lectureService.selectContinuePlay(map));
         }else{
-            mv.getModel().put("continuePlay",lectureService.selectPlay(map));
+            mv.getModel().put("continuePlay", lectureService.selectPlay(map));
         }
-        mv.getModel().put("user", (UserVo)au.getPrincipal());
+        mv.getModel().put("isFirst",lectureService.selectOneAbsenceYN(map));
+        mv.getModel().put("user", (UserVo) au.getPrincipal());
         return mv;
     }
 
@@ -135,16 +130,17 @@ public class SubjectPageController {
         map.put("lecture_code", lecture_code);
         Map<String, String> continuePlay = lectureService.selectContinuePlay(map);
         String class_code = continuePlay.get("CLASS_IDENTIFYING_CODE");
-        return new RedirectView("lecturePage/" + class_code+"?first=y");
+        RedirectView r=new RedirectView();
+        return new RedirectView("lecturePage/" + class_code);
     }
 
     @PostMapping("lecturePage")
     @Transactional
-    public void updateContinuePlay(Authentication au,@PathVariable String lecture_code,@RequestBody Map<String, String> map) {
+    public void updateContinuePlay(Authentication au, @PathVariable String lecture_code, @RequestBody Map<String, String> map) {
         map.put("lecture_code", lecture_code);
         map.put("user_id", au.getName());
-        map.put("isplaying",(String) map.get("class_identifying_code"));
-        map.put("replay_time",map.get("replay_time"));
+        map.put("isplaying", (String) map.get("class_identifying_code"));
+        map.put("replay_time", map.get("replay_time"));
         lectureService.updateContinuePlay(map);
         lectureService.updateIdentifyCode(map);
     }
@@ -172,18 +168,11 @@ public class SubjectPageController {
      * @return
      */
     @GetMapping("mantoman")
-    public ModelAndView goMantoMan(ModelAndView mv, Authentication au,@PathVariable String lecture_code) {
-        mv.setViewName("student/exclude/mantoman");
-        List<String> al=new ArrayList<>();
+    public ModelAndView goMantoMan(ModelAndView mv, Authentication au, @PathVariable String lecture_code) {
+        mv.setViewName("common/exclude/mantoman");
+        List<String> al = new ArrayList<>();
         mv.getModel().put("id", au.getName());
-        mv.getModel().put("user", (UserVo)au.getPrincipal());
-        for(Map.Entry<String,CopyOnWriteArrayList<WebSocketSession>> entry:smap.entrySet()){
-            for(String id:lectureService.selectAttendUserID(lecture_code)){
-                if(entry.getKey().equals(id)){
-                    mv.getModel().put("conn_users",id);
-                }
-            }
-        }
+        mv.getModel().put("user", (UserVo) au.getPrincipal());
         return mv;
     }
 
@@ -195,10 +184,10 @@ public class SubjectPageController {
      * @return
      */
     @GetMapping("lectureAssignment")
-    public ModelAndView goAssignment(ModelAndView mv, Authentication au,@PathVariable String lecture_code) {
+    public ModelAndView goAssignment(ModelAndView mv, Authentication au, @PathVariable String lecture_code) {
         mv.setViewName("student/submenu/lectureAssignment");
         mv.getModel().put("id", au.getName());
-        mv.getModel().put("user", (UserVo)au.getPrincipal());
+        mv.getModel().put("user", (UserVo) au.getPrincipal());
         mv.getModel().put("lecture_code", lecture_code);
         String lecture_name = statisticsstudao.selectLectureName(lecture_code);
         mv.getModel().put("lecture_name", lecture_name);
@@ -213,10 +202,10 @@ public class SubjectPageController {
      * @return
      */
     @GetMapping("studyState")
-    public ModelAndView goStudy(ModelAndView mv, Authentication au ,@PathVariable String lecture_code) {
+    public ModelAndView goStudy(ModelAndView mv, Authentication au, @PathVariable String lecture_code) {
         mv.setViewName("student/submenu/studyState");
         mv.getModel().put("id", au.getName());
-        mv.getModel().put("user", (UserVo)au.getPrincipal());
+        mv.getModel().put("user", (UserVo) au.getPrincipal());
         mv.getModel().put("lecture_code", lecture_code);
         return mv;
     }
@@ -232,7 +221,7 @@ public class SubjectPageController {
     public ModelAndView goSurvey(ModelAndView mv, Authentication au) {
         mv.setViewName("student/submenu/survey");
         mv.getModel().put("id", au.getName());
-        mv.getModel().put("user", (UserVo)au.getPrincipal());
+        mv.getModel().put("user", (UserVo) au.getPrincipal());
         return mv;
     }
 }

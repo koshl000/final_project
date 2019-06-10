@@ -41,7 +41,7 @@ $(function() {
 		
 		if (sel == "daily") {
 			
-			var styear =today.v;
+			var styear = today.substring(0, 4);
 			var stmonth =today.substring(4, 6);
 			var stday = today.substring(6, 8);
 			

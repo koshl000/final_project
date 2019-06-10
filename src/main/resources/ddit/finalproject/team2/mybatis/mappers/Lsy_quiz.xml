@@ -3,9 +3,19 @@
 <mapper namespace="ddit.finalproject.team2.myPack.dao.LSY_QuizDAO">
 	
 	<resultMap type="ddit.finalproject.team2.vo.Lsy_QuizQuestionVO" id="allQ" autoMapping="true">
-			<id property="question_no" column="QUESTION_NO"/>
+		<id property="question_no" column="QUESTION_NO"/>
 		<collection property="problemList" autoMapping="true" ofType="ddit.finalproject.team2.vo.Lsy_QuizProblemVo">
 			<id property="quizProblem_no" column="QUIZPROBLEM_NO"/>
+		</collection>
+	</resultMap>
+	
+	<resultMap type="ddit.finalproject.team2.vo.Lsy_ExamVo" id="allExam" autoMapping="true">
+		<id property="exam_no" column="EXAM_NO"/>
+			<collection property="questionList" autoMapping="true" ofType="ddit.finalproject.team2.vo.Lsy_ExamQuestionVo">
+			<id property="question_no" column="QUESTION_NO"></id>
+				<collection property="problemList" autoMapping="true" ofType="ddit.finalproject.team2.vo.Lsy_ExamProblemVo">
+					<id property="problem_no" column="PROBLEM_NO"/>
+			</collection>
 		</collection>
 	</resultMap>
 	
@@ -15,6 +25,68 @@
 		from dual
 		connect by level <= #{size}
 		]]>
+	</select>
+	
+	<select id="stAnswerNextVal" resultType="String">
+		<![CDATA[
+		select stQuiz_seq.nextval
+		from dual
+		connect by level <= #{size}
+		]]>
+	</select>
+	
+	<select id="examNoNextVal" resultType="String">
+		select exam_no_seq.nextval
+		from dual
+	</select>
+	
+	<select id="problemNoSeqVal" resultType="String">
+		<![CDATA[
+		SELECT PROBLEM_NO_PRE_SEQ.nextval||PROBLEM_NO_SUF_SEQ.nextval
+		FROM dual
+		connect by level <= #{size}
+		]]>
+	</select>
+	
+	<select id="answerNoSeqVal" resultType="String">
+		<![CDATA[
+		SELECT EXAM_ANSWER_NO_SEQ.nextval
+		FROM dual
+		connect by level <= #{size}
+		]]>
+	</select>
+	
+	<select id="selectStudyCode" parameterType="java.util.HashMap" resultType="ddit.finalproject.team2.vo.Lsy_ExamVo">
+		select e.exam_no, es.evalstudy_code
+		from exam e, evaluationstudy es
+		where es.evalstudy_code = 
+		(select evalstudy_code from evaluationstudy where lecture_code = #{lecture_code} and evalstudy_type like #{examType}||'%')
+		and e.exam_no = 
+		(select exam_no from exam where evalstudy_code = 
+		(select evalstudy_code from evaluationstudy where lecture_code = #{lecture_code} and evalstudy_type like #{examType}||'%'))
+	</select>
+	
+	<select id="markingTest" parameterType="ddit.finalproject.team2.vo.Lsy_EmbraceAnswer" resultType="ddit.finalproject.team2.vo.Lsy_QuizQuestionVO">
+		SELECT
+		    question_no,
+		    question_content,
+		    question_answer,
+		    class_identifying_code,
+		    lecture_code
+		FROM quizquestion
+		WHERE question_answer in
+		<foreach item="answer" collection="answerList" open="(" close=")" separator=",">
+			#{answer.stSelect_no}
+		</foreach>
+	</select>
+	
+	<select id="selectExamList" parameterType="java.util.HashMap" resultMap="allExam">
+		select *
+		from exam e inner join examquestion eq on e.exam_no = eq.exam_no
+		            left outer join examproblem ep on eq.question_no = ep.question_no
+		where e.evalstudy_code = #{evalCode}
+		and e.exam_type like #{examType}||'%'
+		and ep.exam_no = #{examNo}
 	</select>
 	
 	<insert id="insertQuiz" parameterType="ddit.finalproject.team2.vo.Lsy_EmbraceQuizVo">
@@ -41,7 +113,59 @@
 		select * from dual
 	</insert>
 	
-	<update id="updateProblems" parameterType="ddit.finalproject.team2.vo.Lsy_QuizProblemVo">
+	<insert id="insertStAnswer" parameterType="ddit.finalproject.team2.vo.Lsy_EmbraceAnswer">
+		INSERT ALL
+			<foreach collection="answerList" item="answer">
+					into QUIZSTUDENTANSWER
+						(QUESTION_NO, STSELECT_NO, ATTEND_NO, QUIZANSWER_CODE)
+					values
+						(
+						  #{answer.question_no}, #{answer.stSelect_no}, #{answer.attend_no}, #{answer.quizAnswer_code}
+						)
+			</foreach>
+			select * from dual
+	</insert>
+		
+	<insert id="insertExam" parameterType="ddit.finalproject.team2.vo.Lsy_EmbraceExamVo">
+		INSERT ALL
+		<foreach collection="examList" item="examVo">
+			INTO EXAM
+				(EXAM_NO, EXAM_TYPE, EVALSTUDY_CODE)
+			values
+				(#{examVo.exam_no}, #{examVo.exam_type}, #{examVo.evalStudy_code})
+			<foreach collection="examVo.questionList" item="examQuestionVo">
+				INTO EXAMQUESTION
+					(QUESTION_NO, SUBJECTIVE_ANSWER, EXAM_NO, QUESTION_CONTENT, OBJECTIVE_ANSWER)
+				VALUES
+					(#{examQuestionVo.question_no}, #{examQuestionVo.subjective_answer}, 
+					#{examVo.exam_no}, #{examQuestionVo.question_content}, #{examQuestionVo.objective_answer})
+					<foreach collection="examQuestionVo.problemList" item="examProblemVo">
+						INTO EXAMPROBLEM
+						(PROBLEM_NO, PROBLEM_CONTENT, EXAM_NO, QUESTION_NO)
+						VALUES ( 
+						#{examProblemVo.problem_no}, #{examProblemVo.problem_content}, #{examVo.exam_no}, #{examQuestionVo.question_no}
+						 )
+					</foreach>
+			</foreach>
+		</foreach>
+		select * from dual
+	</insert>
+	
+	<insert id="insertExamAnswer" parameterType="ddit.finalproject.team2.vo.Lsy_EmbraceExamAnswer">
+		INSERT ALL
+		<foreach collection="answerList" item="examAnswerVo">
+			INTO EXAMANSWER 
+				( exam_no, attend_no, question_no, problem_no, answer_no, subjective_answer ) 
+			VALUES 
+			( #{examAnswerVo.exam_no}, #{examAnswerVo.attend_no}, #{examAnswerVo.question_no},
+			  #{examAnswerVo.problem_no}, #{examAnswerVo.answer_no}, #{examAnswerVo.subjective_answer} 
+			)
+		</foreach>
+		select * from dual
+	</insert>
+	
+	
+	<update id="updateQuizProblems" parameterType="ddit.finalproject.team2.vo.Lsy_QuizProblemVo">`
 		update quizproblem
 		set quizProblem_content = #{quizProblem_content}
 		where question_no = #{question_no}
@@ -56,6 +180,32 @@
 		and lecture_code = #{lecture_code}
 		and class_identifying_code = #{class_identifying_code}
 	</update>
+	
+	<update id="updateExam" parameterType="ddit.finalproject.team2.vo.Lsy_ExamQuestionVo">
+		update EXAMQUESTION
+		set question_content = #{question_content},
+				objective_answer = #{objective_answer},
+				subjective_answer = #{subjective_answer}
+		where exam_no = #{exam_no}
+		and question_no = #{question_no}
+	</update>
+	
+	<update id="updateExamProblems" parameterType="ddit.finalproject.team2.vo.Lsy_ExamProblemVo">
+		update EXAMPROBLEM
+		set problem_content = #{problem_content}
+		where exam_no = #{exam_no}
+		and question_no = #{question_no}
+		and problem_no = #{problem_no}
+	</update>
+	
+	<select id="selectOneExam" parameterType="java.util.HashMap" resultMap="allExam">
+		select *
+		from examquestion eq inner join exam e on e.exam_no = eq.exam_no
+		                     inner join examproblem ep on eq.question_no = ep.question_no
+		where ep.exam_no = #{exam_no}
+		and ep.question_no = #{question_no}
+		and exam_type like #{exam_type}||'%'
+	</select>
 	
 	<select id="selectOneQuiz" parameterType="ddit.finalproject.team2.vo.Lsy_QuizQuestionVO" resultMap="allQ">
 		select * 

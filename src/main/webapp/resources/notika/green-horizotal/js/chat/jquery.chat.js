@@ -26,8 +26,9 @@
         var uaerName = this.$userName.val();
         var contextPath = this.$contextPath.val();
         if (chatText == "") {
-            sweetAlert("Oops...", "You forgot to enter your chat message", "error");
-            this.$chatInput.focus();
+        	 var chatTime = moment().format("MM/DD hh:mm");
+    		 $('<li class="clearfix odd"><div class="chat-avatar"><i>' + chatTime + '</i></div><div class="conversation-text"><div class="ctext-wrap"><i>대덕인재대학교</i><p>' + "안녕하세요.대덕인재대학교 ChatBot시스템 입니다." + '</p></div></div></li>').appendTo('ul.conversation-list');
+        	 $('.widgets-chat-scrollbar').mCustomScrollbar("scrollTo","last");
         } else {
         	 $('<li class="clearfix"><div class="chat-avatar"><i>' + chatTime + '</i></div><div class="conversation-text"><div class="ctext-wrap"><i>'+uaerName+'</i><p>' + chatText + '</p></div></div></li>').appendTo('ul.conversation-list');
         	 $('.widgets-chat-scrollbar').mCustomScrollbar("scrollTo","last");
@@ -67,11 +68,18 @@
            			data: targetParam,
            			dataType : "json", // request header(Accept), response header(Content-Type)
            			success : function(resp) {
-           				var respList = resp;
-           				$(respList).each(function(idx, resps){
-           					$('<li class="clearfix odd"><div class="chat-avatar"><i>' + chatTime + '</i></div><div class="conversation-text"><div class="ctext-wrap"><i>대덕인재대학교</i><p>' + resps.scheduleName +resps.startSchedule+"~" + resps.endSchedule+ '</p></div></div></li>').appendTo('ul.conversation-list');
-           					$('.widgets-chat-scrollbar').mCustomScrollbar("scrollTo","last");
-           				})
+           				if(resp.length>0){
+           					var respList = resp;
+               				$(respList).each(function(idx, resps){
+               					$('<li class="clearfix odd"><div class="chat-avatar"><i>' + chatTime + '</i></div><div class="conversation-text"><div class="ctext-wrap"><i>대덕인재대학교</i><p>' + resps.scheduleName +resps.startSchedule+"~" + resps.endSchedule+ '</p></div></div></li>').appendTo('ul.conversation-list');
+               					$('.widgets-chat-scrollbar').mCustomScrollbar("scrollTo","last");
+               				})
+           					
+           				} else{
+           				 var chatTime = moment().format("MM/DD hh:mm");
+           				 $('<li class="clearfix odd"><div class="chat-avatar"><i>' + chatTime + '</i></div><div class="conversation-text"><div class="ctext-wrap"><i>대덕인재대학교</i><p>' + "검색된 내용이 없습니다." + '</p></div></div></li>').appendTo('ul.conversation-list');
+           				}
+           				
 
            			},
            			error : function(errorResp) {

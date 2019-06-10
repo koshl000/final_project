@@ -35,4 +35,6 @@ public interface Lsh_ILectureDao {
     public List<String> selectAttendUserID(String lec_code);
 
     public String selectLecProID(String lec_code);
+
+    public String selectOneAbsenceYN(Map<String,String> map);
 }

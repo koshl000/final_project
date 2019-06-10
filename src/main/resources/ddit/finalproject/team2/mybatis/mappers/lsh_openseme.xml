@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ddit.finalproject.team2.common.dao.Lsh_IOPenSemeDao">
+    <select id="selectOpenPeroid" resultType="map" parameterType="string">
+       <![CDATA[
+        select OPENSEME_PERIOD1,OPENSEME_PERIOD2
+        from OPENSEMESTER inner join LECTURE L2 on OPENSEMESTER.OPENSEME_NO = L2.OPENSEME_NO
+        where L2.LECTURE_CODE=#{lecture_code}
+        ]]>
+   </select>
+</mapper>

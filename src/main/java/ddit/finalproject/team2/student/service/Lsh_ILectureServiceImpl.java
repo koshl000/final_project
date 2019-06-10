@@ -25,7 +25,7 @@ public class Lsh_ILectureServiceImpl implements Lsh_ILectureService {
     }
 
     @Override
-    public List<String> selectAbsenceYN(Map<String, String> map) {
+    public List<String> selectAbsenceListYN(Map<String, String> map) {
         return dao.selectAbsenceYN(map);
     }
 
@@ -62,5 +62,10 @@ public class Lsh_ILectureServiceImpl implements Lsh_ILectureService {
     @Override
     public Map<String, String> selectPlay(Map<String, String> map) {
         return dao.selectPlay(map);
+    }
+
+    @Override
+    public String selectOneAbsenceYN(Map<String, String> map) {
+        return dao.selectOneAbsenceYN(map);
     }
 }

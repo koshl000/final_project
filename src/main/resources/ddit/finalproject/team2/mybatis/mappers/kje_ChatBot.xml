@@ -38,6 +38,22 @@
 		
 	</select>
 
+	<select id="selectAssignmentSchedule" parameterType="String" resultType="KJE_ScheduleVo">
+		SELECT
+		SCHEDULE_NO,
+		SCHEDULE_TYPE,
+		SCHEDULE_TITLE,
+		SCHEDULE_CONTENT,
+		SCHEDULE_START,
+		SCHEDULE_END,
+		SCHEDULE_ADD,
+		S.LECTURE_CODE,
+		L.LECTURE_NAME
+		FROM SCHEDULE S INNER JOIN LECTURE L ON(S.LECTURE_CODE=L.LECTURE_CODE)
+        INNER JOIN ATTEND A ON(A.LECTURE_CODE=L.LECTURE_CODE)
+        WHERE A.USER_ID = #{user_id}
+        AND S.SCHEDULE_TYPE='과제물'
+	</select>
 
 </mapper>
 

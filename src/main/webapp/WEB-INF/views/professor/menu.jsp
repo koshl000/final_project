@@ -124,19 +124,21 @@
                     </li>
                     <li><a href="${pageContext.request.contextPath }/professorMain/notice"><i class="notika-icon notika-bar-chart"></i>공지사항</a></li>
                 </ul>
+                <%--마이페이지--%>
                 <div class="tab-content custom-menu-content">
                     <div id="mypage" class="tab-pane in notika-tab-menu-bg animated flipInX">
                         <ul class="notika-main-menu-dropdown">
-                            <li><a href="index.html">성적조회</a>
+                            <li><a href="${pageContext.request.contextPath }/professorMain/">성적조회</a>
                             </li>
-                            <li><a href="index-2.html">나의정보</a>
+                            <li><a href="${pageContext.request.contextPath }/professorMain/">나의정보</a>
                             </li>
                             <li><a href="${pageContext.request.contextPath}/professor/proschedule">일정관리</a>
                             </li>
-                            <li><a href="index-4.html">담당강의</a>
+                            <li><a href="${pageContext.request.contextPath }/professorMain/">담당강의</a>
                             </li>
                         </ul>
                     </div>
+                    <%--강의관리--%>
                     <div id="manage" class="tab-pane notika-tab-menu-bg animated flipInX">
                         <ul class="notika-main-menu-dropdown">
                             <li><a href="animations.html">교육목표</a>
@@ -147,7 +149,7 @@
                             </li>
                             <li><a href="${pageContext.request.contextPath }/subjectPage/lecture_code_1/lectureBoard">강의게시판</a>
                             </li>
-                            <li><a href="image-cropper.html">1:1지도</a>
+                            <li><a href="${pageContext.request.contextPath }/professorMain/mantoman">1:1지도</a>
                             </li>
                             <li><a href="${pageContext.request.contextPath}/professor/assignment">과제물관리</a>
                             </li>
@@ -155,6 +157,7 @@
                             </li>
                         </ul>
                     </div>
+                    <%--학습통계--%>
                     <div id="statistics" class="tab-pane notika-tab-menu-bg animated flipInX">
                     <ul class="notika-main-menu-dropdown">
                     <li><a href="inbox.html">출석통계</a>
@@ -163,6 +166,7 @@
                     </li>
                     </ul>
                     </div>
+                    <%--증명서--%>
                     <div id="cert" class="tab-pane notika-tab-menu-bg animated flipInX">
                         <ul class="notika-main-menu-dropdown">
                             <li><a href="flot-charts.html">증명서</a>

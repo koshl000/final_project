@@ -1,101 +1,143 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<link rel="stylesheet" href="${pageContext.request.contextPath}/res/fullCalendar/fullcalendar/style_full.css"/>
+<script type="text/javascript" src="${pageContext.request.contextPath}/res/fullCalendar/fullcalendar/moment.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/res/fullCalendar/fullcalendar/fullcalendar.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/res/fullCalendar/fullcalendar/spectrum.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/res/fullCalendar/fullcalendar/frontStu.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.2/TweenMax.min.js"></script>
+	
+	<!-- dialog CSS
+		============================================ -->
+    <link rel="stylesheet" href="${pageContext.request.contextPath }/notika/css/dialog/sweetalert2.min.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath }/notika/css/dialog/dialog.css">
     
 <style>
-    .sangyup {
-       display: inline;
-        float:right;
-    }
-    .dataTables_wrapper .dataTables_filter {
-       width: 45%;
+   tfoot { 
+       display: table-header-group; 
    }
-    .dataTables_wrapper .dataTables_filter input, .dataTables_wrapper .dataTables_filter label {
-       width: 20%;
-       
+   select {
+       border: 1px solid #eee;
+       height: 35px;
+       padding: 7px 15px;
+       font-size: 13px;
+       border-radius: 2px;
+       -webkit-appearance: none;
+       -moz-appearance: none;
+       line-height: 100%;
+       background-color: #fff;
+       outline: none;
    }
+   
+   select :hover  {
+      background-color: #00c292 !important;
+       color: #fff !important;
+   }
+   .selectSpan {
+      font-size: 16px;
+      font-weight: bold;
+      margin : 0 5px 0 20px;
+   }
+   #grade, #credit, #course {
+      width: 60px;
+   }
+   
 </style>
 
-	<!--    메뉴 소개 영역 -->
-    <div class="breadcomb-area">
-      <div class="container">
-         <div class="row">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-               <div class="breadcomb-list">
-                  <div class="row">
-                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                        <div class="breadcomb-wp">
-                           <div class="breadcomb-ctn">
-                              <h2>알림목록</h2>
-                              <p> <span class="bread-ntd"></span></p>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-            </div>
-         </div>
-      </div>
-   </div>
-   
-   <div class="data-table-area">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    <div class="data-table-list">
-                        <div class="table-responsive">
-                            <div id="data-table-basic_wrapper" class="dataTables_wrapper">
-                            <div class="dataTables_length" id="data-table-basic_length">
-                            <label>Show <select name="data-table-basic_length" aria-controls="data-table-basic" class="">
-                            <option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select>
-                             entries</label>
-                           <table id="data-table-basic" class="table table-striped dataTable" role="grid" aria-describedby="data-table-basic_info">
-                                <thead>
-                                    <tr role="row">
-                                    <th class="sorting_asc" tabindex="0" aria-controls="data-table-basic" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 80px;">알림구분</th>
-                                    <th class="sorting" tabindex="0" aria-controls="data-table-basic" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 100px;">알림내용</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                <tr role="row" class="odd">
-                                        <td class="sorting_1">공지사항</td>
-                                        <td>새글이 등록되었습니다</td>
-                                    </tr>
-                                  	<tr role="row" class="even">
-                                       <td class="sorting_1">게시판</td>
-                                        <td>1새글이 등록되었습니다</td>
-                                    </tr>
-                                    </tbody>
-                            </table>
-                            <div class="dataTables_info" id="data-table-basic_info" role="status" aria-live="polite">Showing 1 to 10 of 57 entries</div><div class="dataTables_paginate paging_simple_numbers" id="data-table-basic_paginate"><a class="paginate_button previous disabled" aria-controls="data-table-basic" data-dt-idx="0" tabindex="0" id="data-table-basic_previous">Previous</a><span><a class="paginate_button current" aria-controls="data-table-basic" data-dt-idx="1" tabindex="0">1</a><a class="paginate_button " aria-controls="data-table-basic" data-dt-idx="2" tabindex="0">2</a><a class="paginate_button " aria-controls="data-table-basic" data-dt-idx="3" tabindex="0">3</a><a class="paginate_button " aria-controls="data-table-basic" data-dt-idx="4" tabindex="0">4</a><a class="paginate_button " aria-controls="data-table-basic" data-dt-idx="5" tabindex="0">5</a><a class="paginate_button " aria-controls="data-table-basic" data-dt-idx="6" tabindex="0">6</a></span><a class="paginate_button next" aria-controls="data-table-basic" data-dt-idx="7" tabindex="0" id="data-table-basic_next">Next</a></div></div>
-			               
-<!-- 			                <div class="bsc-tbl"> -->
-<!-- 			                   <table class="table table-sc-ex"> -->
-<!-- 			                       <thead> -->
-<!-- 			                           <tr> -->
-<!-- 			                               <th>#</th> -->
-<!-- 			                               <th>First Name</th> -->
-<!-- 			                               <th>Last Name</th> -->
-<!-- 			                               <th>Username</th> -->
-<!-- 			                               <th>Nickname</th> -->
-<!-- 			                           </tr> -->
-<!-- 			                       </thead> -->
-<!-- 			                       <tbody> -->
-<!-- 			                           <tr> -->
-<!-- 			                               <td>1</td> -->
-<!-- 			                               <td>Alexandra</td> -->
-<!-- 			                               <td>Christopher</td> -->
-<!-- 			                               <td>@makinton</td> -->
-<!-- 			                               <td>Ducky</td> -->
-<!-- 			                           </tr> -->
-<!-- 			                       </tbody> -->
-<!-- 			                   </table> -->
-<!-- 			               </div> -->
+<div class="breadcomb-area">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+				<div class="breadcomb-list">
+					<div class="row">
+						<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+							<div class="breadcomb-wp">
+								<div class="breadcomb-icon">
+									<i class="notika-icon notika-bar-chart"></i>
+								</div>
+								<div class="breadcomb-ctn">
+									<h2>일정 관리 </h2>
+									<p> 날짜를 클릭하시면 일정을 추가하실 수 있습니다.<p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    </div>
-    
+<div class="container">
+	<div class="row">
+		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+		<div class="wrap">
+		<div class="calendar_wrap" id="calendar"> </div>
+		<!--// calendar_wrap-->
+
+		<div class="schedule_wrap">
+		<div class="schedule_form">
+			<table class="tbl th_ver" border="0" cellpadding="0" cellspacing="0">
+	            <caption></caption>
+	            <colgroup>
+	                <col width="30%" />
+	                <col width="70%" />
+	            </colgroup>	
+	            <tbody>
+	            	<tr>
+	            		<th scope="row">과목</th>
+	            		<td id="lectureName"></td>
+	            	</tr>
+	            	<tr>
+	            		<th scope="row">일정명</th>
+	            		<td id="sTitle"></td>
+	            	</tr>
+	            	<tr>
+	            		<th scope="row">등록일</th>
+	            		<td class="write_date" name="schedule_add"></td>
+	            	</tr>
+	            	<tr>
+	            		<th scope="row">시작일</th>
+	            		<td id="start-date">
+	            		</td>
+	            	</tr>
+	            	<tr>
+	            		<th scope="row">일정 시작 시간</th>
+	            		<td id="stTime">
+	            		</td>
+	            	</tr>
+	            	<tr>
+	            		<th scope="row">종료일</th>
+	            		<td id="end-date"></td>
+	            	</tr>
+	            	<tr>
+	            		<th scope="row">일정 종료 시간</th>
+	            		<td id="edTime"> </td>
+	            	</tr>
+	            </tbody>
+            </table>
+		</div>
+		<!--// schedule_form-->
+
+		<div class="btn_area center">
+			<button type="button" class="btn cancel" id="closeBtn">닫기</button>
+		</div>
+		<!--// btn_area-->
+	</div>
+	<!--// schedule_wrap-->
+	<!--// con_box-->
+</div>
+</div>
+</div>
+</div>
+<script type="text/javascript">
+$(function(){
+	scheduleRegist.init();			// 일정 등록 관리 초기화
+	ajaxData();
+	
+});
+</script>
+
+<script	src="${pageContext.request.contextPath }/notika/js/dialog/sweetalert2.min.js"></script>
