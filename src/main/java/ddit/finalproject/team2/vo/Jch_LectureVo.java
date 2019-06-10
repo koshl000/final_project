@@ -15,7 +15,7 @@ import lombok.ToString;
 @EqualsAndHashCode(of="lecture_code")
 @ToString
 public class Jch_LectureVo implements Serializable{
-	@NotNull private String lower_organization;
+	private String lower_organization;
 	@NotNull private String lecture_current;
 	@NotNull private String lecture_code;
 	@NotNull private String user_id;
@@ -23,9 +23,27 @@ public class Jch_LectureVo implements Serializable{
 	@NotNull private String lecture_name;
 	@NotNull private String lecture_credit;
 	@NotNull private String lecture_target;
-	@NotNull private String openseme_no;
+	private String openseme_no;
 	@NotNull private String lecture_capacity;
 	@NotNull private Date mid_date;
 	@NotNull private Date final_date;
+	
+	private String openseme_year;
+	private String openseme_semester;
+	private String user_name;
+	
+	
+	private String lecture_planBtn = "<button class='btn btn-default notika-btn-default waves-effect'>보기</button>";
+	private String lectureAddBtn = "<button class='btn btn-default notika-btn-default waves-effect lectureAddBtn'>등록</button>";
+	
+	private String videoBtn = "<button class='btn btn-default notika-btn-default waves-effect'>보기</button>"
+						+ "<button class='btn btn-default notika-btn-default waves-effect'>등록</button>"
+						+ "<button class='btn btn-default notika-btn-default waves-effect'>수정</button>";
+	private String quizeBtn = "<button class='btn btn-default notika-btn-default waves-effect'>보기</button>"
+						+ "<button class='btn btn-default notika-btn-default waves-effect'>등록</button>"
+						+ "<button class='btn btn-default notika-btn-default waves-effect'>수정</button>";
+	private String examBtn = "<button class='btn btn-default notika-btn-default waves-effect'>보기</button>"
+						+ "<button class='btn btn-default notika-btn-default waves-effect'>등록</button>"
+						+ "<button class='btn btn-default notika-btn-default waves-effect'>수정</button>";
 	
 }
