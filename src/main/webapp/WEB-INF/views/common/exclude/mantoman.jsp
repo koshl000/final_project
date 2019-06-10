@@ -34,7 +34,7 @@
 </div>
 <div id="frame">
     <div id="half_frame">
-
+        <iframe src="/professor/showExam?lecture_code=CS001&examtype=중간}" style="width: 100%;height: 100%;"></iframe>
     </div>
     <div id="half_frame">
         <div id="sidepanel">

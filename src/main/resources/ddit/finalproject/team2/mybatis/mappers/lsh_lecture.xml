@@ -45,6 +45,18 @@
           and A2.USER_ID = #{user_id}
         order by ABSENCE_WEEK asc, ABSENCE_CLASS asc
     </select>
+
+    <select id="selectOneAbsenceYN" parameterType="map" resultType="string">
+        select ABSENCE_YN
+        from ABSENCE A1
+                 inner join ATTEND A2
+                            on A1.ATTEND_NO = A2.ATTEND_NO
+        where A2.LECTURE_CODE = #{lecture_code}
+          and A2.USER_ID = #{user_id}
+          and A1.ABSENCE_WEEK = substr(#{class_identifying_code}, 1, 1)
+          and A1.ABSENCE_CLASS = substr(#{class_identifying_code}, 2, 1)
+    </select>
+
     <!--이어보기-->
     <select id="selectContinuePlay" parameterType="map" resultType="map">
         select STUDYSTATE.*, VIDEOFILE.FILE_URL
@@ -55,7 +67,7 @@
                            from attend
                            where attend.user_id = #{user_id}
                              and attend.lecture_code = #{lecture_code})
-          and STUDYSTATE.CLASS_IDENTIFYING_CODE=STUDYSTATE.ISPLAYING
+          and STUDYSTATE.CLASS_IDENTIFYING_CODE = STUDYSTATE.ISPLAYING
     </select>
 
     <select id="getAttend" parameterType="map" resultType="string">
@@ -76,9 +88,11 @@
     </update>
 
     <update id="updateIdentifyCode" parameterType="map">
-        update STUDYSTATE set ISPLAYING=#{isplaying}
+        update STUDYSTATE
+        set ISPLAYING=#{isplaying}
     </update>
 
+<!--    -->
     <select id="selectPlay" parameterType="map" resultType="map">
         select STUDYSTATE.*, VIDEOFILE.FILE_URL
         FROM STUDYSTATE
@@ -88,12 +102,16 @@
                            from attend
                            where attend.user_id = #{user_id}
                              and attend.lecture_code = #{lecture_code})
-          and STUDYSTATE.CLASS_IDENTIFYING_CODE=#{class_identifying_code}
+          and STUDYSTATE.CLASS_IDENTIFYING_CODE = #{class_identifying_code}
     </select>
     <select id="selectAttendUserID" parameterType="string" resultType="string">
-        select USER_ID from ATTEND where LECTURE_CODE=#{lecture_code}
+        select USER_ID
+        from ATTEND
+        where LECTURE_CODE = #{lecture_code}
     </select>
     <select id="selectLecProID" parameterType="string" resultType="string">
-        select USER_ID from LECTURE where LECTURE_CODE=#{lecture_code}
+        select USER_ID
+        from LECTURE
+        where LECTURE_CODE = #{lecture_code}
     </select>
 </mapper>

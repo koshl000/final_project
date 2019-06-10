@@ -45,10 +45,10 @@ public class SubjectPageController {
 
     @Inject
     KJE_IStatisticsService statisticsService;
-    
+
     @Inject
     KJE_IStatisticsStuDao statisticsstudao;
-    
+
     @Inject
     Lsh_ILectureService lectureService;
 
@@ -75,7 +75,7 @@ public class SubjectPageController {
         userinfo.put("acc_ip", request.getRemoteAddr());
         statisticsService.recodeLectureAccessStats(userinfo);
         mv.setViewName("student/submenu/eduGoal");
-        mv.getModel().put("user", (UserVo)authentication.getPrincipal());
+        mv.getModel().put("user", (UserVo) authentication.getPrincipal());
         return mv;
     }
 
@@ -87,7 +87,7 @@ public class SubjectPageController {
     @GetMapping("professorIntro")
     public ModelAndView goIntroduction(ModelAndView mv, Authentication authentication) {
         mv.setViewName("student/submenu/professorIntro");
-        mv.getModel().put("user", (UserVo)authentication.getPrincipal());
+        mv.getModel().put("user", (UserVo) authentication.getPrincipal());
         return mv;
     }
 
@@ -101,23 +101,24 @@ public class SubjectPageController {
     @GetMapping("lecturePage/{class_identifying_code}")
     @Transactional
     public ModelAndView goContinueLectureList(ModelAndView mv, Authentication au, HttpServletRequest req, @PathVariable String lecture_code,
-                                              @PathVariable String class_identifying_code,@RequestParam(required = false) String first) {
+                                              @PathVariable String class_identifying_code) {
         Map<String, String> map = new HashMap<>();
         map.put("lecture_code", lecture_code);
         map.put("user_id", au.getName());
         map.put("class_identifying_code", class_identifying_code);
-        map.put("replay_time", "0");
         map.put("isplaying", class_identifying_code);
         mv.setViewName("student/exclude/lecturePage");
         mv.getModel().put("videoList", lectureService.selectVideoListbyLecture(map));
-        mv.getModel().put("completeList", lectureService.selectAbsenceYN(map));
-        mv.getModel().put("period",openService.selectOPenPeriod(lecture_code));
-        if(first!=null && first.equals("y")){
-            mv.getModel().put("continuePlay",lectureService.selectPlay(map));
-        }else{
+        mv.getModel().put("completeList", lectureService.selectAbsenceListYN(map));
+        mv.getModel().put("period", openService.selectOPenPeriod(lecture_code));
+        String s=req.getHeader("referer");
+        if(req.getHeader("referer")!=null && !req.getHeader("referer").contains("lecturePage")){
             mv.getModel().put("continuePlay", lectureService.selectContinuePlay(map));
+        }else{
+            mv.getModel().put("continuePlay", lectureService.selectPlay(map));
         }
-        mv.getModel().put("user", (UserVo)au.getPrincipal());
+        mv.getModel().put("isFirst",lectureService.selectOneAbsenceYN(map));
+        mv.getModel().put("user", (UserVo) au.getPrincipal());
         return mv;
     }
 
@@ -129,17 +130,17 @@ public class SubjectPageController {
         map.put("lecture_code", lecture_code);
         Map<String, String> continuePlay = lectureService.selectContinuePlay(map);
         String class_code = continuePlay.get("CLASS_IDENTIFYING_CODE");
-
-        return new RedirectView("lecturePage/" + class_code+"?first=y");
+        RedirectView r=new RedirectView();
+        return new RedirectView("lecturePage/" + class_code);
     }
 
     @PostMapping("lecturePage")
     @Transactional
-    public void updateContinuePlay(Authentication au,@PathVariable String lecture_code,@RequestBody Map<String, String> map) {
+    public void updateContinuePlay(Authentication au, @PathVariable String lecture_code, @RequestBody Map<String, String> map) {
         map.put("lecture_code", lecture_code);
         map.put("user_id", au.getName());
-        map.put("isplaying",(String) map.get("class_identifying_code"));
-        map.put("replay_time",map.get("replay_time"));
+        map.put("isplaying", (String) map.get("class_identifying_code"));
+        map.put("replay_time", map.get("replay_time"));
         lectureService.updateContinuePlay(map);
         lectureService.updateIdentifyCode(map);
     }
@@ -167,11 +168,11 @@ public class SubjectPageController {
      * @return
      */
     @GetMapping("mantoman")
-    public ModelAndView goMantoMan(ModelAndView mv, Authentication au,@PathVariable String lecture_code) {
+    public ModelAndView goMantoMan(ModelAndView mv, Authentication au, @PathVariable String lecture_code) {
         mv.setViewName("common/exclude/mantoman");
-        List<String> al=new ArrayList<>();
+        List<String> al = new ArrayList<>();
         mv.getModel().put("id", au.getName());
-        mv.getModel().put("user", (UserVo)au.getPrincipal());
+        mv.getModel().put("user", (UserVo) au.getPrincipal());
         return mv;
     }
 
@@ -183,10 +184,10 @@ public class SubjectPageController {
      * @return
      */
     @GetMapping("lectureAssignment")
-    public ModelAndView goAssignment(ModelAndView mv, Authentication au,@PathVariable String lecture_code) {
+    public ModelAndView goAssignment(ModelAndView mv, Authentication au, @PathVariable String lecture_code) {
         mv.setViewName("student/submenu/lectureAssignment");
         mv.getModel().put("id", au.getName());
-        mv.getModel().put("user", (UserVo)au.getPrincipal());
+        mv.getModel().put("user", (UserVo) au.getPrincipal());
         mv.getModel().put("lecture_code", lecture_code);
         String lecture_name = statisticsstudao.selectLectureName(lecture_code);
         mv.getModel().put("lecture_name", lecture_name);
@@ -201,10 +202,10 @@ public class SubjectPageController {
      * @return
      */
     @GetMapping("studyState")
-    public ModelAndView goStudy(ModelAndView mv, Authentication au ,@PathVariable String lecture_code) {
+    public ModelAndView goStudy(ModelAndView mv, Authentication au, @PathVariable String lecture_code) {
         mv.setViewName("student/submenu/studyState");
         mv.getModel().put("id", au.getName());
-        mv.getModel().put("user", (UserVo)au.getPrincipal());
+        mv.getModel().put("user", (UserVo) au.getPrincipal());
         mv.getModel().put("lecture_code", lecture_code);
         return mv;
     }
@@ -220,7 +221,7 @@ public class SubjectPageController {
     public ModelAndView goSurvey(ModelAndView mv, Authentication au) {
         mv.setViewName("student/submenu/survey");
         mv.getModel().put("id", au.getName());
-        mv.getModel().put("user", (UserVo)au.getPrincipal());
+        mv.getModel().put("user", (UserVo) au.getPrincipal());
         return mv;
     }
 }

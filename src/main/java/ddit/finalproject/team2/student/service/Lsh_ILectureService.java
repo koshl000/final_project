@@ -11,7 +11,7 @@ public interface Lsh_ILectureService {
 
     public List<Map<String, String>> selectVideoListbyLecture(Map<String, String> map);
 
-    public List<String> selectAbsenceYN(Map<String, String> map);
+    public List<String> selectAbsenceListYN(Map<String, String> map);
 
     public Map<String, String> selectContinuePlay(Map<String, String> map);
 
@@ -26,5 +26,7 @@ public interface Lsh_ILectureService {
     public int updateIdentifyCode(Map<String, String> map);
 
     public Map<String, String> selectPlay(Map<String, String> map);
+
+    public String selectOneAbsenceYN(Map<String,String> map);
 
 }
