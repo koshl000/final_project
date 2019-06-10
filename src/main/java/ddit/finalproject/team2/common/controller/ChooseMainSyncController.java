@@ -152,7 +152,7 @@ public class ChooseMainSyncController {
 			
 			//문자SMS
 //			String api_key = "NCSDR0AKHFXQMT3W";
-//			String api_secret = "0B4ITNKM8XPXE1QCVTFYUPJUFRTZIBOG";
+//			String api_secret = "7OJVF4K8TVLAO80YYKK8XWNZIOCESX8R";
 //			Message coolsms = new Message(api_key, api_secret);
 //			HashMap<String, String> params = new HashMap<String, String>();
 //			params.put("to", userVo.getUser_hp()); // 수신번호
@@ -191,7 +191,7 @@ public class ChooseMainSyncController {
 			
 			//문자SMS
 //			String api_key = "NCSDR0AKHFXQMT3W";
-//			String api_secret = "0B4ITNKM8XPXE1QCVTFYUPJUFRTZIBOG";
+//			String api_secret = "7OJVF4K8TVLAO80YYKK8XWNZIOCESX8R";
 //			Message coolsms = new Message(api_key, api_secret);
 //			HashMap<String, String> params = new HashMap<String, String>();
 //			params.put("to", userVo.getUser_hp()); // 수신번호
@@ -247,4 +247,5 @@ public class ChooseMainSyncController {
 		}
 		return msg;
 	}
+	
 }

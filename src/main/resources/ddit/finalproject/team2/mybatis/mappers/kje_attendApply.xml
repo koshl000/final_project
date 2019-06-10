@@ -122,4 +122,17 @@
         	]]>
 	</select>
 
+	<update id="plusLecture_current" parameterType="String">
+		UPDATE LECTURE
+        SET  LECTURE_CURRENT=TO_NUMBER(LECTURE_CURRENT)+1
+        WHERE LECTURE_CODE=#{lecture_code}
+	</update>
+	
+	<update id="minusLecture_current" parameterType="String">
+		UPDATE LECTURE
+        SET  LECTURE_CURRENT=TO_NUMBER(LECTURE_CURRENT)-1
+        WHERE lecture_code=(SELECT L.lecture_code FROM LECTURE L INNER JOIN ATTEND A 
+        ON (L.lecture_code=A.lecture_code) WHERE A.attend_no=#{attend_no})
+	</update>
+
 </mapper>

@@ -19,8 +19,7 @@
 	function take_snapshot() {
 		var data1;
 		// take snapshot and get image data
-		Webcam
-				.snap(function(data_uri) {
+		Webcam.snap(function(data_uri) {
 					// display results in page
 					document.getElementById('results').innerHTML = '<img src="'+data_uri+'"/>';
 					data1 = data_uri;

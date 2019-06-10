@@ -49,7 +49,7 @@
     	<put-attribute name="menu" value=""/>
     </definition>
 
-    <definition name="empty" template="/WEB-INF/views/tilesSetting/baseLayout.jsp">
+    <definition name=".empty" template="/WEB-INF/views/tilesSetting/baseLayout.jsp">
         <put-attribute name="style" value=""/>
         <put-attribute name="header" value="/WEB-INF/views/tilesSetting/include/webSocketHeader.jsp"/>
         <put-attribute name="menu" value=""/>
@@ -57,8 +57,9 @@
         <put-attribute name="footer" value="" />
     </definition>
 
+
     <!-- (2) -->
-    <definition name="student/exclude/*" extends="empty">
+    <definition name="student/exclude/*" extends=".empty">
         <put-attribute name="body" value="/WEB-INF/views/student/exclude/{1}.jsp" />
     </definition>
     <definition name="student/submenu/*" extends=".submenu">
@@ -75,5 +76,8 @@
     </definition>
     <definition name="new/*" extends="newPage">
     	<put-attribute name="body" value="/WEB-INF/views/new/{1}.jsp"/>
+    </definition>
+    <definition name="common/exclude/*" extends=".empty">
+        <put-attribute name="body" value="/WEB-INF/views/common/exclude/{1}.jsp" />
     </definition>
 </tiles-definitions>

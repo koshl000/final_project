@@ -30,7 +30,7 @@
 		location="classpath:ddit/finalproject/team2/appInfo.properties" />
 		
 	<bean id="filterMultipartResolver" class="org.springframework.web.multipart.support.StandardServletMultipartResolver" />	
-
+	
 	<util:map id="socketSessionMap" key-type="java.lang.String" value-type="java.util.concurrent.CopyOnWriteArrayList" 
 		map-class="java.util.concurrent.ConcurrentHashMap"
 	/>

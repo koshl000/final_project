@@ -16,44 +16,93 @@
     <link rel="stylesheet" href="https://cdn.inflearn.com/dist/vendor/bulma-tooltip.min.css">
     <link rel="stylesheet" href="https://cdn.inflearn.com/dist/vendor/bulma-tooltip.min.css">
     <link rel="stylesheet" href="https://cdn.inflearn.com/font/font-awesome/css/all.min.css">
-    <link rel="stylesheet" href="/res/css/MAIN.2300e926c1f7c59e6cc7.css">
-    <link rel="stylesheet" type="text/css" href="/res/css/video-js.min.css"/>
-    <script src="/res/js/video.min.js"></script>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/res/css/MAIN.2300e926c1f7c59e6cc7.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/res/css/video-js.min.css"/>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/res/Login_v3/vendor/bootstrap/css/bootstrap.css">
+    <script src="${pageContext.request.contextPath}/res/js/video.min.js"></script>
     <script src="${pageContext.request.contextPath}/notika/js/vendor/jquery-1.12.4.min.js"></script>
-    <script>
-        var $j = jQuery.noConflict();
-        var videoinfo;
-        var vid;
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+    <script src="${pageContext.request.contextPath}/res/Login_v3/vendor/bootstrap/js/bootstrap.js"></script>
+    <script src="${pageContext.request.contextPath}/res/js/videojs.disableProgress.js"></script>
+        <script>
+        let $j = jQuery.noConflict();
+        let videoinfo;
+        let vid;
+        let isfirst='${isFirst}';
+        let enabled=false;
         $j(document).ready(function () {
+            if (isfirst===''){
+                $j("#faceModal").modal({backdrop: 'static', keyboard: false});
+            }
+
             vid = videojs("my-video", {
-                preload:'auto', muted: true,controls:true,
+                preload: 'auto', muted: true, controls: true,
                 sources: [{
                     src: '${continuePlay.FILE_URL}',
                     type: 'video/mp4'
                 }]
-            },function(){
-              this.on('loadedmetadata',function(){
-                  this.currentTime(${continuePlay.REPLAY_TIME});
-              })
+            }, function () {
+                this.on('loadedmetadata', function () {
+                    this.currentTime(${continuePlay.REPLAY_TIME});
+                });
+                this.on('ended',function(){
+                    if(isfirst===''){
+
+                    }else{
+
+                    }
+                });
+            }).ready(function () {
+                this.disableProgress();
+
+                if(enabled){
+                    this.disableProgress.enable();
+                }
+                else{
+                    this.disableProgress.disable();
+                }
+
             });
+
+            //동영상 제목 헤더 뷰
             $j("li[fxd-data='{\"id\":${continuePlay.CLASS_IDENTIFYING_CODE},\"preview\":true}']").addClass("is_now");
             var subname = $j("li[fxd-data='{\"id\":${continuePlay.CLASS_IDENTIFYING_CODE},\"preview\":true}']").find('span.list-item.unit_title').text();
-
             $j("div.unit_title").find("h1").text(subname);
 
+            //비디오 컨텍스트 메뉴 제거
             $j("video").on("contextmenu", function () {
                 return false;
             });
+            //동영상 선택
             $j(".list.unit.unit_lecture").on("click", function () {
                 var obj = JSON.parse($j(this).attr("fxd-data"));
                 location.href = "${pageContext.request.contextPath}/subjectPage/${continuePlay.LECTURE_CODE}/lecturePage/" + obj.id;
             });
 
-            $j("div.right_buttons").on("click",function(event){
+            //나가기버튼
+            $j("div.right_buttons").on("click", function (event) {
                 event.stopPropagation();
-                location.href="${pageContext.request.contextPath}/subjectPage/${continuePlay.LECTURE_CODE}/eduGoal";
+                videoinfo = {
+                    "class_identifying_code":${class_identifying_code},
+                    "replay_time": vid.currentTime()
+                };
+                $j.ajax({
+                    type: "POST",
+                    url: "${pageContext.request.contextPath}/subjectPage/${lecture_code}/lecturePage",
+                    dataType: 'json',
+                    data: JSON.stringify(videoinfo),
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (resp) {
+                        resp.toString();
+                    },
+                    error: function (err) {
+                        err.toString();
+                    }
+                });
+                location.href = "${pageContext.request.contextPath}/subjectPage/${continuePlay.LECTURE_CODE}/eduGoal";
             });
 
+            //페이지 에서 나갈시 주차코드와 나가기전까지 재생된 시간을 저장하여 이어보기 기능 구현
             $j(window).on('unload', function () {
                 console.log('unload');
                 videoinfo = {
@@ -82,6 +131,26 @@
 
 <body id="inflearn" class="lecture"
       fxd-data='{"google":"https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&prompt=consent&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile&response_type=code&client_id=887875630717-ror9t8ig4obhvokdij07eoochpqbu5kf.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Fwww.inflearn.com%2Fauth%2Fgoogle","facebook":"https://facebook.com/dialog/oauth?response_type=code&client_id=1101702136522636&redirect_uri=https%3A%2F%2Fwww.inflearn.com%2Fauth%2Ffacebook&scope=email","github":"https://github.com/login/oauth/authorize?response_type=code&client_id=5fd8e44b142806d9cbea&redirect_uri=https%3A%2F%2Fwww.inflearn.com%2Fauth%2Fgithub&scope=user%3Aemail"}'>
+
+<!-- Modal -->
+<div class="modal fade" id="faceModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div id="root">
     <main id="main">
 
@@ -97,7 +166,9 @@
             <aside class="lecture_nav lecture_nav_left">
                 <div class="lecture_nav_left_header">
                     <h5>${videoList[0].LECTURE_NAME}</h5>
-                    <p><span class="is-bold">기간:</span> 무제한</p>
+                    <p><span
+                            class="is-bold">기간:</span>${attend_period.OPENSEME_ATTEND1}~${attend_period.OPENSEME_ATTEND2}
+                    </p>
                     <div class="progress_container">
                         <div class="inf_progress">
                             <c:set var="count" value="0"/>
@@ -120,36 +191,56 @@
                         <c:set var="start" value="${0}"/>
                         <c:set var="end" value="${credit-1}"/>
                         <c:set var="count" value="${1}"/>
-                        <c:forEach var="i" begin="1" end="12">
-                            <li class="list unit unit_section   "
-                                fxd-data='{"id":${count},"preview":false}'>
-                                <span class="list-item unit_title">${i}주차</span>
-                            </li>
-                            <c:forEach var="j" begin="${start}" end="${end}">
-                                <c:set var="count" value="${count+1}"/>
-                                <c:choose>
-                                    <c:when test="${videoList[j].ABSENCE_YN=='Y'}">
-                                        <li class="list unit unit_lecture is_checked" fxd-data='{"id":${videoList[j].CLASS_IDENTIFYING_CODE},"preview":true}'>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <li class="list unit unit_lecture" fxd-data='{"id":${videoList[j].CLASS_IDENTIFYING_CODE},"preview":true}'>
-                                    </c:otherwise>
-
-                                </c:choose>
-                                <span class="list-item unit_title">${videoList[j].LECTURE_SUBNAME}
-                                            <a href="/lecturePage/${videoList[j].CLASS_IDENTIFYING_CODE}"></a></span>
-                                <span class="unit_checked icon"><svg width="16" aria-hidden="true" data-prefix="fas"
-                                                                     data-icon="check-circle"
-                                                                     class="svg-inline--fa fa-check-circle fa-w-16"
-                                                                     role="img" xmlns="http://www.w3.org/2000/svg"
-                                                                     viewBox="0 0 512 512"><path fill="currentColor"
-                                                                                                 d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"></path></svg></span>
+                        <c:forEach var="i" begin="1" end="13">
+                            <c:if test="${i eq 7}">
+                                <li class="list unit unit_section   "
+                                    fxd-data='{"id":${count},"preview":false}'>
+                                    <span class="list-item unit_title">중간고사</span>
                                 </li>
-                                <c:if test="${j eq end}">
-                                    <c:set var="start" value="${end+1}"/>
-                                    <c:set var="end" value="${end+credit}"/>
-                                </c:if>
-                            </c:forEach>
+                                <li class="list unit unit_lecture" fxd-data='{"id":middle,"preview":true}'>
+                                <span class="list-item unit_title">중간고사
+                                    <a href="/lecturePage/middle?"></a></span>
+                            </c:if>
+                            <c:if test="${i eq 13}">
+                                <li class="list unit unit_section   "
+                                    fxd-data='{"id":${count},"preview":false}'>
+                                    <span class="list-item unit_title">기말고사</span>
+                                </li>
+                                <li class="list unit unit_lecture" fxd-data='{"id":final,"preview":true}'>
+                                <span class="list-item unit_title">기말고사
+                                    <a href="/lecturePage/final?"></a></span>
+                            </c:if>
+                            <c:if test="${i!=7 && i!=13}">
+                                <li class="list unit unit_section   "
+                                    fxd-data='{"id":${count},"preview":false}'>
+                                    <span class="list-item unit_title">${i}주차</span>
+                                </li>
+                                <c:forEach var="j" begin="${start}" end="${end}">
+                                    <c:set var="count" value="${count+1}"/>
+                                    <c:choose>
+                                        <c:when test="${videoList[j].ABSENCE_YN=='Y'}">
+                                            <li class="list unit unit_lecture is_checked" fxd-data='{"id":${videoList[j].CLASS_IDENTIFYING_CODE},"preview":true}'>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <li class="list unit unit_lecture" fxd-data='{"id":${videoList[j].CLASS_IDENTIFYING_CODE},"preview":true}'>
+                                        </c:otherwise>
+                                    </c:choose>
+                                    <span class="list-item unit_title">${videoList[j].LECTURE_SUBNAME}
+                                            <a href="/lecturePage/${videoList[j].CLASS_IDENTIFYING_CODE}"></a></span>
+                                    <span class="unit_checked icon"><svg width="16" aria-hidden="true" data-prefix="fas"
+                                                                         data-icon="check-circle"
+                                                                         class="svg-inline--fa fa-check-circle fa-w-16"
+                                                                         role="img" xmlns="http://www.w3.org/2000/svg"
+                                                                         viewBox="0 0 512 512"><path fill="currentColor"
+                                                                                                     d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"></path></svg></span>
+                                    </li>
+                                    <c:if test="${j eq end}">
+                                        <c:set var="start" value="${end+1}"/>
+                                        <c:set var="end" value="${end+credit}"/>
+                                    </c:if>
+                                </c:forEach>
+                            </c:if>
+
                         </c:forEach>
                     </ul>
                 </div>
@@ -181,35 +272,35 @@
                 <div class="content unit_body">
                     <div class="note_container" style="padding:0px;">
                         <div class="video-js-box">
-                            <video id="my-video" controls preload="auto" class="video-js" src="${video_url}"></video>
+                            <video id="my-video" controls preload="auto" class="video-js vjs-default-skin" src="${video_url}"></video>
                         </div>
                     </div>
                 </div>
 
                 <footer class="content_footer_nav navbar">
-                    <div class="navbar-item">
+                    <%--                    <div class="navbar-item">--%>
 
-                        <button class="button is-link is-inverted is-outlined is_no_border is_completed">
-                            <svg width="16" aria-hidden="true" data-prefix="far" data-icon="check"
-                                 class="svg-inline--fa fa-check fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg"
-                                 viewBox="0 0 512 512">
-                                <path fill="currentColor"
-                                      d="M435.848 83.466L172.804 346.51l-96.652-96.652c-4.686-4.686-12.284-4.686-16.971 0l-28.284 28.284c-4.686 4.686-4.686 12.284 0 16.971l133.421 133.421c4.686 4.686 12.284 4.686 16.971 0l299.813-299.813c4.686-4.686 4.686-12.284 0-16.971l-28.284-28.284c-4.686-4.686-12.284-4.686-16.97 0z"></path>
-                            </svg>
-                        </button>
-                    </div>
-                    <div class="navbar-item">
+                    <%--                        <button class="button is-link is-inverted is-outlined is_no_border is_completed">--%>
+                    <%--                            <svg width="16" aria-hidden="true" data-prefix="far" data-icon="check"--%>
+                    <%--                                 class="svg-inline--fa fa-check fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg"--%>
+                    <%--                                 viewBox="0 0 512 512">--%>
+                    <%--                                <path fill="currentColor"--%>
+                    <%--                                      d="M435.848 83.466L172.804 346.51l-96.652-96.652c-4.686-4.686-12.284-4.686-16.971 0l-28.284 28.284c-4.686 4.686-4.686 12.284 0 16.971l133.421 133.421c4.686 4.686 12.284 4.686 16.971 0l299.813-299.813c4.686-4.686 4.686-12.284 0-16.971l-28.284-28.284c-4.686-4.686-12.284-4.686-16.97 0z"></path>--%>
+                    <%--                            </svg>--%>
+                    <%--                        </button>--%>
+                    <%--                    </div>--%>
+                    <%--                    <div class="navbar-item">--%>
 
-                        <button class="button is-link is-inverted is-outlined is_no_border next_unit">
-                            <svg width="16" aria-hidden="true" data-prefix="far" data-icon="step-forward"
-                                 class="svg-inline--fa fa-step-forward fa-w-14" role="img"
-                                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-                                <path fill="currentColor"
-                                      d="M372 32h-24c-6.6 0-12 5.4-12 12v183L116.5 39.4C95.9 22.3 64 36.6 64 64v384c0 27.4 31.9 41.8 52.5 24.6L336 283.9V468c0 6.6 5.4 12 12 12h24c6.6 0 12-5.4 12-12V44c0-6.6-5.4-12-12-12zM112 413.5V98.4l186.7 157.1-186.7 158z"></path>
-                            </svg>
-                            다음강좌
-                        </button>
-                    </div>
+                    <%--                        <button class="button is-link is-inverted is-outlined is_no_border next_unit">--%>
+                    <%--                            <svg width="16" aria-hidden="true" data-prefix="far" data-icon="step-forward"--%>
+                    <%--                                 class="svg-inline--fa fa-step-forward fa-w-14" role="img"--%>
+                    <%--                                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">--%>
+                    <%--                                <path fill="currentColor"--%>
+                    <%--                                      d="M372 32h-24c-6.6 0-12 5.4-12 12v183L116.5 39.4C95.9 22.3 64 36.6 64 64v384c0 27.4 31.9 41.8 52.5 24.6L336 283.9V468c0 6.6 5.4 12 12 12h24c6.6 0 12-5.4 12-12V44c0-6.6-5.4-12-12-12zM112 413.5V98.4l186.7 157.1-186.7 158z"></path>--%>
+                    <%--                            </svg>--%>
+                    <%--                            다음강좌--%>
+                    <%--                        </button>--%>
+                    <%--                    </div>--%>
                 </footer>
             </div>
         </section>

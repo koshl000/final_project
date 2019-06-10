@@ -27,4 +27,11 @@ public interface KJE_ChatBotDao {
 	 */
 	List<KJE_ScheduleVo> selectSchedule(String user_id);
 	
+	/**
+	 * 개인별 과제물 일정을 가져오는 메서드
+	 * @param user_id user_id USER ID
+	 * @return 일정이 담긴 List
+	 */
+	List<KJE_ScheduleVo> selectAssignmentSchedule(String user_id);
+	
 }

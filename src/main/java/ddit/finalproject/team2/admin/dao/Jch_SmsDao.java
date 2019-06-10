@@ -1,12 +1,10 @@
 package ddit.finalproject.team2.admin.dao;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import ddit.finalproject.team2.util.enumpack.ServiceResult;
 import ddit.finalproject.team2.vo.Jch_SMSGroupVo;
 import ddit.finalproject.team2.vo.Jch_SMSVo;
 import ddit.finalproject.team2.vo.Jch_UnitGroupVo;

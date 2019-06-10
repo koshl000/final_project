@@ -24,5 +24,5 @@ public interface IUserDao {
    String selectUserType(String user_id);
    
    UserVo selectProfessor(String user_id);
-
+	
 }

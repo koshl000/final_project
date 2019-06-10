@@ -11,6 +11,8 @@
 		c:strength="512"
 		p:encodeHashAsBase64="true"
 	/>
+	<beans:bean id="logoutHandler" class="ddit.finalproject.team2.common.component.LogoutSuccess"/>
+
 	<authentication-manager>
 		<authentication-provider user-service-ref="customUserDetailService">
 			<password-encoder ref="shaPasswordEncoder" />
@@ -32,13 +34,12 @@
 			authentication-success-handler-ref="customAuthenticationSuccessHandler"
 		/>
 		
-		<logout logout-url="/logout" logout-success-url="/"/>
-
-		<intercept-url pattern="/**" access="permitAll"/>
+		<logout logout-url="/logout" success-handler-ref="logoutHandler" invalidate-session="false"/>
+		
+		<intercept-url pattern="/**" access="permitAll" requires-channel="https"/>
 		<custom-filter ref="authorityCheckFilter"
 			after="LAST"
 		/>
-		
 		<csrf disabled="true"/>		
 	</http>
 	

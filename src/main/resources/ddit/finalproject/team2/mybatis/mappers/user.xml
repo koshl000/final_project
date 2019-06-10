@@ -67,4 +67,5 @@
       WHERE A.USER_ID = #{user_id}
       and C.LOWER_ORGANIZATION = (select prof_degree from professor where user_id = #{user_id})
    </select>
+	
 </mapper>

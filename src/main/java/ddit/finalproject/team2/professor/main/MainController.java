@@ -6,7 +6,11 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+<<<<<<< HEAD
 import org.apache.tiles.autotag.core.runtime.annotation.Parameter;
+=======
+import ddit.finalproject.team2.vo.UserVo;
+>>>>>>> branch 'master' of https://github.com/loopy313/final_project.git
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,8 +25,11 @@ import ddit.finalproject.team2.vo.Lsy_LectureInfos;
 import ddit.finalproject.team2.vo.ProfessorVo;
 import ddit.finalproject.team2.vo.UserVo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Controller("professorController")
-@RequestMapping("/professorMain")
+@RequestMapping("/professorMain/")
 public class MainController {
 	
 	@Inject
@@ -104,4 +111,11 @@ public class MainController {
 //		return mv;
 //	}
 	
+	@GetMapping("mantoman/{lecture_code}")
+	public ModelAndView goMantoMan(ModelAndView mv, Authentication au, @PathVariable String lecture_code) {
+		mv.setViewName("common/exclude/mantoman");
+		mv.getModel().put("id", au.getName());
+		mv.getModel().put("user", (UserVo)au.getPrincipal());
+		return mv;
+	}
 }
