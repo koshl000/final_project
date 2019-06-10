@@ -151,21 +151,21 @@ public class ChooseMainSyncController {
 			response.addCookie(setCookie);
 			
 			//문자SMS
-//			String api_key = "NCSDR0AKHFXQMT3W";
-//			String api_secret = "7OJVF4K8TVLAO80YYKK8XWNZIOCESX8R";
-//			Message coolsms = new Message(api_key, api_secret);
-//			HashMap<String, String> params = new HashMap<String, String>();
-//			params.put("to", userVo.getUser_hp()); // 수신번호
-//			params.put("from", "010-9940-9824"); // 발신번호
-//			params.put("type", "SMS"); // Message type ( SMS, LMS, MMS, ATA )
-//			params.put("text", "[Abnormals] 인증번호["+ins+"]를/n 입력해주세요"); // 문자내용
-//			try {
-//				JSONObject obj = (JSONObject) coolsms.send(params);
-//				System.out.println(obj.toString());
-//			} catch (CoolsmsException e) {
-//				System.out.println(e.getMessage());
-//				System.out.println(e.getCode());
-//			}
+			String api_key = "NCSDR0AKHFXQMT3W";
+			String api_secret = "7OJVF4K8TVLAO80YYKK8XWNZIOCESX8R";
+			Message coolsms = new Message(api_key, api_secret);
+			HashMap<String, String> params = new HashMap<String, String>();
+			params.put("to", userVo.getUser_hp()); // 수신번호
+			params.put("from", "010-9940-9824"); // 발신번호
+			params.put("type", "SMS"); // Message type ( SMS, LMS, MMS, ATA )
+			params.put("text", "[Abnormals] 인증번호["+ins+"]를/n 입력해주세요"); // 문자내용
+			try {
+				JSONObject obj = (JSONObject) coolsms.send(params);
+				System.out.println(obj.toString());
+			} catch (CoolsmsException e) {
+				System.out.println(e.getMessage());
+				System.out.println(e.getCode());
+			}
 			
 		} else {
 			msg = "이름과 핸드폰 번호를 확인하여 주세요.";
@@ -190,21 +190,21 @@ public class ChooseMainSyncController {
 			response.addCookie(setCookie);
 			
 			//문자SMS
-//			String api_key = "NCSDR0AKHFXQMT3W";
-//			String api_secret = "7OJVF4K8TVLAO80YYKK8XWNZIOCESX8R";
-//			Message coolsms = new Message(api_key, api_secret);
-//			HashMap<String, String> params = new HashMap<String, String>();
-//			params.put("to", userVo.getUser_hp()); // 수신번호
-//			params.put("from", "010-9940-9824"); // 발신번호
-//			params.put("type", "SMS"); // Message type ( SMS, LMS, MMS, ATA )
-//			params.put("text", "[Abnormals] 인증번호["+ins+"]를/n 입력해주세요"); // 문자내용
-//			try {
-//				JSONObject obj = (JSONObject) coolsms.send(params);
-//				System.out.println(obj.toString());
-//			} catch (CoolsmsException e) {
-//				System.out.println(e.getMessage());
-//				System.out.println(e.getCode());
-//			}
+			String api_key = "NCSDR0AKHFXQMT3W";
+			String api_secret = "7OJVF4K8TVLAO80YYKK8XWNZIOCESX8R";
+			Message coolsms = new Message(api_key, api_secret);
+			HashMap<String, String> params = new HashMap<String, String>();
+			params.put("to", userVo.getUser_hp()); // 수신번호
+			params.put("from", "010-9940-9824"); // 발신번호
+			params.put("type", "SMS"); // Message type ( SMS, LMS, MMS, ATA )
+			params.put("text", "[Abnormals] 인증번호["+ins+"]를/n 입력해주세요"); // 문자내용
+			try {
+				JSONObject obj = (JSONObject) coolsms.send(params);
+				System.out.println(obj.toString());
+			} catch (CoolsmsException e) {
+				System.out.println(e.getMessage());
+				System.out.println(e.getCode());
+			}
 			
 		} else {
 			msg = "이름과 핸드폰 번호를 확인하여 주세요.";
