@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -67,7 +68,7 @@ public class ChooseMainSyncController {
 	
 	@Inject
 	KJE_IStatisticsService statisticsService; 
-	
+
 	@GetMapping("/chooseMain")
 	public ModelAndView chooseMain(HttpServletResponse response, Authentication authentication, ModelAndView mv,HttpServletRequest request) throws IOException{
 		int statusCode = 0;

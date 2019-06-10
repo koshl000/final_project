@@ -63,6 +63,7 @@
 			<bean class="org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor" />
 		</websocket:handshake-interceptors>
 	</websocket:handlers>
+
 	<bean id="servletServerContainer" class="org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean" 
 		p:maxBinaryMessageBufferSize="8192"
 	/>
