@@ -114,4 +114,13 @@
         from LECTURE
         where LECTURE_CODE = #{lecture_code}
     </select>
+    
+    <select id="lectureInfoForViews" parameterType="java.util.HashMap" resultType="ddit.finalproject.team2.vo.Lsy_LectureInfos">
+		select l.lecture_code, l.user_id, l.lecture_coursetype, l.lecture_name, l.lecture_credit,
+        l.lecture_target||'학년' lecture_target, l.lecture_current||'/'||l.lecture_capacity lecture_capacity,
+        l.lower_organization, lw.lecture_class||'교시' lecture_class,
+        lw.lecture_week||'주' lecture_week, lw.lecture_subname
+		from lecture l inner join lectureweek lw on l.lecture_code = lw.lecture_code
+		where l.lecture_code = '#{lecture_code}'
+	</select>
 </mapper>

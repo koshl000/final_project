@@ -12,8 +12,10 @@ import ddit.finalproject.team2.vo.Lsy_EmbraceQuizVo;
 import ddit.finalproject.team2.vo.Lsy_ExamProblemVo;
 import ddit.finalproject.team2.vo.Lsy_ExamQuestionVo;
 import ddit.finalproject.team2.vo.Lsy_ExamVo;
+import ddit.finalproject.team2.vo.Lsy_LectureInfos;
 import ddit.finalproject.team2.vo.Lsy_QuizProblemVo;
 import ddit.finalproject.team2.vo.Lsy_QuizQuestionVO;
+import ddit.finalproject.team2.vo.ProfessorVo;
 
 
 public interface LSY_IQuizService {
@@ -41,4 +43,7 @@ public interface LSY_IQuizService {
 	public Map<String, Object> examNoNextVal(HashMap<String, String> examMap);
 	public Lsy_ExamVo retrieveStudyCode(HashMap<String, String> examMap);
 	public Lsy_ExamVo retrieveExamList(HashMap<String, String> examMap);
+	public Lsy_LectureInfos retrieveLectureInfoForViews(String lecture_code);
+	public ProfessorVo retrieveProInfos(String user_id);
+	public Lsy_LectureInfos retreiveLectureInfoForList(Map<String, String> proMap);
 }

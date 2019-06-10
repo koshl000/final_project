@@ -216,7 +216,7 @@ $(function(){
 			
 // 			autosize($('textarea'));
 				$.ajax({
-				    "url" : "${pageContext.request.contextPath}/professor/selectType/"+btnType,
+				    "url" : "${pageContext.request.contextPath}/professor/SelectType/"+btnType,
 				    "dataType" : "json",
 				    "success" : function(resp){
 				    	if(resp.surveyList){

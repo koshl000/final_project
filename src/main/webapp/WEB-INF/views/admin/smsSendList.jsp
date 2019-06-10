@@ -13,6 +13,7 @@
 <style>
 	td {
 		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 </style>
 <script type="text/javascript">

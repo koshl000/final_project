@@ -195,10 +195,14 @@ public class Ljs_GradeServiceImpl implements Ljs_IGradeService{
 		List<AttendVo> attendList = attendDao.selectAttendList(lecture_code);
 		
 		for(GradeVo grade : gradeList){
-			if(gradeList.size()>0 && gradeList.size()==attendList.size() && grade.getGrade_assignment()!=null){
+			if(gradeList.size()>0 && gradeList.size()==attendList.size() && grade.getGrade_absence()!=null){
 				float total = Float.parseFloat(grade.getGrade_midterm()) + Float.parseFloat(grade.getGrade_final())
 					+ Float.parseFloat(grade.getGrade_absence()) + Float.parseFloat(grade.getGrade_assignment());
-				grade.setAverage(Math.floor(total*45/1000*100)/100f+"");
+				float average = 0;
+				if(!"0".equals(grade.getGrade_absence())){
+					average = (float) (Math.floor(total*45/1000*100)/100f);
+				}
+				grade.setAverage(average+"");
 			}else{
 				throw new CommonException("성적이 취합되지 않은 학생이 존재합니다.");
 			}

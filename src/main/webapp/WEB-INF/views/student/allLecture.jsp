@@ -3,12 +3,43 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+<style>
+	tfoot { 
+    	display: table-header-group; 
+	}
+	select {
+	    border: 1px solid #eee;
+	    height: 35px;
+	    padding: 7px 15px;
+	    font-size: 13px;
+	    border-radius: 2px;
+	    -webkit-appearance: none;
+	    -moz-appearance: none;
+	    line-height: 100%;
+	    background-color: #fff;
+	    outline: none;
+	}
+	
+	select :hover  {
+		background-color: #00c292 !important;
+	    color: #fff !important;
+	}
+	.selectSpan {
+		font-size: 16px;
+		font-weight: bold;
+		margin : 0 5px 0 20px;
+	}
+	#grade, #credit, #course {
+		width: 60px;
+	}
+	
+</style>
 <script type="text/javascript">
 	$(function() {
 		var table = $('#data-table-basic').DataTable({
 			ajax : {
 				"type" : "get",
-				"url" : "${pageContext.request.contextPath}/mail/allLecture/allLectureList",
+				"url" : "${pageContext.request.contextPath}/studentMain/allLecture/allLectureList",
 				"dataType" : "JSON"
 			},
 			columns : [
@@ -19,17 +50,54 @@
 				, {data : "lecture_target"}
 				, {data : "user_id"}
 				, {data : "lecture_capacity"}
-				, {data : "lecture_plan"}
+				, {data : "lecture_planBtn"}
 			],
 			"order" : []
+			,
+			initComplete: function () {
+				this.api().columns().every( function () {
+					var column = this;
+					var select = $('<select><option value=""></option></select>')
+						.appendTo( $('#searchDiv') )
+						.on( 'change', function () {
+							var val = $.fn.dataTable.util.escapeRegex(
+								$(this).val()
+							);
+							
+							column
+								.search( val ? '^'+val+'$' : '', true, false )
+								.draw();
+						});
+
+					column.data().unique().sort().each( function ( d, j ) {
+						select.append( '<option value="'+d+'">'+d+'</option>' )
+					});
+					
+				});
+				$('#searchDiv').find('select:eq(0)').attr('id', 'code').css('display', 'none');
+				$('#searchDiv').find('select:eq(1)').attr('id', 'name').attr('class', 'selectpicker');
+				$('#searchDiv').find('select:eq(2)').attr('id', 'course').attr('class', 'selectpicker');
+				$('#searchDiv').find('select:eq(3)').attr('id', 'credit').attr('class', 'selectpicker');
+				$('#searchDiv').find('select:eq(4)').attr('id', 'grade').attr('class', 'selectpicker');
+				$('#searchDiv').find('select:eq(5)').attr('id', 'prof').css('display', 'none');
+				$('#searchDiv').find('select:eq(6)').attr('id', 'capacity').css('display', 'none');
+				$('#searchDiv').find('select:eq(7)').attr('id', 'lecplan').css('display', 'none');
+				$("#grade").after($("#name"));
+				$("#grade").after($("#course"));
+				$("#grade").after($("#credit"));
+				$("<span class='selectSpan'>학년</span>").insertBefore($('#grade'));
+				$("<span class='selectSpan'>과목</span>").insertBefore($('#name'));
+				$("<span class='selectSpan'>이수구분</span>").insertBefore($('#course'));
+				$("<span class='selectSpan'>학점</span>").insertBefore($('#credit'));
+			}
 		});
-	})
+		
+	});
 	
 	function page_link() {
 		window.open("${pageContext.request.contextPath }/subjectPage/eduGoal", "상세강의보기", "width=1000, height=700, toolbar=no, menubar=no, scrollbars=no, resizable=yes, location=yes");
 	}
 </script>
-
 <!--    메뉴 소개 영역 -->
 <div class="breadcomb-area">
 	<div class="container">
@@ -60,8 +128,7 @@
 			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 				<div class="data-table-list">
 					<div class="table-responsive">
-						<table id="data-table-basic" class="table table-striped dataTable"
-							role="grid" aria-describedby="data-table-basic_info">
+						<table id="data-table-basic" class="table table-striped dataTable" role="grid" aria-describedby="data-table-basic_info">
 							<div id="searchDiv"></div>
 							<thead>
 								<tr>
@@ -84,5 +151,4 @@
 		</div>
 	</div>
 </div>
-
 <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
