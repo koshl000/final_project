@@ -126,8 +126,8 @@ public class LSY_QuizServiceImpl implements LSY_IQuizService{
 	}
 	
 	@Override
-	public Lsy_QuizQuestionVO retrieveOneQuiz(Lsy_QuizQuestionVO oneQuiz) {
-		Lsy_QuizQuestionVO oneQuizz = quizDao.selectOneQuiz(oneQuiz);
+	public Lsy_QuizQuestionVO retrieveOneQuiz(String question_no) {
+		Lsy_QuizQuestionVO oneQuizz = quizDao.selectOneQuiz(question_no);
 		return oneQuizz;
 	}
 
@@ -279,6 +279,15 @@ public class LSY_QuizServiceImpl implements LSY_IQuizService{
 	@Override
 	public Lsy_LectureInfos retreiveLectureInfoForList(Map<String, String> proMap) {
 		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Lsy_LectureInfos retrieveLectureInfoForOneViews(Map<String, String> lectureMap) {
+		Lsy_LectureInfos result = quizDao.selectLectureInfoForOneViews(lectureMap);
+		if(result!=null) {
+			return result;
+		}
 		return null;
 	}
 
