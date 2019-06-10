@@ -20,7 +20,7 @@ import ddit.finalproject.team2.vo.ProfessorVo;
 @Repository
 public interface LSY_QuizDAO {
 	public List<Lsy_QuizQuestionVO> selectQuizList(Lsy_QuizQuestionVO quizList);
-	public Lsy_QuizQuestionVO selectOneQuiz(Lsy_QuizQuestionVO oneQuiz);
+	public Lsy_QuizQuestionVO selectOneQuiz(String question_no);
 	public Lsy_ExamVo selectOneExam(Map<String, String> examMap);
 	
 	public int insertQuiz(Lsy_EmbraceQuizVo quizChunk);
@@ -44,6 +44,7 @@ public interface LSY_QuizDAO {
 	public Lsy_ExamVo selectStudyCode(Map<String, String> examMap);
 	public Lsy_ExamVo selectExamList(Map<String, String> examMap);
 	public Lsy_LectureInfos selectLectureInfoForViews(String lecture_code);
+	public Lsy_LectureInfos selectLectureInfoForOneViews(Map<String, String> lectureMap);
 	public ProfessorVo selectProInfos(String user_id);
 	public List<Lsy_LectureInfos> selectLectureInfoForList(Map<String, String> proMap);
 } 

@@ -19,11 +19,19 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/res/css/MAIN.2300e926c1f7c59e6cc7.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/res/css/video-js.min.css"/>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/res/Login_v3/vendor/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath }/notika/css/dialog/sweetalert2.min.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath }/notika/css/dialog/dialog.css">
     <script src="${pageContext.request.contextPath}/res/js/video.min.js"></script>
     <script src="${pageContext.request.contextPath}/notika/js/vendor/jquery-1.12.4.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
     <script src="${pageContext.request.contextPath}/res/Login_v3/vendor/bootstrap/js/bootstrap.js"></script>
     <script src="${pageContext.request.contextPath}/res/js/videojs.disableProgress.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/res/js/webcam.min.js"></script>
+    <style>
+    .modal-content {
+        background-color: #1f1f1f;
+    }
+</style>
         <script>
         let $j = jQuery.noConflict();
         let videoinfo;
@@ -31,6 +39,7 @@
         let isfirst='${isFirst}';
         let enabled=false;
         $j(document).ready(function () {
+        
             if (isfirst===''){
                 $j("#faceModal").modal({backdrop: 'static', keyboard: false});
             }
@@ -125,6 +134,135 @@
                 });
             });
 
+            //faceId 
+            
+        	var fac1;
+            var fac2;
+           $j("#createFaceid").on('click', function(){
+        	  
+        	   $j.ajax({
+					url : "${pageContext.request.contextPath}/getFaceId",
+					dataType : "text",
+					success : function(resp) {
+						if(resp){
+							 fac2 =resp;
+						}else{
+							swal("출석확인","FaceID가 없습니다.", "error"); 
+						}
+					},
+					error : function(
+							errorResp) {
+						console.log(errorResp.status);
+					}
+				});
+        	   
+        	   
+        	   var data1;
+        		// take snapshot and get image data
+        		Webcam.snap(function(data_uri) {
+        					// display results in page
+        					document.getElementById('results').innerHTML = '<img src="'+data_uri+'"/>';
+        					data1 = data_uri;
+        					var params = {
+        						// Request parameters
+        						"returnFaceId" : "true",
+        						"returnFaceLandmarks" : "false",
+        						"returnFaceAttributes" : "age,gender,headPose,smile,facialHair,glasses,emotion,"
+        								+ "hair,makeup,occlusion,accessories,blur,exposure,noise"
+        					};
+
+        					var baseimg = data1;
+        					var sourceImageUrl = baseimg;
+        					// 					            document.querySelector("#sourceImage").src = sourceImageUrl;
+
+        					function mkblob(dataURL) {
+        						var BASE64_MARKER = ';base64,';
+        						if (dataURL.indexOf(BASE64_MARKER) == -1) {
+        							var parts = dataURL.split(',');
+        							var contentType = parts[0].split(':')[1];
+        							var raw = decodeURIComponent(parts[1]);
+        							return new Blob([ raw ], {
+        								type : contentType
+        							});
+        						}
+        						var parts = dataURL.split(BASE64_MARKER);
+        						var contentType = parts[0].split(':')[1];
+        						var raw = window.atob(parts[1]);
+        						var rawLength = raw.length;
+
+        						var uInt8Array = new Uint8Array(rawLength);
+
+        						for (var i = 0; i < rawLength; ++i) {
+        							uInt8Array[i] = raw.charCodeAt(i);
+        						}
+
+        						// return new Blob(uInt8Array, { type: contentType });
+        						return uInt8Array;
+        					}
+        					// alert(mkblob(baseimg));
+        					// console.log($.param(params));
+
+        					$j.ajax({
+        							url : "https://westcentralus.api.cognitive.microsoft.com/face/v1.0/detect?"
+        									+ $.param(params),
+        							beforeSend : function(xhrObj) {
+        								// Request headers
+        								xhrObj.setRequestHeader("Content-Type","application/octet-stream");
+        								xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key","71d36159ce92459f8b72ffa1184ad667");
+        							},
+        							type : "POST",
+        							// Request body
+        							data : mkblob(baseimg),
+        							processData : false,
+        							success : function(resp) {
+        								if(resp!=""){
+        								fac1 = resp[0].faceId;
+        								  $j.ajax({
+        							            url: "https://westcentralus.api.cognitive.microsoft.com/face/v1.0/verify",
+        							            beforeSend: function(xhrObj){
+        							                // Request headers
+        							                xhrObj.setRequestHeader("Content-Type","application/json");
+        							                xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key","71d36159ce92459f8b72ffa1184ad667");
+        							            },
+        							            type: "POST",
+        							            // Request body
+        							            data:'{"faceId1":'+'"'+ fac1+'","faceId2" :' + '"'+fac2+'"}',
+        							            success : function(resp){
+        							            	result=resp.isIdentical;
+        							            	if(result==true){
+        							            		alert("출석확인에 성공하였습니다.");
+        							            		$j('#faceModal').modal('hide');
+        							            		
+        							            	}else{
+        							            		alert("다른사람으로 판별되어 출석확인에 실패하였습니다. 메인화면으로 이동합니다."); 
+        							            		location.href = '${pageContext.request.contextPath}/chooseMain';
+        							            	}
+        							            	
+        							            } 
+        							            
+        							        })
+        							        .done(function(data) {
+        							        
+        							        })
+        							        .fail(function() {
+        							            alert("error");
+        							        });
+        								 
+        											}else{
+        												swal("출석확인 실패","출석확인에 실패하였습니다. 정면을 보고 다시 촬영해주시기 바랍니다.", "error"); 
+        											}
+        										}
+        									}).done(function(data) {
+        								// alert("success");
+        							}).fail(function() {
+        								alert("error");
+        							});
+        					});
+        	   
+        	   
+           }) ;
+            
+            
         });
     </script>
 
@@ -133,19 +271,43 @@
       fxd-data='{"google":"https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&prompt=consent&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile&response_type=code&client_id=887875630717-ror9t8ig4obhvokdij07eoochpqbu5kf.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Fwww.inflearn.com%2Fauth%2Fgoogle","facebook":"https://facebook.com/dialog/oauth?response_type=code&client_id=1101702136522636&redirect_uri=https%3A%2F%2Fwww.inflearn.com%2Fauth%2Ffacebook&scope=email","github":"https://github.com/login/oauth/authorize?response_type=code&client_id=5fd8e44b142806d9cbea&redirect_uri=https%3A%2F%2Fwww.inflearn.com%2Fauth%2Fgithub&scope=user%3Aemail"}'>
 
 <!-- Modal -->
-<div class="modal fade" id="faceModal" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade" id="faceModal" tabindex="-1" role="dialog" aria-hidden="true" >
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                </button>
+              <h3>출석 확인을 위한 페이지입니다.</h3>
             </div>
             <div class="modal-body">
-                ...
+            <h4>카메라정면을 바라보고 </h4>
+			<h4>출석확인 버튼을 눌러주세요.</h4>
+			<div id="my_camera" style="float:left; margin-right:50px "></div>
+			<div id="results"></div>
+			<!-- Configure a few settings and attach camera -->
+			<script language="JavaScript">
+				Webcam.set({
+					// live preview size
+					width : 320,
+					height : 240,
+
+					// device capture size
+					dest_width : 320,
+					dest_height : 240,
+
+					// final cropped size
+					crop_width : 240,
+					crop_height : 240,
+
+					// format and quality
+					image_format : 'jpeg',
+					jpeg_quality : 90
+				});
+
+				Webcam.attach('#my_camera');
+			</script>
+                
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-primary" id="createFaceid">출석확인</button>
             </div>
         </div>
     </div>
@@ -503,6 +665,7 @@
         a.appendChild(r);
     })(window, document, 'https://static.hotjar.com/c/hotjar-', '.js?sv=');
 </script>
+<script	src="${pageContext.request.contextPath }/notika/js/dialog/sweetalert2.min.js"></script>
 <script type="text/javascript" defer="defer" src="https://extend.vimeocdn.com/ga/13628830.js"></script>
 </body>
 </html>

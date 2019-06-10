@@ -16,7 +16,6 @@ import lombok.ToString;
 @ToString
 public class LectureVo implements Serializable{
 	@NotNull private String lecture_code;
-	@NotNull private String subject_code;
 	@NotNull private String user_id;
 	@NotNull private String lecture_coursetype;
 	@NotNull private String lecture_name;
@@ -30,5 +29,10 @@ public class LectureVo implements Serializable{
 	
 	public LectureVo(String lecture_code){
 		this.lecture_code = lecture_code;
+	}
+	
+	public LectureVo(String lecture_code, String openseme_no){
+		this.lecture_code = lecture_code;
+		this.openseme_no = openseme_no;
 	}
 }

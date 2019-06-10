@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class LogoutSuccess extends SimpleUrlLogoutSuccessHandler {
-    @Resource(name = "socketSessionMap")
+    @Resource(name="socketSessionMap")
     ConcurrentMap<String, CopyOnWriteArrayList<WebSocketSession>> socketSessionMap;
 
     @Override

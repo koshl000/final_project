@@ -102,7 +102,7 @@
 	
 	<select id="selectSumCredit" parameterType="String" resultType="String">
 		SELECT
-		SUM (LECTURE_CREDIT)
+		NVL(SUM (LECTURE_CREDIT),0)
 		FROM LECTURE L INNER JOIN ATTEND A ON(L.LECTURE_CODE=A.LECTURE_CODE)
 		WHERE A.USER_ID=#{user_id}
 	</select>
