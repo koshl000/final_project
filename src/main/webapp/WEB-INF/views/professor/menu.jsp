@@ -147,9 +147,9 @@
                             </li>
                             <li><a href="${pageContext.request.contextPath}/professor/alectureList">강의목록</a>
                             </li>
-                            <li><a href="${pageContext.request.contextPath }/subjectPage/lecture_code_1/lectureBoard">강의게시판</a>
+                            <li><a href="${pageContext.request.contextPath}/subjectPage/lecture_code_1/lectureBoard">강의게시판</a>
                             </li>
-                            <li><a href="${pageContext.request.contextPath }/professorMain/mantoman">1:1지도</a>
+                            <li><a href="${pageContext.request.contextPath}/professorMain/mantoman">1:1지도</a>
                             </li>
                             <li><a href="${pageContext.request.contextPath}/professor/assignment">과제물관리</a>
                             </li>
