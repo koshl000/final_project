@@ -21,9 +21,13 @@ public class LogoutSuccess extends SimpleUrlLogoutSuccessHandler {
 
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        UserVo user=(UserVo)authentication.getPrincipal();
-        List<WebSocketSession> list=socketSessionMap.get(user.getUser_id());
-        list.get(0).sendMessage(new TextMessage(user.getUser_id()));
+        if(authentication!=null){
+        	UserVo user=(UserVo)authentication.getPrincipal();
+        	List<WebSocketSession> list=socketSessionMap.get(user.getUser_id());
+        	if(list.size()>0){
+        		list.get(0).sendMessage(new TextMessage(user.getUser_id()));
+        	}
+        }
 
         super.onLogoutSuccess(request, response, authentication);
     }

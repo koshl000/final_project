@@ -37,7 +37,7 @@
 					<div class="table-responsive">
 						<div id="data-table-basic_wrapper" class="dataTables_wrapper">
 							<div class="dataTables_length" id="data-table-basic_length">
-								<table id="table">
+								<table id="data-table-basic">
 									<thead>
 										<tr>
 											<th>강좌코드</th>
@@ -67,7 +67,7 @@
 <script
 	src="${pageContext.request.contextPath }/notika/js/data-table/data-table-act.js"></script>
 <script>
-	$('#table').DataTable({
+	$('#data-table-basic').DataTable({
 		scrollY : '200px',
 		scrollCollapse : true,
 		paging : false,

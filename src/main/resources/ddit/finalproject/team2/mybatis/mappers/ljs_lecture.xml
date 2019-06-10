@@ -6,4 +6,5 @@
 		FROM LECTURE
 		WHERE LECTURE_CODE = #{lecture_code}
 	</select>
+	
 </mapper>

@@ -12,11 +12,9 @@ public class Ljs_LectureServiceImpl implements Ljs_ILectureService{
 
 	@Inject
 	Ljs_ILectureDao dao;
-
+	
 	@Override
 	public LectureVo retrieveLecture(String lecture_code) {
 		return dao.selectLecture(lecture_code);
 	}
-	
-	
 }
