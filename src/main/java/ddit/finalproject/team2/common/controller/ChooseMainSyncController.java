@@ -110,7 +110,6 @@ public class ChooseMainSyncController {
 		mv.setViewName(view);
 		mv.getModel().put("authority", authority);
 		mv.getModel().put("user", (UserVo)authentication.getPrincipal());
-		
 		return mv;
 	}
 	
