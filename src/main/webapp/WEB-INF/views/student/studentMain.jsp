@@ -10,7 +10,7 @@
 <script type="text/javascript"
 	src="${pageContext.request.contextPath}/res/fullCalendar/fullcalendar/spectrum.js"></script>
 <script type="text/javascript"
-	src="${pageContext.request.contextPath}/res/fullCalendar/fullcalendar/frontStu.js"></script>
+	src="${pageContext.request.contextPath}/res/fullCalendar/fullcalendar/frontStumain.js"></script>
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.2/TweenMax.min.js"></script>
 
@@ -35,19 +35,17 @@ html, body {
 
 .test {
 	width: 50%;
-	height: 50%;
+	height: 100%;
 	overflow: auto;
 }
 
 .test1 {
 	width: 50%;
-	height: 50%;
-	overflow: auto;
+	height: 100%;
+	overflow: auto; 
 }
+
 </style>
-
-
-<div class="bar-chart-area">
 	<div class="container">
 		<div class="col-md-6 test">
 			<div class="data-table-list">
@@ -162,8 +160,6 @@ html, body {
 		</div>
 	</div>
 	</div>
-	
-</div>
 <script type="text/javascript">
 	$(function() {
 		scheduleRegist.init(); // 일정 등록 관리 초기화

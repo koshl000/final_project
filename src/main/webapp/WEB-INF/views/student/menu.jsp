@@ -111,10 +111,10 @@
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <ul class="nav nav-tabs notika-menu-wrap menu-it-icon-pro">
                     <li><a data-toggle="tab" href="#myPage"><i class="notika-icon notika-house"></i>마이페이지</a></li>
-                    <li><a data-toggle="tab" href="#lecture"><i class="notika-icon notika-mail"></i>강의</a></li>
+                    <li><a data-toggle="tab" href="#lecture"><i class="notika-icon notika-draft"></i>강의</a></li>
                     <li><a href="${pageContext.request.contextPath }/studentMain/attendApply"><i class="notika-icon notika-edit"></i>수강신청</a></li>
-                    <li><a href="${pageContext.request.contextPath }/studentMain/certificate"><i class="notika-icon notika-bar-chart"></i>증명서</a></li>
-                    <li><a href="${pageContext.request.contextPath }/studentMain/notice"><i class="notika-icon notika-bar-chart"></i>공지사항</a></li>
+                    <li><a href="${pageContext.request.contextPath }/studentMain/certificate"><i class="notika-icon notika-form"></i>증명서</a></li>
+                    <li><a href="${pageContext.request.contextPath }/studentMain/notice"><i class="notika-icon notika-windows"></i>공지사항</a></li>
                 </ul>	
                 <div class="tab-content custom-menu-content">
                     <div id="myPage" class="tab-pane in notika-tab-menu-bg animated flipInX">

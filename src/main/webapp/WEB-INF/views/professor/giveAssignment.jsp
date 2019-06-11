@@ -58,6 +58,17 @@
 <script type="text/javascript">
 
 	$(function() {
+		
+		$('body').on('hidden.bs.modal',function(){
+			
+			if($('.modal.in').length>0){
+				
+				$('body').addClass('modal-open');
+			}
+			
+		});
+		
+		
 		CKEDITOR.replace("contextArea", {
          filebrowserImageUploadUrl:"<c:url value='/assignment/imageUpload'/>"
       });
@@ -393,6 +404,10 @@
 		
 		setSubDataTable();
 		
+		$('#assignmentView').modal('hide');
+		
+// 		$('body').addClass('modal-open');
+		
 		if (!($('.modal.in').length)) {
 			$('.modal-dialog').css({
 				top : 0,
@@ -627,8 +642,7 @@
 
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal"
-					id="viewSubmit">제출 내역 보기</button>
+				<button type="button" class="btn btn-default" id="viewSubmit">제출 내역 보기</button>
 				<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
 			</div>
 		</div>

@@ -58,6 +58,14 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath }/notika/css/datapicker/datepicker3.css">
 <script type="text/javascript">
 	$(function(){
+	$('body').on('hidden.bs.modal',function(){
+			
+			if($('.modal.in').length>0){
+				
+				$('body').addClass('modal-open');
+			}
+			
+		});
 		
 		settingDataTable();
 		function settingDataTable() {

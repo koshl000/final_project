@@ -18,13 +18,6 @@
                                     <li><a href="widgets.html">Widgets</a></li>
                                 </ul>
                             </li>
-                            <li><a data-toggle="collapse" data-target="#demoevent" href="#">사용자관리</a>
-                                <ul id="demoevent" class="collapse dropdown-header-top">
-                                    <li><a href="inbox.html">Inbox</a></li>
-                                    <li><a href="view-email.html">View Email</a></li>
-                                    <li><a href="compose-email.html">Compose Email</a></li>
-                                </ul>
-                            </li>
                             <li><a data-toggle="collapse" data-target="#democrou" href="#">교육과정관리</a>
                                 <ul id="democrou" class="collapse dropdown-header-top">
                                     <li><a href="animations.html">Animations</a></li>
@@ -47,13 +40,6 @@
                                 <ul id="demodepart" class="collapse dropdown-header-top">
                                     <li><a href="normal-table.html">Normal Table</a></li>
                                     <li><a href="data-table.html">Data Table</a></li>
-                                </ul>
-                            </li>
-                            <li><a data-toggle="collapse" data-target="#demo" href="#">게시판관리</a>
-                                <ul id="demo" class="collapse dropdown-header-top">
-                                    <li><a href="form-elements.html">Form Elements</a></li>
-                                    <li><a href="form-components.html">Form Components</a></li>
-                                    <li><a href="form-examples.html">Form Examples</a></li>
                                 </ul>
                             </li>
                             <li><a data-toggle="collapse" data-target="#Miscellaneousmob" href="#">통계관리</a>
@@ -111,13 +97,10 @@
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <ul class="nav nav-tabs notika-menu-wrap menu-it-icon-pro">
                     <li><a href="${pageContext.request.contextPath }/adminMain/basic"><i class="notika-icon notika-house"></i>기초정보관리</a></li>
-                    <li><a href="${pageContext.request.contextPath }/adminMain/user"><i class="notika-icon notika-support"></i>사용자관리</a></li>
                     <li><a data-toggle="tab" href="#lecture" ><i class="notika-icon notika-edit"></i>교육과정관리</a></li>
                     <li><a data-toggle="tab" href="#operation" ><i class="notika-icon notika-windows"></i>강의운영관리</a></li>
                     <li><a href="${pageContext.request.contextPath }/adminMain/certificate"><i class="notika-icon notika-form"></i>증명서관리</a></li>
-                    <li><a href="${pageContext.request.contextPath }/adminMain/board"><i class="notika-icon notika-edit"></i>게시판관리</a></li>
                     <li><a data-toggle="tab" href="#stats" ><i class="notika-icon notika-bar-chart"></i>통계관리</a></li>
-                    <li><a data-toggle="tab" href="#portal" ><i class="notika-icon notika-app"></i>포털관리(일정 미구현)</a></li>
                     <li><a data-toggle="tab" href="#sms" ><i class="notika-icon notika-mail"></i>SMS관리</a></li>
                 </ul>
                 <div class="tab-content custom-menu-content">
