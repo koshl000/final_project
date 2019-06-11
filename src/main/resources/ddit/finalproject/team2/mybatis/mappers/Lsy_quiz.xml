@@ -266,8 +266,8 @@
 		select evalstudy_code, evalstudy_type
 		from evaluationstudy
 		where lecture_code = #{lecture_code}
-		and evalstudy_type like '%'||'중간'||'%'
-		or evalstudy_type like '%'||'기말'||'%'
+		and (evalstudy_type like '%'||'중간'||'%'
+		or evalstudy_type like '%'||'기말'||'%')
 	</select>
 </mapper>
 

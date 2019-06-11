@@ -60,6 +60,8 @@ var surveyList; var classList; var examList;
 var identifying_code = "";
 $(function(){
 		var error = "";
+		var lecture_code = $("#lecture_code").val();
+		
 		var len; var len2; var len3;
 		$(".container").on("click", '#complete',function(event){
 			event.preventDefault();
@@ -94,7 +96,6 @@ $(function(){
 // 			} else {
 				var class_identifying_code = $("#class_identifying_code").val();
 				$(".class_identifying_code").val(class_identifying_code)
-				var lecture_code = $("#lecture_code").val();
 				$(".lecture_code").val(lecture_code);
 				var lecture_class = '${lectureInfos.lectureWeekInfos[0].lectureWeekClass[0].lecture_class}'
 				$("#yaoZhuannSong").submit();
@@ -165,10 +166,8 @@ $(function(){
 		$(".container").on("click", ".deleteBody", function(event){
 			event.preventDefault();
 			var questionBody = $(this).closest('div');
-			alert(dddd);
 			questionBody.remove();
 		})
-		
 })
 
 </script>
@@ -177,6 +176,7 @@ $(function(){
 		<div class='row timeCnt'>
 			<div class="col-xs-12 col-sm-12 timeCnt">
 				<span><h3>${lectureInfos.lectureWeekInfos[0].lectureWeekClass[0].lecture_subname} / ${lectureInfos.lectureWeekInfos[0].lecture_week}주차 ${lectureInfos.lectureWeekInfos[0].lectureWeekClass[0].lecture_class}교시 : 퀴즈</h3>
+				${lectureInfos.lectureWeekInfos[0].lecture_code}
 				</span>
 			</div>
 		</div>

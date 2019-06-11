@@ -275,8 +275,6 @@ img.visible {
 		<div class='row timeCnt'>
 			<div class="col-xs-12 col-sm-12 timeCnt">
 				<span><h3>${lectureInfos.lectureWeekInfos[0].lectureWeekClass[0].lecture_subname} / ${lectureInfos.lectureWeekInfos[0].lecture_week}주차 ${lectureInfos.lectureWeekInfos[0].lectureWeekClass[0].lecture_class}교시 : 퀴즈</h3>
-				${lectureInfos.lectureWeekInfos[0].lectureWeekClass[0].class_identifying_code}
-				${lectureInfos.lectureWeekInfos[0].lecture_code}
 				</span>
 				<span style="font-size: 10pt; font-weight: 500" class="timee"> 
 				<span style="padding-left: 8px; font-weight: 500" class="timee">Timer</span>

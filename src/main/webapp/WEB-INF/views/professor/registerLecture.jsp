@@ -21,8 +21,9 @@
 									   'width=800, height=700'); return false;
 	}
 	
-	function openMakeExam(){
-		MakeQuestionPage = window.open('${path}professor/createExam', '', 'width=800, height=700'); return false;
+	function openMakeExam(evalType, evalCode, lecture_code, class_identifying_code){
+		MakeQuestionPage = window.open('${path}professor/createExam/'+evalType+'/'+evalCode+'/'+lecture_code+'/'+class_identifying_code, '',
+										'width=800, height=700'); return false;
 	}
 	
 	function openQuizSt(class_identifying_code, lecture_class, lecture_code){
@@ -30,14 +31,13 @@
 		  'width=800, height=700'); return false;
 	}
 	
-	function openNewExamPage(evalType, evalCode, lecture_code){
+	function openNewExamPage(evalType, evalCode, lecture_code, class_identifying_code){
 		if('${identifier}'=='ROLE_STUDENT'){
 			alert("확인을 누르시면 시험이 진행됩니다. 아직 준비가 되지 않으셨다면 취소를 눌러주세요.")
-			//왜 '중간'을못보내지??
-			MakeQuestionPage = window.open('${path}professor/showExam/'+evalType+'/'+evalCode+'/'+lecture_code, '',
+			MakeQuestionPage = window.open('${path}student/showExam/'+evalType+'/'+evalCode+'/'+lecture_code+'/'+class_identifying_code, '',
 											'width=800, height=700'); return false;
 		} else {
-			MakeQuestionPage = window.open('${path}professor/showExam/'+evalType+'/'+evalCode+'/'+lecture_code, '',
+			MakeQuestionPage = window.open('${path}professor/showExam/'+evalType+'/'+evalCode+'/'+lecture_code+'/'+class_identifying_code, '',
 											'width=800, height=700'); return false;
 		}
 	}
@@ -64,7 +64,7 @@
 								<div class="panel panel-collapse notika-accrodion-cus">
 			                    	<div class="panel-heading" role="tab">
 			                        	<h4 class="panel-title">
-			                            <a class="collapsed" data-toggle="collapse" data-parent="#accordionGreen" href="#accordionGreen-${vs.count}" aria-expanded=${vs.count eq 1?true:false}>
+			                            <a class="collapsed" data-toggle="collapse" data-parent="#accordionGreen" href="#accordionGreen-${vs.count}" aria-expanded='${vs.count eq 1?true:false}'>
 											${vs.count}주차
 										</a>
 			                            </h4>
@@ -113,9 +113,15 @@
 													<button class="btn-sm" onClick="openNewExamPage(
 													'${evalTypeAndCode[0].evalStudy_type}',	
 													'${evalTypeAndCode[0].evalStudy_code}',
-													'${lectureInfos.lecture_code}'
+													'${lectureInfos.lecture_code}',
+													'${lectureWeekClass.class_identifying_code}'
 													)">보기</button>
-													<button class="btn-sm" onClick="openMakeExam()">등록</button>
+													<button class="btn-sm" onClick="openMakeExam(
+													'${evalTypeAndCode[0].evalStudy_type}',	
+													'${evalTypeAndCode[0].evalStudy_code}',
+													'${lectureInfos.lecture_code}',
+													'${lectureWeekClass.class_identifying_code}'
+													)">등록</button>
 												</div>
 				                            </div>
 			                            </c:if>
@@ -175,9 +181,15 @@
 													<button class="btn-sm" onClick="openNewExamPage(
 													'${evalTypeAndCode[0].evalStudy_type}',	
 													'${evalTypeAndCode[0].evalStudy_code}',
-													'${lectureInfos.lecture_code}'
+													'${lectureInfos.lecture_code}',
+													'${lectureWeekClass.class_identifying_code}'
 													)">보기</button>
-													<button class="btn-sm" onClick="openMakeExam()">등록</button>
+													<button class="btn-sm" onClick="openMakeExam(
+													'${evalTypeAndCode[0].evalStudy_type}',	
+													'${evalTypeAndCode[0].evalStudy_code}',
+													'${lectureInfos.lecture_code}',
+													'${lectureWeekClass.class_identifying_code}'
+													)">등록</button>
 												</div>
 				                            </div>
 			                            </c:if>
