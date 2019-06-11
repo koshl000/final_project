@@ -1,13 +1,15 @@
 package ddit.finalproject.team2.student.service;
 
-import ddit.finalproject.team2.student.dao.Lsh_ILectureDao;
-import ddit.finalproject.team2.vo.LectureVo;
-import ddit.finalproject.team2.vo.StudyStateVo;
-import org.springframework.stereotype.Service;
-
-import javax.inject.Inject;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
+
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Service;
+
+import ddit.finalproject.team2.student.dao.Lsh_ILectureDao;
+import ddit.finalproject.team2.vo.LectureVo;
 
 @Service
 public class Lsh_ILectureServiceImpl implements Lsh_ILectureService {
@@ -16,7 +18,20 @@ public class Lsh_ILectureServiceImpl implements Lsh_ILectureService {
 
     @Override
     public List<LectureVo> selectLectureListbyOpenseme(Map<String, String> map) {
-        return dao.selectLectureListbyOpenseme(map);
+    	int year = Calendar.getInstance().get(1);
+    	int month = Calendar.getInstance().get(2);
+    	String semester = "1";
+    	if(month>6){
+    		semester = "2";
+    	}
+    	
+    	map.put("openseme_year",year+"");
+		map.put("openseme_semester",semester);
+        List<LectureVo> list = dao.selectLectureListbyOpenseme(map);
+        for(LectureVo lec : list){
+        	lec.setLecture_nameForMyLecture(lec.getLecture_name(), lec.getLecture_code());
+        }
+		return list;
     }
 
     @Override

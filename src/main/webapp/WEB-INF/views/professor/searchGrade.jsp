@@ -34,24 +34,20 @@
 			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 				<div class="data-table-list">
 					<div class="table-responsive">
-						<div id="data-table-basic_wrapper" class="dataTables_wrapper">
-							<div class="dataTables_length" id="data-table-basic_length">
-								<table id="data-table-basic">
-									<thead>
-										<tr>
-											<th></th>
-											<th>강좌코드</th>
-											<th>강좌명</th>
-											<th>이수구분</th>
-											<th>학년</th>
-											<th>수강인원</th>
-										</tr>
-									</thead>
-									<tbody id="tableBody">
-									</tbody>
-								</table>
-							</div>
-						</div>
+						<table id="data-table-basic">
+							<thead>
+								<tr>
+									<th></th>
+									<th>강좌코드</th>
+									<th>강좌명</th>
+									<th>이수구분</th>
+									<th>학년</th>
+									<th>수강인원</th>
+								</tr>
+							</thead>
+							<tbody id="tableBody">
+							</tbody>
+						</table>
 					</div>
 				</div>
 			</div>
@@ -64,7 +60,7 @@
 	src="${pageContext.request.contextPath }/notika/js/data-table/data-table-act.js"></script>
 <script>
 var t = $('#data-table-basic').DataTable({
-	scrollY : '200px',
+	scrollY : '400px',
 	scrollCollapse : true,
 	paging : false,
 	ajax : {

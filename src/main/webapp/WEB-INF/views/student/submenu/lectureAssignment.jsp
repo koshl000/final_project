@@ -96,7 +96,7 @@ $(function(){
 										asfd+= "<i class='notika-icon notika-file'></i></a>"
 										
 										$('#assignfile_view').append(
-												$('<div class="dw-atc-sn">').html(asfv+asfd),
+												$('<div class="dw-atc-sn">').html(asfv+asfd)
 										);
 								});
 							}

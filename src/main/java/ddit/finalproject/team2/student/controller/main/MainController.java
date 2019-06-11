@@ -147,12 +147,6 @@ public class MainController {
 		mv.setViewName("student/myLecture");
 		mv.getModel().put("id", au.getName());
 		mv.getModel().put("user", (UserVo)au.getPrincipal());
-
-		Map<String,String> map=new HashMap<>();
-		map.put("user_id",au.getName());
-		map.put("openseme_year","2019");
-		map.put("openseme_semester","1");
-		mv.getModel().put("lectures",lectureService.selectLectureListbyOpenseme(map));
 		return mv;
 	}
 

@@ -125,8 +125,6 @@
                             </li>
                             <li><a href="${pageContext.request.contextPath }/studentMain/schedule">일정</a>
                             </li>
-                            <li><a href="${pageContext.request.contextPath }/studentMain/attendList">수강과목</a>
-                            </li>
                         </ul>
                     </div>
                     <div id="lecture" class="tab-pane notika-tab-menu-bg animated flipInX">

@@ -24,8 +24,8 @@
 						<div id="searchDiv"></div>
 						<thead>
 							<tr>
+								<th></th>
 								<th>분류</th>
-								<th>글번호</th>
 								<th>제목</th>
 								<th>댓글수</th>
 								<th>작성자</th>
@@ -54,9 +54,9 @@
 			"dataType" : "JSON"
 		},
 		columns : [ {
-			data : "board_type"
+			data : "lecture_name"
 		}, {
-			data : "board_no"
+			data : "board_type"
 		}, {
 			data : "board_title"
 		}, {
@@ -69,7 +69,18 @@
 			data : "board_hit"
 		} ],
 		"order" : []
+		, columnDefs : [ {
+	        "searchable": false,
+	        "orderable": false,
+	        "targets": 0
+	    } ]
 	});
+	
+	table.on( 'order.dt search.dt', function () {
+	    table.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+	        cell.innerHTML = i+1;
+	    } );
+	} ).draw();
 
 	//등록 버튼
 	$('#createBoard').on('click',function() {
@@ -82,45 +93,4 @@
 		location.href = "${pageContext.request.contextPath}/${lecture_code}/board/"+ no;
 	});
 	
-	$('#data-table-basic_filter').find('label').prop('style', 'display:none;');
-	$('#data-table-basic_filter').on('click',$('#searchBtn'),function() {
-		$.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-			var chosenType = $('#types').val();
-			var searchWord = $('#searchInput').val();
-			console.log(searchWord);
-
-			var type = data[0];
-			var no = data[1];
-			var title = data[2];
-			var count = data[3];
-			var writer = data[4];
-			var date = data[5];
-			var hit = data[6];
-
-			if ((chosenType == '전체' || chosenType == type)
-					&& (searchWord == ''
-							|| searchWord == no
-							|| searchWord == title
-							|| searchWord == count
-							|| searchWord == writer
-							|| searchWord == date || searchWord == hit)) {
-				return true;
-			}
-			return false;
-		});
-		table.draw();
-	});
-
-	var select = $('<select>').prop('id', 'types').append(
-			$('<option>').text('전체'), $('<option>').text('강좌공지'),
-			$('<option>').text('일반'), $('<option>').text('질문'));
-	var button = $('<button>').prop({
-		type : 'button',
-		'class' : 'btn btn-default notika-btn-default',
-		id : 'searchBtn'
-	}).text("검색");
-	$('#data-table-basic_filter').prepend($('<input>').prop({
-		type : 'text',
-		id : 'searchInput'
-	})).prepend(button).prepend(select);
 </script>
