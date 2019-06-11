@@ -16,10 +16,9 @@
                 <div class="header-top-menu">
                     <ul class="nav navbar-nav notika-top-nav">
 <!--                         알림 -->
-                        <li class="nav-item nc-al">
+                             <li class="nav-item nc-al">
                         	<a id="ring" href="#" data-toggle="dropdown" role="button" aria-expanded="false" class="nav-link dropdown-toggle">
 	                        	<span><i class="notika-icon notika-alarm"></i></span>
-	                        	
                         	</a>
                             <div role="menu" class="dropdown-menu message-dd notification-dd animated zoomIn">
                                 <div class="hd-mg-tt">
@@ -34,7 +33,7 @@
                             </div>
                         </li>
                         
-                        <li class="nav-item"><a href="#" data-toggle="dropdown" role="button" aria-expanded="false" class="nav-link dropdown-toggle"><span><i class="notika-icon notika-chat"></i></span></a>
+                        <li class="nav-item"><a href="#" data-toggle="dropdown" role="button" aria-expanded="false" class="nav-link dropdown-toggle"><span  id="bell"><i class="notika-icon notika-chat"></i></span></a>
                             <div role="menu" class="dropdown-menu message-dd chat-dd animated zoomIn">
                              <div class="notika-chat-list notika-shadow mg-t-30 tb-res-ds-n dk-res-ds">
                         <div class="realtime-ctn">

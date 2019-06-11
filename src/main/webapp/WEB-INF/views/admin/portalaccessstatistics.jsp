@@ -14,6 +14,38 @@
 
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/notika/css/datapicker/datepicker3.css">
+	
+	<style>
+   tfoot { 
+       display: table-header-group; 
+   }
+   select {
+       border: 1px solid #eee;
+       height: 35px;
+       padding: 7px 15px;
+       font-size: 13px;
+       border-radius: 2px;
+       -webkit-appearance: none;
+       -moz-appearance: none;
+       line-height: 100%;
+       background-color: #fff;
+       outline: none;
+   }
+   
+   select :hover  {
+      background-color: #00c292 !important;
+       color: #fff !important;
+   }
+   .selectSpan {
+      font-size: 16px;
+      font-weight: bold;
+      margin : 0 5px 0 20px;
+   }
+   #grade, #credit, #course {
+      width: 60px;
+   }
+   
+</style>
 <script type="text/javascript">
 	$(function() {
 
