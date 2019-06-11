@@ -184,7 +184,7 @@
         }
         video.srcObject = event.stream;
         setTimeout(function () {
-            video.media.play();
+            // video.media.play();
         }, 5000);
         mediaElement.id = event.streamid;
         // to keep room-id in cache
@@ -267,8 +267,8 @@
     function message(msg) {
         var out =
             "<li class=\"replies\">\n" +
-            "   <img src=\"\" alt=\"\"/>\n" +
-            "   <p>" + msg + "</p>\n" + ``
+            "   <img src=\"${pageContext.request.contextPath}/res/images/male.png\" alt=\"\"/>\n" +
+            "   <p>" + msg + "</p>\n";
         return out;
     }
 
@@ -278,15 +278,19 @@
 
     socket.emit('userInfo', userInfo);
     socket.on('userInfo', function (users) {
-        console.log('userinfo event...');
         $('#contacts ul').empty();
         for (var i = 0; i<users.user_id.length; ++i) {
             $('#contacts ul').append(user_info(users.user_id[i], users.user_name[i]));
         }
-
     });
+
+    $(window).on('unload',function(){
+        console.log('unload');
+        socket.emit('exit', userInfo);
+    });
+
     socket.on('chat message', function (msg) {
-        $('.messages ul').append(message(msg));
+        $('.messages ul').append(newMessage(msg));
     });
 
     socket.on('disconnect', function (userInfo) {
@@ -329,18 +333,25 @@
     });
 
     $('.submit').click(function () {
-        message = $(".message-input input").val();
         socket.emit('chat message', message);
         newMessage(message);
 
     });
 
     $(window).on('keydown', function (e) {
-        if (e.which == 13) {
-            newMessage();
+        if (e.which === 13) {
+            message = $(".message-input input").val();
+            newMessage(message);
+            socket.emit('chat message', message);
             return false;
         }
     });
+
+    $(document).on("dblclick",".contact",function(){
+
+    });
+
+
 </script>
 
 </body>
