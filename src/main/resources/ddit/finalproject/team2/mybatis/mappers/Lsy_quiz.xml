@@ -261,5 +261,13 @@
 								and q.class_identifying_code = #{class_identifying_code}) qn
 		where p.question_no = qn.question_no
 	</select>
+	
+	<select id="selectEvalStudyCodes" resultType="ddit.finalproject.team2.vo.Lsy_ExamVo">
+		select evalstudy_code, evalstudy_type
+		from evaluationstudy
+		where lecture_code = #{lecture_code}
+		and evalstudy_type like '%'||'중간'||'%'
+		or evalstudy_type like '%'||'기말'||'%'
+	</select>
 </mapper>
 

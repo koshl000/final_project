@@ -53,11 +53,22 @@
    #grade, #credit, #course {
       width: 60px;
    }
-   
+  
 </style>
 <script type="text/javascript">
 
 	$(function() {
+		
+		$('body').on('hidden.bs.modal',function(){
+			
+			if($('.modal.in').length>0){
+				
+				$('body').addClass('modal-open');
+			}
+			
+		});
+		
+		
 		CKEDITOR.replace("contextArea", {
          filebrowserImageUploadUrl:"<c:url value='/assignment/imageUpload'/>"
       });
@@ -141,7 +152,7 @@
 				success : function(resp) {
 					var title = "<p><b>제목:</b>"+resp.assignment_title+"</p>";
 					title+="<p><b>주차:</b>"+resp.class_identifying_code.substring(0,1)+"주차</p>";
-					title+="<p><b>차시:</b>"+ resp.class_identifying_code.substring(1,0)+"차시</p>";
+					title+="<p><b>차시:</b>"+ resp.class_identifying_code.substring(1,2)+"차시</p>";
 					title+="<p><b>과제 등록일 :</b>"+ resp.assignment_date+"</p>";
 					title+="<p><b>과제제출 기한 :</b>" +resp.submit_period1+"~"+ resp.submit_period2+"</p>";
 					
@@ -208,8 +219,6 @@
 		$('#updatAssignment').text("저장");
 		$('#updatAssignment').attr('id','saveAssignment'); 
 		
-		
-		
 		lecture_name=$("[name='lecture']").children(":selected").text();
 		var week =$($(this).parent().parent().find($('td'))[0]).text();
 		var turn =$($(this).parent().parent().find($('td'))[1]).text();
@@ -254,8 +263,6 @@
 		
 		var content = CKEDITOR.instances.contextArea.getData();	
 		$("[name='assignment_content']").val(content.trim());
-		
-		
 		        // Get form
 		        var form = $('#assignment')[0];
 		        // Create an FormData object 
@@ -396,6 +403,10 @@
 	$('#viewSubmit').on("click",function(event){
 		
 		setSubDataTable();
+		
+		$('#assignmentView').modal('hide');
+		
+// 		$('body').addClass('modal-open');
 		
 		if (!($('.modal.in').length)) {
 			$('.modal-dialog').css({
@@ -631,8 +642,7 @@
 
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal"
-					id="viewSubmit">제출 내역 보기</button>
+				<button type="button" class="btn btn-default" id="viewSubmit">제출 내역 보기</button>
 				<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
 			</div>
 		</div>

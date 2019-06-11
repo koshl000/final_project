@@ -30,13 +30,15 @@
 		  'width=800, height=700'); return false;
 	}
 	
-	var identifier = "학생";
-	function openNewExamPage(){
-		if(identifier=="학생"){
+	function openNewExamPage(evalType, evalCode, lecture_code){
+		if('${identifier}'=='ROLE_STUDENT'){
 			alert("확인을 누르시면 시험이 진행됩니다. 아직 준비가 되지 않으셨다면 취소를 눌러주세요.")
-			MakeQuestionPage = window.open('${path}professor/showExam', '', 'width=800, height=700'); return false;
+			//왜 '중간'을못보내지??
+			MakeQuestionPage = window.open('${path}professor/showExam/'+evalType+'/'+evalCode+'/'+lecture_code, '',
+											'width=800, height=700'); return false;
 		} else {
-			MakeQuestionPage = window.open('${path}professor/showExam', '', 'width=800, height=700'); return false;
+			MakeQuestionPage = window.open('${path}professor/showExam/'+evalType+'/'+evalCode+'/'+lecture_code, '',
+											'width=800, height=700'); return false;
 		}
 	}
 	
@@ -55,16 +57,20 @@
 					</div>
 					<div class="accordion-stn">
                     	<div class="panel-group" data-collapse-color="nk-green" id="accordionGreen" role="tablist" aria-multiselectable="true">
-							<c:forEach items="${lectureInfos.lectureWeekInfos}" var="weekInfo" varStatus="vs">
+                    	<c:forEach  begin="0" end="15" varStatus="vs">
+                    		<c:set var="weekInfo" value="${lectureInfos.lectureWeekInfos[vs.index]}"></c:set>
+<%-- 							<c:forEach items="${lectureInfos.lectureWeekInfos}" var="weekInfo" varStatus="vs"> --%>
+                    		<c:if test="${not empty weekInfo}">
 								<div class="panel panel-collapse notika-accrodion-cus">
 			                    	<div class="panel-heading" role="tab">
 			                        	<h4 class="panel-title">
-			                            <a class="collapsed" data-toggle="collapse" data-parent="#accordionGreen" href="#accordionGreen-${vs.count}" aria-expanded="false">
+			                            <a class="collapsed" data-toggle="collapse" data-parent="#accordionGreen" href="#accordionGreen-${vs.count}" aria-expanded=${vs.count eq 1?true:false}>
 											${vs.count}주차
 										</a>
 			                            </h4>
 			                        </div>
 			                		<div id="accordionGreen-${vs.count}" class="collapse" role="tabpanel">
+			                			<c:if test="${vs.count ne 7}">
 			                			<c:forEach items="${weekInfo.lectureWeekClass}" var="lectureWeekClass">
 				                        	<div class="panel-body">
 				                            	<div style="display: inline-block; padding-left: 20px;">
@@ -92,66 +98,96 @@
 														'${lectureWeekClass.lecture_class}',
 														'${lectureInfos.lecture_code}')">등록</button>
 												</div>
+				                            </div>
+			                            </c:forEach>
+			                            </c:if>
+			                            <c:if test="${vs.count eq 7}">
+			                            	<div class="panel-body">
+				                            	<div style="display: inline-block; padding-left: 20px;">
+													<span style="display:inline-block; padding-right:20px;">
+													</span>
+													<strong id="classesName">중간고사</strong>
+												</div>
 												<div style="display: inline-block; padding-left: 50px;">
 													<strong>시험</strong>
-													<button class="btn-sm" onClick="openNewExamPage()">보기</button>
+													<button class="btn-sm" onClick="openNewExamPage(
+													'${evalTypeAndCode[0].evalStudy_type}',	
+													'${evalTypeAndCode[0].evalStudy_code}',
+													'${lectureInfos.lecture_code}'
+													)">보기</button>
 													<button class="btn-sm" onClick="openMakeExam()">등록</button>
 												</div>
 				                            </div>
-			                            </c:forEach>
+			                            </c:if>
 			                        </div>
 			                     </div>
+			                     </c:if>
+			                     <c:if test="${empty weekInfo}">
+			                     <div class="panel panel-collapse notika-accrodion-cus">
+			                    	<div class="panel-heading" role="tab">
+			                        	<h4 class="panel-title">
+			                            <a class="collapsed" data-toggle="collapse" data-parent="#accordionGreen" href="#accordionGreen-${vs.count}" aria-expanded=${vs.count eq 1?true:false}>
+											${vs.count}주차
+										</a>
+			                            </h4>
+			                        </div>
+			                		<div id="accordionGreen-${vs.count}" class="collapse" role="tabpanel">
+			                			<c:if test="${vs.count ne 7}">
+			                			<c:forEach begin="0" end="2" varStatus="vs2">
+				                        	<div class="panel-body">
+				                            	<div style="display: inline-block; padding-left: 20px;">
+													<span style="display:inline-block; padding-right:20px;">
+													${vs2.count}교시 </span>
+													<strong id="classesName">미입력 (차시 정보를 입력해주세요.)</strong>
+												</div>
+												<div style="display: inline-block; padding-left: 50px;">
+													<strong>동영상</strong>
+													<button class="btn-sm" onClick="openQuizSt(
+														'${lectureWeekClass.class_identifying_code}',
+														'${lectureWeekClass.lecture_class}',
+														'${lectureInfos.lecture_code}')">보기</button>
+													<button class="btn-sm">등록</button>
+													<button class="btn-sm">수정</button>
+												</div>
+													<div style="display: inline-block; padding-left: 50px;">
+														<strong>퀴즈</strong>
+														<button class="btn-sm" onClick="openNewQuizPage(
+														'${lectureWeekClass.class_identifying_code}',
+														'${lectureWeekClass.lecture_class}',
+														'${lectureInfos.lecture_code}')">보기</button>
+														<button class="btn-sm" onClick="openMakeQuiz(
+														'${lectureWeekClass.class_identifying_code}',
+														'${lectureWeekClass.lecture_class}',
+														'${lectureInfos.lecture_code}')">등록</button>
+												</div>
+				                            </div>
+			                            </c:forEach>
+			                            </c:if>
+			                            <c:if test="${vs.count eq 7}">
+			                            	<div class="panel-body">
+				                            	<div style="display: inline-block; padding-left: 20px;">
+													<span style="display:inline-block; padding-right:20px;">
+													</span>
+													<strong id="classesName">중간고사</strong>
+												</div>
+												<div style="display: inline-block; padding-left: 50px;">
+													<strong>시험</strong>
+													<button class="btn-sm" onClick="openNewExamPage(
+													'${evalTypeAndCode[0].evalStudy_type}',	
+													'${evalTypeAndCode[0].evalStudy_code}',
+													'${lectureInfos.lecture_code}'
+													)">보기</button>
+													<button class="btn-sm" onClick="openMakeExam()">등록</button>
+												</div>
+				                            </div>
+			                            </c:if>
+			                        </div>
+			                     </div>
+			                     </c:if>
+<%-- 			                </c:forEach> --%>
 			                </c:forEach>
-				
-				
-<!-- 					<div class="accordion-hd"> -->
-<%-- 						<h2>${lectureInfos.lecture_name}</h2> --%>
-<!-- 					</div> -->
-<%-- 					<c:forEach items="${lectureInfos.lectureWeekInfos}" var="weekInfo" varStatus="vs"> --%>
-<!-- 						<div class="row"> -->
-<!-- 							<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> -->
-<!-- 								<div class="accordion-stn"> -->
-<!-- 									<div class="panel-group" data-collapse-color="nk-green" -->
-<!-- 										id="accordionGreen" role="tablist" aria-multiselectable="true"> -->
-<!-- 										<div class="panel panel-collapse notika-accrodion-cus"> -->
-<!-- 											<div class="panel-heading active" role="tab"> -->
-<!-- 												<h2 class="panel-title"> -->
-<!-- 													<a data-toggle="collapse" data-parent="#accordionGreen" -->
-<!-- 														href="#accordionGreen-one" aria-expanded="true" class=""> -->
-<%-- 														${vs.count}주차 </a> --%>
-<!-- 												</h2> -->
-<!-- 											</div> -->
-<%-- 											<c:forEach items="${weekInfo.lectureWeekClass}" var="lectureWeekClass"> --%>
-<!-- 												<div id="accordionGreen-one" class="collapse in animated flipInX" role="tabpanel" aria-expanded="true" style=""> -->
-<!-- 													<div class="panel-body"> -->
-<!-- 														<div> -->
-<!-- 															<div style="display: inline-block; padding-left: 20px;"> -->
-<%-- 																<strong>${lectureWeekClass.lecture_subname }</strong> --%>
-<!-- 															</div> -->
-<!-- 															<div style="display: inline-block; padding-left: 50px;"> -->
-<!-- 																<strong>동영상</strong> -->
-<!-- 																<button class="btn-sm">보기</button> -->
-<!-- 																<button class="btn-sm">등록</button> -->
-<!-- 																<button class="btn-sm">수정</button> -->
-<!-- 															</div> -->
-<!-- 															<div style="display: inline-block; padding-left: 50px;"> -->
-<!-- 																<strong>퀴즈</strong> -->
-<!-- 																<button class="btn-sm" onClick="openNewQuizPage()">보기</button> -->
-<!-- 																<button class="btn-sm" onClick="openMakeQuiz()">등록</button> -->
-<!-- 															</div> -->
-<!-- 															<div style="display: inline-block; padding-left: 50px;"> -->
-<!-- 																<strong>시험</strong> -->
-<!-- 																<button class="btn-sm" onClick="openNewExamPage()">보기</button> -->
-<!-- 																<button class="btn-sm" onClick="openMakeExam()">등록</button> -->
-<!-- 															</div> -->
-<%-- 											</c:forEach> --%>
-<!-- 										</div> -->
-<!-- 									</div> -->
-<!-- 								</div> -->
-<!-- 							</div> -->
-<!-- 						</div> -->
-<%-- 					</c:forEach> --%>
-					</div></div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

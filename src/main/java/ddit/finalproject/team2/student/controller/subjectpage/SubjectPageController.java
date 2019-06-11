@@ -168,11 +168,17 @@ public class SubjectPageController {
      * @return
      */
     @GetMapping("mantoman")
-    public ModelAndView goMantoMan(ModelAndView mv, Authentication au, @PathVariable String lecture_code) {
+    public ModelAndView goMantoMan(@RequestParam(required = false) String roomId, ModelAndView mv, Authentication au, @PathVariable String lecture_code) {
         mv.setViewName("common/exclude/mantoman");
         List<String> al = new ArrayList<>();
+        UserVo uv=(UserVo) au.getPrincipal();
         mv.getModel().put("id", au.getName());
-        mv.getModel().put("user", (UserVo) au.getPrincipal());
+        mv.getModel().put("user", uv);
+        if(roomId!=null&&(!roomId.isEmpty())){
+            mv.getModel().put("roomId",roomId);
+        }else{
+            mv.getModel().put("roomId",uv.getUser_id());
+        }
         return mv;
     }
 

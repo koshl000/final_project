@@ -63,51 +63,53 @@ $(function(){
 		var len; var len2; var len3;
 		$(".container").on("click", '#complete',function(event){
 			event.preventDefault();
-			if(btnType=="quiz"||btnType=="test"){
-					var QCinputs = $('.QContent');
-					var validated = Array.prototype.filter.call(QCinputs, function(e) {
-					return len = e.value.trim().length > 0;
-					});
-				if(len!=5){
-					var QAinputs = $("input:checkbox:checked");
-					var validated = Array.prototype.filter.call(QAinputs, function(e) {
-					len2 = e.value.trim().length;
-					if(len2==0){
-						error +="답을 선택해주세요"
-					}
-					});
-				} else {
-					error = "모든 문제를 입력해주세요.";
-				}
-				if(len2>0){
-					var PCinputs = $('.PContent')
-					var validated = Array.prototype.filter.call(PCinputs, function(e) {
-					len3 = e.value.trim().length > 0;
-					if(len3<20){
-						error += "모든 선택지를 입력해주세요."
-					}
-					});
-				}
-			}
-			if(error.length<0){
-				alert(error)
-			} else {
-				$("#boddy").submit();
-			}
+// 			if(btnType=="quiz"||btnType=="test"){
+// 					var QCinputs = $('.QContent');
+// 					var validated = Array.prototype.filter.call(QCinputs, function(e) {
+// 					return len = e.value.trim().length > 0;
+// 					});
+// 				if(len!=5){
+// 					var QAinputs = $("input:checkbox:checked");
+// 					var validated = Array.prototype.filter.call(QAinputs, function(e) {
+// 					len2 = e.value.trim().length;
+// 					if(len2==0){
+// 						error +="답을 선택해주세요"
+// 					}
+// 					});
+// 				} else {
+// 					error = "모든 문제를 입력해주세요.";
+// 				}
+// 				if(len2>0){
+// 					var PCinputs = $('.PContent')
+// 					var validated = Array.prototype.filter.call(PCinputs, function(e) {
+// 					len3 = e.value.trim().length > 0;
+// 					if(len3<20){
+// 						error += "모든 선택지를 입력해주세요."
+// 					}
+// 					});
+// 				}
+// 			}
+// 			if(error.length<0){
+// 				alert(error)
+// 			} else {
+				var class_identifying_code = $("#class_identifying_code").val();
+				$(".class_identifying_code").val(class_identifying_code)
+				var lecture_code = $("#lecture_code").val();
+				$(".lecture_code").val(lecture_code);
+				var lecture_class = '${lectureInfos.lectureWeekInfos[0].lectureWeekClass[0].lecture_class}'
+				$("#yaoZhuannSong").submit();
+			
 		});
 		
 		
 			var btnType = $('#btnType').val();
 			var twoBtn = "<div class='row'>"+"<div class='col-xs-6 col-sm-6 btnSpace'>" +
-							"<button class='btn' disabled type='button' id='prev'>등록</button>";
+							"<button class='btn' type='button' id='complete'>등록</button>";
 			if(btnType=='quiz'){
 				var result = makeQuestion(".container", btnType, 5, 4)
-				btnType = "quiz";
 				$("#quiz").prop("disabled", true);
 				$("#boddy").after(twoBtn);
 				$('#boddy').find('a').hide();
-				$(".lecture_code").val('lecture_code_1');
-				$(".lecture_week").val('1');
 			} 
 // 			else if(btnType=='test'){
 // 				var result = makeQuestion("#boddy", "test", 2, 4)
@@ -123,7 +125,6 @@ $(function(){
 			
 			$('#boddy .i-checks').iCheck({
 				checkboxClass: 'icheckbox_square-green',
-				radioClass: 'iradio_square-green',
 			});
 			
 			autosize($('textarea'));
@@ -175,10 +176,11 @@ $(function(){
 	<div class="container">
 		<div class='row timeCnt'>
 			<div class="col-xs-12 col-sm-12 timeCnt">
-				<span><h3>${lectureInfos.lectureWeekInfos[0].lectureWeekClass[0].lecture_subname} / ${lectureInfos.lectureWeekInfos[0].lecture_week}주차 ${lectureInfos.lectureWeekInfos[0].lectureWeekClass[0].lecture_class}교시 : 퀴즈</h3></span>
+				<span><h3>${lectureInfos.lectureWeekInfos[0].lectureWeekClass[0].lecture_subname} / ${lectureInfos.lectureWeekInfos[0].lecture_week}주차 ${lectureInfos.lectureWeekInfos[0].lectureWeekClass[0].lecture_class}교시 : 퀴즈</h3>
+				</span>
 			</div>
 		</div>
-
+		<form id="yaoZhuannSong" method="post" action="${pageContext.request.contextPath}/professor/addQuiz">
 		<div class='row' id='boddy'>
 			<div class="col-xs-1 col-sm-1 veryLeft">
 			</div>
@@ -189,13 +191,14 @@ $(function(){
 			<div class="col-xs-1 col-sm-1 right">
 			</div>
 		</div>
+		</form>
 	</div>
 </div>
-<input id="identifier" type="hidden" value="교수"/>
-<input id="user_id" type="hidden" value="st_001"/>
+<input id="identifier" type="hidden" value="${identifier[0]}"/>
+<input id="user_id" type="hidden" value="${userVo.user_id}"/>
 <input id="btnType" type='hidden' value="${btnType}"/>
-<input id="class_identifying_code" type='hidden' value="${quizList[0].class_identifying_code}"/>
-<input id="lecture_code" type='hidden' value="${quizList[0].lecture_code}"/>
+<input id="class_identifying_code" type='hidden' value="${lectureInfos.lectureWeekInfos[0].lectureWeekClass[0].class_identifying_code}"/>
+<input id="lecture_code" type='hidden' value="${lectureInfos.lectureWeekInfos[0].lecture_code}"/>
 
 <!-- autosize JS
 		============================================ -->
@@ -205,7 +208,7 @@ $(function(){
     <script src="${pageContext.request.contextPath}/notika/js/autosize.min.js"></script>
     <script src="${pageContext.request.contextPath}/notika/js/icheck/icheck.min.js"></script>
     <script src="${pageContext.request.contextPath}/notika/js/icheck/icheck-active.js"></script>
-	<script src="${pageContext.request.contextPath}/res/js/makeQuestion2.js"></script>
+	<script src="${pageContext.request.contextPath}/res/js/makeQuestion.js"></script>
     
 </body>
 </html>

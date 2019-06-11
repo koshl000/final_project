@@ -287,6 +287,7 @@
 		$("[name='lowerOrganization']").on("change", function() {
 			var lec = $(this).val();
 			if (lec) {
+				$("[name='lecture']>option:not(:first)").hide();
 				$("[name='lecture']").children(":selected").hide();
 				$("." + lec).show();
 			}
