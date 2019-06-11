@@ -47,4 +47,5 @@ public interface LSY_QuizDAO {
 	public Lsy_LectureInfos selectLectureInfoForOneViews(Map<String, String> lectureMap);
 	public ProfessorVo selectProInfos(String user_id);
 	public List<Lsy_LectureInfos> selectLectureInfoForList(Map<String, String> proMap);
+	public List<Lsy_ExamVo> selectEvalStudyCodes(String lecture_code);
 } 

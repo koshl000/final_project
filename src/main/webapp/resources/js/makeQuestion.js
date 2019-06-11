@@ -18,8 +18,8 @@ function makeQuestion(formRange, btn, Qnum, Anum){
 				"<span id='spanYet'>questionNo번</span>" +
 				"<input type='hidden' id='lecture_week' class='lecture_week' name='"+btnType+"List[questionNum].lecture_week'/>" +
 				"<input type='hidden' id='lecture_class' name='"+btnType+"List[questionNum].lecture_class'/>" +
+				"<input type='hidden' id='lecture_code' name='"+btnType+"List[questionNum].lecture_code'/>" +
 				"<input type='hidden' class='class_identifying_code' name='"+btnType+"List[questionNum].class_identifying_code'/>" +
-				"<span id='contentYet'>questionNo번</span>" +
 				"<textarea name='"+btnType+"List[questionNum].question_content' class='QContent form-control auto-size' rows='10' placeholder='문제를 입력하세요'/>" +
 				"</textarea></div></div>";
 				for (var idx2 = 0; idx2 < Anum; idx2++) {
@@ -39,8 +39,8 @@ function makeQuestion(formRange, btn, Qnum, Anum){
 				"<span id='spanYet'>questionNo번</span>" +
 				"<input type='hidden' id='lecture_week' class='lecture_week' name='"+btnType+"List[questionNum].lecture_week'/>" +
 				"<input type='hidden' id='lecture_class' name='"+btnType+"List[questionNum].lecture_class'/>" +
+				"<input type='hidden' id='lecture_code' name='"+btnType+"List[questionNum].lecture_code'/>" +
 				"<input type='hidden' class='class_identifying_code' name='"+btnType+"List[questionNum].class_identifying_code'/>" +
-				"<span id='contentYet'>questionNo번</span>" +
 				"<textarea name='"+btnType+"List[questionNum].question_content' class='QContent form-control auto-size' rows='10' placeholder='문제를 입력하세요'/>" +
 				"</textarea></div></div>";
 				for (var idx2 = 0; idx2 < Anum; idx2++) {

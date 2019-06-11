@@ -21,14 +21,14 @@ function makeQuestion(divRange, btnNm, Qnum, Anum){
 				"<input type='hidden' class='class_identifying_code' name='"+buttonType+"List[questionNum].class_identifying_code'/>" +
 				"<textarea name='"+buttonType+"List[questionNum].question_content' id='questionCon' class='QContent form-control auto-size' rows='3' placeholder='문제를 입력하세요'></textarea>";
 				for (var idx2 = 0; idx2 < Anum; idx2++) {
-					source += "<input type='hidden' id='question_no' />" +
-					"<input name='"+buttonType+"List[questionNum].question_answer' type='checkbox' class='i-checks QAnswer professor' value=''/>"+
+					source += "<input type='hidden' id='question_no' name='"+buttonType+"List[questionNum].problemList[problem_Num].question_no' value='problemnno'/>" +
+					"<input name='"+buttonType+"List[questionNum].question_answer' type='checkbox' class='i-checks QAnswer professor' value='problemnno'/>"+
 					"<input name='"+buttonType+"List[questionNum].problemList[problem_Num].quizProblem_content' class='PContent' type='text' placeholder='선택지를 입력하세요' value=''/>"+
 					"<a class='stAnswer'><img src='${pageContext.request.contextPath}/res/images/checkMark.gif'/>${numList[vs2.index]} ${problem.quizProblem_content} <input name='answerList[questionNum].quizAnswer_code' type='hidden' class='i-checks QAnswer student' value=''/></a>"+
 					"<br>";
 					source = source.replace(/questionNo/g, (idx+1)); // 보여지는 문제번호
 					source = source.replace(/questionNum/g, idx); // 실제 스프링으로 넘어갈 문제_배열의 인덱스값
-					source = source.replace(/problem_no/g, (idx2+1)); // 보여지는 선택지 번호
+					source = source.replace(/problemnno/g, (idx2+1)); // 보여지는 선택지 번호
 					source = source.replace(/problem_Num/g, idx2); // 실제 스프링으로 넘어갈 선택지_배열의 인덱스값
 				}
 				source += "</div>"+"</form>";

@@ -274,7 +274,10 @@ img.visible {
 	<div class="container">
 		<div class='row timeCnt'>
 			<div class="col-xs-12 col-sm-12 timeCnt">
-				<span><h3>${lectureInfos.lectureWeekInfos[0].lectureWeekClass[0].lecture_subname} / ${lectureInfos.lectureWeekInfos[0].lecture_week}주차 ${lectureInfos.lectureWeekInfos[0].lectureWeekClass[0].lecture_class}교시 : 퀴즈</h3></span>
+				<span><h3>${lectureInfos.lectureWeekInfos[0].lectureWeekClass[0].lecture_subname} / ${lectureInfos.lectureWeekInfos[0].lecture_week}주차 ${lectureInfos.lectureWeekInfos[0].lectureWeekClass[0].lecture_class}교시 : 퀴즈</h3>
+				${lectureInfos.lectureWeekInfos[0].lectureWeekClass[0].class_identifying_code}
+				${lectureInfos.lectureWeekInfos[0].lecture_code}
+				</span>
 				<span style="font-size: 10pt; font-weight: 500" class="timee"> 
 				<span style="padding-left: 8px; font-weight: 500" class="timee">Timer</span>
 				<span id="min" style="width: 15px; font-weight: 500; text-align: right" class="timee">
@@ -320,7 +323,7 @@ img.visible {
 								$(".left").append(
 										"<form id='form${vs.index}' class='formT'>"+
 										"<div class='questionBody questionBody${idx} coverEach'>" + 
-											"<input type='hidden' id='attendNo' name='answerList[${vs.index}].attend_no' value='${1}' class='student attend_no'>"+
+											"<input type='hidden' id='attendNo' name='answerList[${vs.index}].attend_no' value='${2}' class='student attend_no'>"+
 											"<input type='hidden' id='questionNO' name='${btnType}List[questionNum].question_no' value='${quiz.question_no }' class='professor'>"+
 											"<input type='hidden' id='questionNO' name='answerList[${vs.index}].question_no' value='${quiz.question_no}' class='student questionNo'>"+
 											"<input type='hidden' name='${btnType}List[${vs.index}].question_content' value='${quiz.question_content}' class='professor'>"+
@@ -344,7 +347,7 @@ img.visible {
 								$(".center").append(
 										"<form id='form${vs.index}' class='formT'>"+
 										"<div class='questionBody questionBody${idx} coverEach'>" + 
-											"<input type='hidden' id='attendNo' name='answerList[${vs.index}].attend_no' value='${1}' class='student attend_no'>"+
+											"<input type='hidden' id='attendNo' name='answerList[${vs.index}].attend_no' value='${2}' class='student attend_no'>"+
 											"<input type='hidden' id='questionNO' name='${btnType}List[questionNum].question_no' value='${quiz.question_no }' class='professor'>"+
 											"<input type='hidden' id='questionNO' name='answerList[${vs.index}].question_no' value='${quiz.question_no}' class='student questionNo'>"+
 											"<input type='hidden' name='${btnType}List[${vs.index}].question_content' value='${quiz.question_content}' class='professor'>"+
@@ -370,12 +373,13 @@ img.visible {
 	</div>
 </div>
 <input id="qStart" type="hidden" value="1"/>
-<input id="identifier" type="hidden" value="ROLE_STUDENT"/>
-<input id="attend_no" type="hidden" value="${attend_no}"/>
+<input id="identifier" type="hidden" value="${identifier[0]}"/>
+<input id="attend_no" type="hidden" value="2"/>
+<%-- <input id="attend_no" type="hidden" value="${userVo.attend_no}"/> --%>
 <input id="user_id" type="hidden" value="${userVo.user_id}"/>
 <input id="btnType" type='hidden' value="${btnType}"/>
-<input id="class_identifying_code" type='hidden' value="${quizList[0].class_identifying_code}"/>
-<input id="lecture_code" type='hidden' value="${quizList[0].lecture_code}"/>
+<input id="class_identifying_code" type='hidden' value="${lectureInfos.lectureWeekInfos[0].lectureWeekClass[0].class_identifying_code}"/>
+<input id="lecture_code" type='hidden' value="${lectureInfos.lectureWeekInfos[0].lecture_code}"/>
 
 <!-- autosize JS
 		============================================ -->
