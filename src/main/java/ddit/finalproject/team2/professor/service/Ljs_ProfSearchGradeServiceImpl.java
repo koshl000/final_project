@@ -17,8 +17,7 @@ public class Ljs_ProfSearchGradeServiceImpl implements Ljs_IProfSearchGradeServi
 	@Inject
 	Ljs_IProfSearchGradeDao dao;
 
-	@Override
-	public List<LectureVo> retrieveLectureListforProfessor(LectureVo lecture) {
+	private void setSemesterDetail(LectureVo lecture){
 		int year = Calendar.getInstance().get(1);
 		int month = Calendar.getInstance().get(2);
 		String semester = null;
@@ -31,7 +30,11 @@ public class Ljs_ProfSearchGradeServiceImpl implements Ljs_IProfSearchGradeServi
 		OpenSemesterVo vo = new OpenSemesterVo(year+"", semester);
 		String openseme_no = dao.selectOpensemeNo(vo);
 		lecture.setOpenseme_no(openseme_no);
-		
+	}
+	
+	@Override
+	public List<LectureVo> retrieveLectureListforProfessor(LectureVo lecture) {
+		setSemesterDetail(lecture);
 		List<LectureVo> lectureList = dao.selectLectureListForProfessor(lecture);
 		for(LectureVo lec : lectureList){
 			lec.setLecture_name(lec.getLecture_name(), lec.getLecture_code());
@@ -42,6 +45,16 @@ public class Ljs_ProfSearchGradeServiceImpl implements Ljs_IProfSearchGradeServi
 	@Override
 	public List<Ljs_AttendVo> retrieveAttendList(String lecture_code) {
 		return dao.selectAttendList(lecture_code);
+	}
+
+	@Override
+	public List<LectureVo> retrieveLectureListForOpenChat(LectureVo lecture) {
+		setSemesterDetail(lecture);
+		List<LectureVo> list = dao.selectLectureListForProfessor(lecture);
+		for(LectureVo lec : list){
+			lec.setOpenBtn(lec.getLecture_code());
+		}
+		return list;
 	}
 
 }

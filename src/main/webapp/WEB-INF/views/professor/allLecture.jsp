@@ -38,8 +38,8 @@
 	$(function() {
 		var table = $('#data-table-basic').DataTable({
 			ajax : {
-				"type" : "get",
-				"url" : "${pageContext.request.contextPath}/studentMain/allLecture/allLectureList",
+				type : "GET",
+				"url" : "${pageContext.request.contextPath}/openChat/${user.user_id}",
 				"dataType" : "JSON"
 			},
 			columns : [
@@ -50,11 +50,12 @@
 				, {data : "openBtn"}
 			],
 			"order" : []
-		)};
+		});
 		
 		$('#tableBody').on('click', 'button', function(){
 			var id = $(this).prop('id');
-			location.href='${pageContext.request.contextPath}/professorMain/mantoman/'+id;
+			var url ='${pageContext.request.contextPath}/professorMain/mantoman/'+id;
+			window.open(url, '_blank');
 		});
 	});
 	
