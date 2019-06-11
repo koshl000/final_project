@@ -223,7 +223,11 @@
                   <div class="row">
                      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                         <div class="breadcomb-wp">
+                        	<div class="breadcomb-icon">
+									<i class="notika-icon notika-house"></i>
+								</div>
                            <div class="breadcomb-ctn">
+                           
                               <h2>기초정보관리</h2>
                               <p>학년, 학기별로 각종 기간을 설정하는 게시판입니다. <span class="bread-ntd"></span></p>
                            </div>
