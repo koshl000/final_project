@@ -79,15 +79,15 @@
             <%--수강중인 유저--%>
             <div id="contacts">
                 <ul>
-                    <%--                    <li class="contact">--%>
-                    <%--                        <div class="wrap">--%>
-                    <%--                            <span class="contact-status online"></span><busy,online,' '>--%>
-                    <%--                            <img src="${pageContext.request.contextPath }/res/images/male.png" alt=""/>--%>
-                    <%--                            <div class="meta">--%>
-                    <%--                                <p class="name">${user.user_name}(${user.user_id})</p>--%>
-                    <%--                            </div>--%>
-                    <%--                        </div>--%>
-                    <%--                    </li>--%>
+                                        <li class="contact">
+                                            <div class="wrap">
+                                                <span class="contact-status online"></span><busy,online,' '>
+                                                <img src="${pageContext.request.contextPath }/res/images/male.png" alt=""/>
+                                                <div class="meta">
+                                                    <p class="name">${user.user_name}(${user.user_id})</p>
+                                                </div>
+                                            </div>
+                                        </li>
                 </ul>
             </div>
         </div>
@@ -121,8 +121,8 @@
 <%--화상채팅js--%>
 <script>
     var connection = new RTCMultiConnection();
-    connection.socketURL = 'https://192.168.207.208:9002/';
-    // connection.socketURL = 'https://rtcmulticonnection.herokuapp.com:443/';
+    // connection.socketURL = 'https://192.168.207.208:9002/';
+    connection.socketURL = 'https://rtcmulticonnection.herokuapp.com:443/';
     connection.socketMessageEvent = 'videoevent';
 
     connection.session = {
@@ -251,7 +251,7 @@
 </script>
 <%--문자채팅 및 유저 리스트--%>
 <script>
-    var socket = io('https://192.168.207.208:9003');
+    var socket = io('http://192.168.35.69:9003');
 
     var userInfo = {
         user_id: '${user.user_id}',
@@ -277,13 +277,14 @@
         }
         $("#status-options").removeClass("active");
 
-        socket.emit('status_change',$("profile-img").attr('class'),userInfo);
+        console.log($("#profile-img").attr("class"));
+        socket.emit('status_change',$("#profile-img").attr("class"),userInfo);
     });
 
     socket.on('status_change',function(status,info){
-        $(".contacts").find("contact").each(function(index){
-            if($(this ).text().indexOf(info.user_id)!==-1){
-                $(this).
+        $(".contacts").find(".contact").each(function(index){
+            if($(this).find("p").first().text().indexOf(info.user_id)!==-1){
+                $(this).find("span").first().addClass();
             }
         })
     });
