@@ -295,17 +295,7 @@
 			dataType : "text",
 			success : function(resp) {
 				if(resp=="FULL"){
-// 					swal("수강신청 실패", "수강신청이 마감되어 신청하실 수 없습니다.", "error"); 
-					if (!($('.modal.in').length)) {
-						$('.modal-dialog').css({
-							top : 0,
-							left : 0
-						});
-					}
-					$('#fullmodal').modal({
-						backdrop : false,
-						show : true
-					});
+					swal("수강신청 실패", "수강신청이 마감되어 신청하실 수 없습니다.", "error"); 
 					
 				}else if (resp=="OVER"){
 					swal("수강신청 실패", "수강신청 가능한 학점이 초과되어 신청하실 수 없습니다.", "error"); 
@@ -533,22 +523,6 @@
                     </div>
                 </div>
             </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<div class="modal fade" id="fullmodal" role="dialog">
-    <div class="modal-dialog modal-large">
-        <div class="modal-content">
-            <div class="modal-header">
-            </div>
-            <div class="modal-body">
-             
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ddit.finalproject.team2.admin.service.KJE_ManageBasicInfoServiceImpl;
@@ -44,6 +45,15 @@ public class KJE_ManageBasicInfoRestController {
 		 ServiceResult result = manageBasicInfoService.createBInfo(saveInfo);
 		return null;
 	}
+	
+	
+	@GetMapping(value="/retriveBIinfo")
+	public KJE_OpenSemesterVo retriveBIinfo(
+			@RequestParam(name="openseme_no")String openseme_no ){
+		KJE_OpenSemesterVo resp =manageBasicInfoService.retriveBInfo(openseme_no);
+		return resp;
+	}
+	
 	
 	
 }

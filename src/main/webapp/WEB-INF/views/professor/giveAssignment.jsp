@@ -53,7 +53,7 @@
    #grade, #credit, #course {
       width: 60px;
    }
-   
+  
 </style>
 <script type="text/javascript">
 
@@ -141,7 +141,7 @@
 				success : function(resp) {
 					var title = "<p><b>제목:</b>"+resp.assignment_title+"</p>";
 					title+="<p><b>주차:</b>"+resp.class_identifying_code.substring(0,1)+"주차</p>";
-					title+="<p><b>차시:</b>"+ resp.class_identifying_code.substring(1,0)+"차시</p>";
+					title+="<p><b>차시:</b>"+ resp.class_identifying_code.substring(1,2)+"차시</p>";
 					title+="<p><b>과제 등록일 :</b>"+ resp.assignment_date+"</p>";
 					title+="<p><b>과제제출 기한 :</b>" +resp.submit_period1+"~"+ resp.submit_period2+"</p>";
 					
@@ -208,8 +208,6 @@
 		$('#updatAssignment').text("저장");
 		$('#updatAssignment').attr('id','saveAssignment'); 
 		
-		
-		
 		lecture_name=$("[name='lecture']").children(":selected").text();
 		var week =$($(this).parent().parent().find($('td'))[0]).text();
 		var turn =$($(this).parent().parent().find($('td'))[1]).text();
@@ -254,8 +252,6 @@
 		
 		var content = CKEDITOR.instances.contextArea.getData();	
 		$("[name='assignment_content']").val(content.trim());
-		
-		
 		        // Get form
 		        var form = $('#assignment')[0];
 		        // Create an FormData object 
