@@ -18,7 +18,9 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/res/Login_v3/vendor/bootstrap/css/bootstrap.css">
 
     <script src="${pageContext.request.contextPath}/res/js/jquery-3.3.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
+            integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
+            crossorigin="anonymous"></script>
     <script src="${pageContext.request.contextPath}/res/Login_v3/vendor/bootstrap/js/bootstrap.js"></script>
     <script src="https://use.typekit.net/hoy3lrg.js"></script>
     <script src="${pageContext.request.contextPath}/res/dist/RTCMultiConnection.min.js"></script>
@@ -26,7 +28,8 @@
     <script src="${pageContext.request.contextPath}/res/dev/getHTMLMediaElement.js"></script>
 </head>
 <body>
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -49,7 +52,8 @@
 </div>
 <div id="frame">
     <div id="half_frame">
-        <iframe src="${pageContext.request.contextPath}/professor/showExam/중간/CS001EVAL01/CS001" style="width: 100%;height: 100%;"></iframe>
+        <iframe src="${pageContext.request.contextPath}/professor/showExam/중간/CS001EVAL01/CS001"
+                style="width: 100%;height: 100%;"></iframe>
     </div>
     <div id="half_frame">
         <div id="sidepanel">
@@ -103,12 +107,12 @@
 </div>
 </body>
 <script>
-    String.prototype.hashCode = function() {
+    String.prototype.hashCode = function () {
         var hash = 0, i, chr;
         if (this.length === 0) return hash;
         for (i = 0; i < this.length; i++) {
-            chr   = this.charCodeAt(i);
-            hash  = ((hash << 5) - hash) + chr;
+            chr = this.charCodeAt(i);
+            hash = ((hash << 5) - hash) + chr;
             hash |= 0; // Convert to 32bit integer
         }
         return hash;
@@ -130,7 +134,7 @@
         OfferToReceiveVideo: true
     };
     let connectedCount = 0;
-    let roomid='${roomId}'.toString().hashCode();
+    let roomid = '${roomId}'.toString().hashCode();
     connection.openOrJoin(roomid, function (isRoomExist, roomid, error) {
         if (error) {
             alert(error);
@@ -268,12 +272,25 @@
         return out;
     }
 
-    function message(msg) {
+    function message1(msg, info) {
         var out =
             "<li class=\"replies\">\n" +
-            "   <img src=\"${pageContext.request.contextPath}/res/images/male.png\" alt=\"\"/>\n" +
-            "   <p>" + msg + "</p>\n";
+            "<img src=\"${pageContext.request.contextPath}/res/images/male.png\" alt=\"\"/>\n" +
+            "<h6 style=\" float: right;margin: 6px 0 0 8px;display:block;\"><font color=\"white\" style=\"float: right;margin: 6px 0 0 8px;display:block;\">" + info.user_name + "(" + info.user_id + ")</font></h6>\n" +
+            "<p>" + msg + "</p>\n";
+        $(".messages").animate({scrollTop: $(document).height()}, "fast");
+
         return out;
+    }
+
+    function newMessage(message, info) {
+        if ($.trim(message) == '') {
+            return false;
+        }
+        $('<li class="sent"><img src="${pageContext.request.contextPath}/res/images/male.png" alt="" /><h6 style><font color="white">' +
+            info.user_name + '(' + info.user_id + ')</font></h6><p>' + message + '</p></li>').appendTo($('.messages ul'));
+        $('.message-input input').val(null);
+        $(".messages").animate({scrollTop: $(document).height()}, "fast");
     }
 
     socket.on('connect', function () {
@@ -283,32 +300,18 @@
     socket.emit('userInfo', userInfo);
     socket.on('userInfo', function (users) {
         $('#contacts ul').empty();
-        for (var i = 0; i<users.user_id.length; ++i) {
+        for (var i = 0; i < users.user_id.length; ++i) {
             $('#contacts ul').append(user_info(users.user_id[i], users.user_name[i]));
         }
     });
 
-    $(window).on('unload',function(){
+    $(window).on('unload', function () {
         console.log('unload');
         socket.emit('exit', userInfo);
     });
 
-    socket.on('chat message', function (msg) {
-        $('.messages ul').append(newMessage(msg));
-    });
-
     socket.on('disconnect', function (userInfo) {
     });
-
-
-    function newMessage(message) {
-        if ($.trim(message) == '') {
-            return false;
-        }
-        $('<li class="sent"><img src="${pageContext.request.contextPath}/res/images/male.png" alt="" /><p>' + message + '</p></li>').appendTo($('.messages ul'));
-        $('.message-input input').val(null);
-        $(".messages").animate({scrollTop: $(document).height()}, "fast");
-    }
 
     $(".messages").animate({scrollTop: $(document).height()}, "fast");
 
@@ -336,26 +339,30 @@
         $("#status-options").removeClass("active");
     });
 
-    $('.submit').click(function () {
-        socket.emit('chat message', message);
-        newMessage(message);
+    socket.on('chat message', function (msg, info) {
+        if (info.user_id !== userInfo.user_id) {
+            $('.messages ul').append(message1(msg, info));
+        }
+    });
 
+    $('.submit').click(function () {
+        message = $(".message-input input").val();
+        socket.emit('chat message', message, userInfo);
+        newMessage(message, userInfo);
     });
 
     $(window).on('keydown', function (e) {
         if (e.which === 13) {
             message = $(".message-input input").val();
-            newMessage(message);
-            socket.emit('chat message', message);
-            return false;
+            newMessage(message, userInfo);
+            socket.emit('chat message', message, userInfo);
         }
     });
 
-    $(document).on("dblclick",".contact",function(e){
-        $j(".modal").modal({backdrop: 'static', keyboard: false});
-
+    $(document).on("dblclick", ".contact", function (e) {
+        $(".modal").modal({backdrop: 'static', keyboard: false});
+        // if($(this).find(".name").text()
         //alert($(this).find(".name").text());
-
     });
 </script>
 
