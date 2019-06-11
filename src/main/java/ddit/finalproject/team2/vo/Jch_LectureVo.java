@@ -31,10 +31,12 @@ public class Jch_LectureVo implements Serializable{
 	private String openseme_year;
 	private String openseme_semester;
 	private String user_name;
+	private int checklec;
+	private int checkplan;
 	
 	
-	private String lecture_planBtn = "<button class='btn btn-default notika-btn-default waves-effect'>보기</button>";
-	private String lectureAddBtn = "<button class='btn btn-default notika-btn-default waves-effect lectureAddBtn'>등록</button>";
+	private String lecturePlanBtn = "<button class='btn btn-default notika-btn-default waves-effect lecturePlan'>강의계획서</button>";
+	private String lectureAddBtn ;
 	
 	private String videoBtn = "<button class='btn btn-default notika-btn-default waves-effect'>보기</button>"
 						+ "<button class='btn btn-default notika-btn-default waves-effect'>등록</button>"

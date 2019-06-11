@@ -16,11 +16,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import ddit.finalproject.team2.admin.service.Jch_CurriculumService;
 import ddit.finalproject.team2.util.enumpack.ServiceResult;
+import ddit.finalproject.team2.vo.Jch_LecturePlanVo;
 import ddit.finalproject.team2.vo.Jch_LectureVo;
 import ddit.finalproject.team2.vo.Jch_LectureWeekVo;
 import ddit.finalproject.team2.vo.Jch_SMSGroupVo;
@@ -36,7 +38,10 @@ public class Jch_LectureController {
 	
 	@GetMapping("alectureList")
 	public ModelAndView lectureList(Authentication au, ModelAndView mv){
-		System.out.println( au.getName());
+		Jch_UserVo userVo = service.getProfInfo(au.getName());
+		Jch_LecturePlanVo jlpVo = service.getLecturePlanVO();
+		mv.addObject("userVo", userVo);
+		mv.addObject("jlpVo", jlpVo);
 		mv.setViewName("professor/lectureList");
 		return mv;
 	}
@@ -49,12 +54,26 @@ public class Jch_LectureController {
 		map.put("data", list);
 		return map;
 	}
-    
+	
+	@GetMapping(value="getLectureCode")
+	public String getLectureCode(String no, Authentication au){
+		String view = null;
+		ServiceResult result = service.getLectureCode(no);
+		if (ServiceResult.OK.equals(result)) {
+	    	view = "professor/registerLecture";
+		} else {
+			view = "professor/alectureList";
+		}
+		return view;
+	}
 	
 	@PostMapping(value="lectureWeekAdd")
-	public String smsGroupAdd(@RequestBody Map<String, String> params, HttpServletRequest request) {
+	public String lectureWeekAdd(@RequestBody Map<String, String> params, HttpServletRequest request) {
 		String view = null;
 		String lecture_code = params.get("no");
+		lecture_code = lecture_code.replaceAll("<a href='register/", "");
+		lecture_code = lecture_code.substring(0, lecture_code.indexOf("'"));
+		System.out.println(lecture_code);
 	    if(lecture_code!=null) {
 	    	params.remove("no");
 	    }
@@ -94,6 +113,17 @@ public class Jch_LectureController {
 			view = "professor/lectureList";
 		}
 		return view;
+	}
+	
+	@PostMapping(value="lecturePlanAdd")
+	public void lecturePlanAdd(@RequestBody Map<String, String> params, HttpServletRequest request) {
+		String view = null;
+		String lecture_code = params.get("no");
+	    if(lecture_code!=null) {
+	    	params.remove("no");
+	    }
+	    System.out.println(params.toString());
+//	    return view;
 	}
 	
 }

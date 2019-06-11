@@ -59,7 +59,7 @@
 				, {data : "lecture_credit"}
 				, {data : "lecture_target"}
 				, {data : "lecture_capacity"}
-				, {data : "lecture_planBtn"}
+				, {data : "lecturePlanBtn"}
 			],
 			"order" : []
 			,

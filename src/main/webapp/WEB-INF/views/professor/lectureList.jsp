@@ -11,6 +11,7 @@
 * 관리자 교육과정관리 (강좌관리)화면
  --%>
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/css/bootstrap-select.min.css">
 <style>
 	tfoot { 
     	display: table-header-group; 
@@ -64,6 +65,7 @@
 				, {data : "lecture_credit"}
 				, {data : "lecture_target"}
 				, {data : "lecture_capacity"}
+				, {data : "lecturePlanBtn"}
 				, {data : "lectureAddBtn"}
 			],
 			"order" : []
@@ -109,6 +111,7 @@
 		$table = $('#data-table-basic').DataTable();
 		$table.on('click', '.lectureAddBtn', function() {
 			var tr = $(this).parents('tr');
+			$(tr).unbind("click").on("click", function() {});
 			var no = table.row(tr).data().lecture_code;
 			var name = table.row(tr).data().lecture_name;
 			
@@ -127,10 +130,59 @@
 			var normals = $('#adda').find('input:eq(65)').val();
 			var finals = $('#adda').find('input:eq(131)').val();
 			$("input[name=lecture_subname]").val(name);
-			$('#adda').find('input:eq(65)').val(normals);
-			$('#adda').find('input:eq(131)').val(finals);
-			
+			$('.normamlSub').val(normals);
+			$('.finalSub').val(finals);
 		});
+		
+		//강의주차수정버튼
+		$table = $('#data-table-basic').DataTable();
+		$table.on('click', '.lectureUpdateBtn', function() {
+			var tr = $(this).parents('tr');
+			var no = table.row(tr).data().lecture_code;
+			var name = table.row(tr).data().lecture_name;
+		});
+		
+		$table = $('#data-table-basic').DataTable();
+		$table.on('click', '.lecPlanAddBtn', function() {
+			var tr = $(this).parents('tr');
+			var no = table.row(tr).data().lecture_code;
+			var name = table.row(tr).data().lecture_name;
+			
+			if (!($('.modal.in').length)) {
+				$('.modal-dialog').css({
+					top : 0,
+					left : 0
+				});
+			}
+			$('#myModalfour').modal({
+				backdrop : false,
+				show : true
+			});
+			$("#eeee").text(name);
+			$("#noo").text(no);
+			$("input[name=lecture_subname]").val(name);
+		});
+		
+		//
+// 		$table = $('#data-table-basic').DataTable();
+// 		$table.on('click', 'tr', function() {
+// 			var no = table.row(this).data().lecture_code;
+// 			var jsonData = {"no" : no};	
+// 			$.ajax({
+// 				url : "${pageContext.request.contextPath}/professor/getLectureCode",
+// 				method : "get",
+// 				data : jsonData,
+// 				dataType : "text", // request header(Accept), response header(Content-Type),
+// 				success : function(resp) {
+// 					window.location.href = "${pageContext.request.contextPath}/professor/register/"+no;
+// 				},
+// 				error : function(errorResp) {
+// 					alert("해당 강의 주차정보가 없습니다. 주차정보를 등록해주세요.");
+// 					console.log(errorResp.status);
+// 				}
+// 			});
+// 		});
+		
 		
 		$(".lectureWeekAddBtn").on("click", function() {
 			var inputs = $("#adda").find(":input");
@@ -143,7 +195,7 @@
 				sendDataTd[prop+index]=value;
 			});
 			var jsonData = JSON.stringify(sendDataTd);
-			
+			console.log(jsonData);
 			$.ajax({
 				url : "${pageContext.request.contextPath}/professor/lectureWeekAdd",
 				method : "post",
@@ -154,6 +206,7 @@
 					alert("강의계획 등록이 완료되었습니다.");
 					console.log(resp);
 					$('#myModalthree').modal("hide");
+					window.location.href = "${pageContext.request.contextPath}/professor/alectureList";
 				},
 				error : function(errorResp) {
 					console.log(errorResp.status);
@@ -161,6 +214,34 @@
 			});
 		});
 		
+		$(".lecturePlanAddBtn").on("click", function() {
+			var inputs = $("#adada").find(":textarea");
+			var sendDataTd = {};
+			var no = $("#noo").text();
+			sendDataTd["no"]=no;
+			$(inputs).each(function(index, input){
+				var prop = $(this).attr("name");
+				var value = $(this).val();
+				sendDataTd[prop]=value;
+			});
+			var jsonData = JSON.stringify(sendDataTd);
+			console.log(jsonData);
+			$.ajax({
+				url : "${pageContext.request.contextPath}/professor/lecturePlanAdd",
+				method : "post",
+				data : jsonData,
+				contentType : "application/json; charset=UTF-8",
+				dataType : "text", // request header(Accept), response header(Content-Type),
+				success : function(resp) {
+					alert("강의계획 등록이 완료되었습니다.");
+					console.log(resp);
+					$('#myModalfour').modal("hide");
+				},
+				error : function(errorResp) {
+					console.log(errorResp.status);
+				}
+			});
+		});
 	});
 	
 	function createLectureLocation() {
@@ -216,6 +297,7 @@
 									<th>학년</th>
 									<th>수강인원</th>
 									<th>강의계획</th>
+									<th>주차</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -257,7 +339,7 @@
 													<td>
 														<input class="form-control" type="hidden" name="lecture_week" value="${i}" />
 														<input class="form-control" type="hidden" name="lecture_class" value="1" />
-														<input class="form-control" type="text" name="lecture_subname" value="중간고사" readonly="readonly"/>
+														<input class="form-control normamlSub" type="text" name="lecture_subname" value="중간고사" readonly="readonly"/>
 													</td>
 												</tr>
 											</c:when>
@@ -268,7 +350,7 @@
 													<td>
 														<input class="form-control" type="hidden" name="lecture_week" value="${i}" />
 														<input class="form-control" type="hidden" name="lecture_class" value="1" />
-														<input class="form-control" type="text" name="lecture_subname" value="기말고사" readonly="readonly"/>
+														<input class="form-control finalSub" type="text" name="lecture_subname" value="기말고사" readonly="readonly"/>
 													</td>
 												</tr>
 											</c:when>
@@ -315,5 +397,82 @@
     </div>
 </div>
 
-<script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<div class="modal fade" id="myModalfour" role="dialog">
+    <div class="modal-dialog modal-large">
+        <div class="modal-content">
+            <div class="modal-header">
+            </div>
+            <div class="modal-body">
+            	<div class="row">
+	                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+	                    <div class="widget-tabs-int">
+	                        <div class="tab-hd" id="lPlandheader">
+	                           <h2 id="eeee"></h2>
+	                           <span id="noo" style="display: none"></span>
+	                        </div>
+	                        <div class="widget-tabs-list">
+	                            <table class="table table-bordered" id="adada">
+	                            	<tr>
+	                            		<th>제목</th>
+	                            		<th>내용</th>
+	                            	</tr>
+	                            	<tr>
+	                            		<th>주별 강의 내용</th>
+	                            		<td>
+	                            			<textArea id="weekCon">${jlpVo.week_content }</textArea>
+	                            		</td>
+	                            	</tr>
+	                            	<tr>
+	                            		<th>학습과제물안내</th>
+	                            		<td>
+	                            			<textArea id="studyAssi">${jlpVo.assignment_info }</textArea>
+	                            		</td>
+	                            	</tr>
+	                            	<tr>
+	                            		<th>교수소개</th>
+	                            		<td>
+	                            			<textArea id="profInfo">${jlpVo.introduction }</textArea>
+	                            		</td>
+	                            	</tr>
+	                            	<tr>
+	                            		<th>교과목 개요</th>
+	                            		<td>
+	                            			<textArea id="lecSummary">${jlpVo.lec_plan_summary }</textArea>
+	                            		</td>
+	                            	</tr>
+	                            	<tr>
+	                            		<th>수업진행방식</th>
+	                            		<td>
+	                            			<textArea id="lecMethod">${jlpVo.lec_plan_method }</textArea>
+	                            		</td>
+	                            	</tr>
+	                            	<tr>
+	                            		<th>교재/참고자료</th>
+	                            		<td>
+	                            			<textArea id="book">${jlpVo.book_material }</textArea>
+	                            		</td>
+	                            	</tr>
+								</table>
+	                        </div>
+	                    </div>
+	                </div>
+	            </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default lecturePlanAddBtn">저장</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
 
+<script src="https://cdn.ckeditor.com/4.11.4/standard-all/ckeditor.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript">
+	CKEDITOR.replace("weekCon");
+	CKEDITOR.replace("studyAssi");
+	CKEDITOR.replace("profInfo");
+	CKEDITOR.replace("lecSummary");
+	CKEDITOR.replace("lecMethod");
+	CKEDITOR.replace("book");
+</script>
