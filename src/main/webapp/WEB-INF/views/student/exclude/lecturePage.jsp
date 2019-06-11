@@ -56,9 +56,8 @@
                 });
                 this.on('ended',function(){
                     if(isfirst===''){
-
-                    }else{
-
+                        var i='${class_identifying_code}';
+                        location.href="${pageContext.request.contextPath}/student/quiz/${class_identifying_code}/"+i.substring(2,1)+"/${lecture_code}";
                     }
                 });
             }).ready(function () {
@@ -85,7 +84,9 @@
             //동영상 선택
             $j(".list.unit.unit_lecture").on("click", function () {
                 var obj = JSON.parse($j(this).attr("fxd-data"));
+
                 location.href = "${pageContext.request.contextPath}/subjectPage/${continuePlay.LECTURE_CODE}/lecturePage/" + obj.id;
+
             });
 
             //나가기버튼

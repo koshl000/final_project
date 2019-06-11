@@ -47,4 +47,5 @@ public interface LSY_IQuizService {
 	public Lsy_LectureInfos retrieveLectureInfoForOneViews(Map<String, String> lectureMap);
 	public ProfessorVo retrieveProInfos(String user_id);
 	public Lsy_LectureInfos retreiveLectureInfoForList(Map<String, String> proMap);
+	public List<Lsy_ExamVo> retrieveEvalStudyCodes(String lecture_code);
 }

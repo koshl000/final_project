@@ -39,6 +39,7 @@
 								<table id="data-table-basic">
 									<thead>
 										<tr>
+											<th></th>
 											<th>강좌코드</th>
 											<th>강좌명</th>
 											<th>이수구분</th>
@@ -62,8 +63,7 @@
 <script
 	src="${pageContext.request.contextPath }/notika/js/data-table/data-table-act.js"></script>
 <script>
-var userId = '${user.user_id}';
-$('#data-table-basic').DataTable({
+var t = $('#data-table-basic').DataTable({
 	scrollY : '200px',
 	scrollCollapse : true,
 	paging : false,
@@ -73,6 +73,8 @@ $('#data-table-basic').DataTable({
 		dataType : 'json'
 	}
 	, columns : [ {
+		data : "mid_date"
+	}, {
 		data : "lecture_code"
 	}, {
 		data : "lecture_name"
@@ -83,6 +85,19 @@ $('#data-table-basic').DataTable({
 	}, {
 		data : "lecture_current"
 	} ]
+	//indexing
+	, columnDefs : [ {
+        "searchable": false,
+        "orderable": false,
+        "targets": 0
+    } ]
 	, order : []
 });
+
+//indexing
+t.on( 'order.dt search.dt', function () {
+    t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+        cell.innerHTML = i+1;
+    } );
+} ).draw();
 </script>

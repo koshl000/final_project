@@ -3,7 +3,7 @@
 <mapper namespace="ddit.finalproject.team2.common.dao.Ljs_INoticeDao">
 	<select id="selectNoticeList" resultType="ddit.finalproject.team2.vo.Ljs_BoardVo">
 		SELECT NOTICE_NO BOARD_NO, '공지' BOARD_TYPE, NOTICE_TITLE BOARD_TITLE, NOTICE_CONTENT BOARD_CONTENT
-			, NOTICE_DATE BOARD_DATE, NOTICE_HIT BOARD_HIT, NOTICE_WRITER BOARD_WRITER 
+			, NOTICE_DATE BOARD_DATE, NOTICE_HIT BOARD_HIT, NOTICE_WRITER WRITER 
 		FROM NOTICE ORDER BY NOTICE_NO DESC
 	</select>
 	

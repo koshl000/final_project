@@ -51,6 +51,7 @@ img.visible {
 <c:if test="${result eq '성공'}">
 	self.close();
 </c:if>
+	var source;
 	var start = ${not empty start?start:0};
 	var end = ${not empty end?end:5};
 	var questions = [];
@@ -58,18 +59,16 @@ img.visible {
 	var resp;
 	var saveBtn; var modifyBtn; var aTags = []; var checkBoxes; var inputTexts; var textAreas; var strongs;
 	function completePage(){
-		if($("#identifier")=="교수"){
+		if($("#identifier")=="ROLE_PROFESSOR"&&'${btnType}'=='exam'){
 			$('.timee').hide();
+			$("#boddy").after("<div class='row'>"+"<div class='col-xs-6 col-sm-6 btnSpace'>" +
+					"<button class='btn' disabled type='button' id='prev'>이전</button>"+
+					"<button class='btn' type='button' id='next'>다음</button>"+
+					"<button class='btn' type='button' id='complete'></button>"
+						);	
 		}
 		$('textArea').hide();
 		$("input[type='text']").attr('type', 'hidden');
-		if('${btnType}'=="exam"){
-		$("#boddy").after("<div class='row'>"+"<div class='col-xs-6 col-sm-6 btnSpace'>" +
-				"<button class='btn' disabled type='button' id='prev'>이전</button>"+
-				"<button class='btn' type='button' id='next'>다음</button>"+
-				"<button class='btn' type='button' id='complete'>제출</button>"
-				);	
-		}
 	}
 	
 	function showPage(questionBody, start, end){
@@ -206,11 +205,11 @@ img.visible {
 			}
 		}
 		console.log($("#yaoZhuannSong"))
-		if($('#identifier').val()=='교수'){
+		if($('#identifier').val()=='ROLE_PROFESSOR'){
 			alert("등록하시겠습니까?");
 			$("#yaoZhuannSong").attr("action", "${pageContext.request.contextPath}/student/submit");
 			$("#yaoZhuannSong").submit();
-		} else if($('#identifier').val()=='학생'){
+		} else if($('#identifier').val()=='ROLE_STUDENT'){
 			alert("제출 이후에는 수정이 불가합니다.\n제출하시겠습니까?")
 			$("#yaoZhuannSong").attr("action", "${pageContext.request.contextPath}/professor/createExamAnswer");
 			$("#yaoZhuannSong").submit();
@@ -390,7 +389,7 @@ img.visible {
 					<c:choose>
 						<c:when test="${vs.count%5 eq 1 or vs.count%5 eq 2 or vs.count%5 eq 3}">
 							<script>
-							var source = "";
+								source = "";
 								source = "<form id='formquestionNum' class='formT'>"+
 									"<div class='questionBody question${vs.index} coverEach'>" +
 									"<span id='spanYet'></span><select id='whichType' class='whichType' disabled>";
@@ -483,15 +482,13 @@ img.visible {
 		</div>
 	</div>
 </div>
-<input id="qStart" type="hidden" value="1"/>
-<input id="identifier" type="hidden" value="학생"/>
-<input id="attend_no" type="hidden" value="CS001002"/>
-<%-- <input id="attend_no" type="hidden" value="${attend_no }"/> --%>
-<input id="user_id" type="hidden" value="st_001"/>
-<input id="exam_no" type="hidden" value="3"/>
+<input id="identifier" type="hidden" value="ROLE_PROFESSOR"/>
+<input id="identifier" type="hidden" value="${identifier[0]}"/>
+<!-- <input id="attend_no" type="hidden" value="CS001002"/> -->
+<input id="user_id" type="hidden" value="${userVo.user_id}"/>
+<input id="exam_no" type="hidden" value="${examVo.exam_no}"/>
 <input id="btnType" type='hidden' value="${btnType}"/>
-<input id="class_identifying_code" type='hidden' value="${quizList[0].class_identifying_code}"/>
-<input id="lecture_code" type='hidden' value="${quizList[0].lecture_code}"/>
+<input id="lecture_code" type='hidden' value="${lecture_code}"/>
 
 <!-- autosize JS
 		============================================ -->

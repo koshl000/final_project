@@ -8,13 +8,13 @@ function makeQuestionPage(identifier, boddy, btnType){
 	var oneBtn = "<div class='row'>"+"<div class='col-xs-10 col-sm-10 btnSpace'>" +
 					"<button class='btn' type='button' id='submt'>등록</button>";
 	if(identifier=="ROLE_PROFESSOR"&&btnType=='exam'){
-		$(boddy).after(twoButtonForPr);
+//		$(boddy).after(twoButtonForPr);
 		$(boddy).find('.coverEach').append(everyModiBtn);
+		$(boddy).find('input:checkbox.student').iCheck('destroy');
 		$(boddy).find('.student').remove();
 		$('input:checkbox').attr('disabled', true);
 	} else if(identifier=="ROLE_PROFESSOR"&&btnType=='quiz'){
 		$(boddy).find('.coverEach').append(everyModiBtn);
-//		$(boddy).after(twoButtonForPr);
 		$(boddy).find('input:checkbox.student').iCheck('destroy');
 		$(boddy).find('.student').remove();
 		$('input:checkbox').attr('disabled', true);

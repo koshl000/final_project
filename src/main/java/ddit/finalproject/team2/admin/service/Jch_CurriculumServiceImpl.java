@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import ddit.finalproject.team2.admin.dao.Jch_CurriculumDao;
 import ddit.finalproject.team2.util.enumpack.ServiceResult;
 import ddit.finalproject.team2.vo.Jch_LectureVo;
+import ddit.finalproject.team2.vo.Jch_LectureWeekVo;
 import ddit.finalproject.team2.vo.Jch_OpenSemesterVo;
 import ddit.finalproject.team2.vo.Jch_UserVo;
 
@@ -46,6 +47,16 @@ public class Jch_CurriculumServiceImpl implements Jch_CurriculumService {
 	@Override
 	public List<Jch_LectureVo> getLectureList(String name) {
 		return curDao.getLectureList(name);
+	}
+
+	@Override
+	public ServiceResult insertLectureWeekList(Jch_LectureWeekVo vo) {
+		int rowCnt = curDao.insertLectureWeekList(vo);
+		ServiceResult result = ServiceResult.FAILED;
+		if (rowCnt > 0) {
+			result = ServiceResult.OK;
+		}
+		return result;
 	}
 
 }

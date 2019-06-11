@@ -123,7 +123,42 @@
 				show : true
 			});
 			$("#eee").text(name);
-			$("select[name=lecture_subname]").val(name);
+			$("#no").text(no);
+			var normals = $('#adda').find('input:eq(65)').val();
+			var finals = $('#adda').find('input:eq(131)').val();
+			$("input[name=lecture_subname]").val(name);
+			$('#adda').find('input:eq(65)').val(normals);
+			$('#adda').find('input:eq(131)').val(finals);
+			
+		});
+		
+		$(".lectureWeekAddBtn").on("click", function() {
+			var inputs = $("#adda").find(":input");
+			var sendDataTd = {};
+			var no = $("#no").text();
+			sendDataTd["no"]=no;
+			$(inputs).each(function(index, input){
+				var prop = $(this).attr("name");
+				var value = $(this).val();
+				sendDataTd[prop+index]=value;
+			});
+			var jsonData = JSON.stringify(sendDataTd);
+			
+			$.ajax({
+				url : "${pageContext.request.contextPath}/professor/lectureWeekAdd",
+				method : "post",
+				data : jsonData,
+				contentType : "application/json; charset=UTF-8",
+				dataType : "text", // request header(Accept), response header(Content-Type),
+				success : function(resp) {
+					alert("강의계획 등록이 완료되었습니다.");
+					console.log(resp);
+					$('#myModalthree').modal("hide");
+				},
+				error : function(errorResp) {
+					console.log(errorResp.status);
+				}
+			});
 		});
 		
 	});
@@ -204,28 +239,67 @@
 	                    <div class="widget-tabs-int">
 	                        <div class="tab-hd" id="lPlandheader">
 	                           <h2 id="eee"></h2>
+	                           <span id="no" style="display: none"></span>
 	                        </div>
 	                        <div class="widget-tabs-list">
-	                            <table class="table table-bordered">
+	                            <table class="table table-bordered" id="adda">
 	                            	<tr>
 	                            		<th>주차</th>
 	                            		<th>차시</th>
 	                            		<th>주차강의명</th>
 	                            	</tr>
-	                            	<c:forEach var="i" begin="1" end="16" varStatus="">
-										<tr>
-											<th rowspan="3" class="${i}">${i}주차</th>
-											<td>1차시</td>
-											<td><input class="form-control" type="text" name="lecture_subname" value="${i}1" /></td>
-										</tr>
-										<tr>
-											<td>2차시</td>
-											<td><input class="form-control" type="text"  name="lecture_subname" /></td>
-										</tr>
-										<tr>
-											<td>3차시</td>
-											<td><input class="form-control" type="text"  name="lecture_subname" /></td>
-										</tr>
+	                            	<c:forEach var="i" begin="1" end="16" varStatus="status">
+	                            		<c:choose>
+											<c:when test="${status.count eq 8}">
+												<tr>
+													<th>${i}주차</th>
+													<td>1차시</td>
+													<td>
+														<input class="form-control" type="hidden" name="lecture_week" value="${i}" />
+														<input class="form-control" type="hidden" name="lecture_class" value="1" />
+														<input class="form-control" type="text" name="lecture_subname" value="중간고사" readonly="readonly"/>
+													</td>
+												</tr>
+											</c:when>
+											<c:when test="${status.count eq 16}">
+												<tr>
+													<th>${i}주차</th>
+													<td>1차시</td>
+													<td>
+														<input class="form-control" type="hidden" name="lecture_week" value="${i}" />
+														<input class="form-control" type="hidden" name="lecture_class" value="1" />
+														<input class="form-control" type="text" name="lecture_subname" value="기말고사" readonly="readonly"/>
+													</td>
+												</tr>
+											</c:when>
+											<c:otherwise>
+												<tr>
+													<th rowspan="3" class="${i}">${i}주차</th>
+													<td>1차시</td>
+													<td>
+														<input class="form-control" type="hidden" name="lecture_week" value="${i}" />
+														<input class="form-control" type="hidden" name="lecture_class" value="1" />
+														<input class="form-control" type="text" name="lecture_subname" value="" />
+													</td>
+												</tr>
+												<tr>
+													<td>2차시</td>
+													<td>
+														<input class="form-control" type="hidden" name="lecture_week" value="${i}" />
+														<input class="form-control" type="hidden" name="lecture_class" value="2" />
+														<input class="form-control" type="text"  name="lecture_subname" value="" />
+													</td>
+												</tr>
+												<tr>
+													<td>3차시</td>
+													<td>
+														<input class="form-control" type="hidden" name="lecture_week" value="${i}" />
+														<input class="form-control" type="hidden" name="lecture_class" value="3" />
+														<input class="form-control" type="text"  name="lecture_subname" value="" />
+													</td>
+												</tr>
+											</c:otherwise>
+										</c:choose>
 	                            	</c:forEach>
 								</table>
 	                        </div>
@@ -234,6 +308,7 @@
 	            </div>
             </div>
             <div class="modal-footer">
+                <button type="button" class="btn btn-default lectureWeekAddBtn">저장</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
             </div>
         </div>

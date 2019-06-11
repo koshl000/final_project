@@ -156,10 +156,11 @@ $(function(){
 				}
 			}
 			console.log($("#yaoZhuannSong"))
-			if($('#identifier').val()=='교수'){
+			if($('#identifier').val()=='ROLE_PROFESSOR'){
 				alert("등록하시겠습니까?");
+				$("#yaoZhuannSong").attr("action", "${pageContext.request.contextPath}/student/submit");
 				$("#yaoZhuannSong").submit();
-			} 
+			}
 			
 			if(btnType=="quiz"||btnType=="test"){
 					var QCinputs = $('.QContent');

@@ -35,4 +35,8 @@ public class LectureVo implements Serializable{
 		this.lecture_code = lecture_code;
 		this.openseme_no = openseme_no;
 	}
+	
+	public void setLecture_name(String lecture_name, String lecture_code){
+		this.lecture_name = "<a href='searchGrade/"+lecture_code+"'>"+lecture_name+"</a>";
+	}
 }

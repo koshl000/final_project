@@ -41,7 +41,6 @@ public class Ljs_BoardVo implements Serializable{
 	
 	private List<Ljs_ReplyVo> replyList;
 	private int replycount;
-	
 	private UserVo user;
 	
 	private Integer startAttachmentNo;

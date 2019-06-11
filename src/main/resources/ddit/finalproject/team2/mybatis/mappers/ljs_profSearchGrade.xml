@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ddit.finalproject.team2.professor.dao.Ljs_IProfSearchGradeDao">
+	<select id="selectOpensemeNo" parameterType="OpenSemesterVo" resultType="string">
+		SELECT OPENSEME_NO FROM OPENSEMESTER
+		WHERE OPENSEME_YEAR = #{openseme_year} AND OPENSEME_SEMESTER = #{openseme_semester}
+	</select>
+	
+	<select id="selectLectureListForProfessor" parameterType="LectureVo" resultType="LectureVo">
+		SELECT LECTURE_CODE, LECTURE_NAME, LECTURE_TARGET, LECTURE_CURRENT
+			, LECTURE_COURSETYPE
+		FROM LECTURE
+		WHERE USER_ID = #{user_id} AND OPENSEME_NO = #{openseme_no}
+		ORDER BY LECTURE_TARGET ASC
+	</select>
+	
+	<resultMap type="Ljs_AttendVo" id="attendMap">
+		<id property="attend.attend_no" column="ATTEND_NO"/>
+		<association property="attend" autoMapping="true" javaType="AttendVo" />
+		<association property="user" autoMapping="true" javaType="UserVo" />
+		<association property="student" autoMapping="true" javaType="StudentVo" />
+		<association property="grade" autoMapping="true" javaType="GradeVo" />
+	</resultMap>
+	<select id="selectAttendList" parameterType="string" resultMap="attendMap">
+		SELECT A.ATTEND_NO, A.USER_ID, A.LECTURE_CODE
+			, B.USER_NAME, C.LOWER_ORGANIZATION, C.CURRENT_YEAR
+            , D.GRADE_MIDTERM, D.GRADE_FINAL, D.GRADE_ABSENCE, D.GRADE_ASSIGNMENT
+		FROM ATTEND A INNER JOIN USERS B
+        ON(A.USER_ID = B.USER_ID)
+        INNER JOIN STUDENT C
+        ON(B.USER_ID = C.USER_ID)
+        LEFT OUTER JOIN GRADE D
+        ON(A.ATTEND_NO = D.ATTEND_NO)
+		WHERE LECTURE_CODE = #{lecture_code}
+		ORDER BY A.USER_ID ASC
+	</select>
+</mapper>

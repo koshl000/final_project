@@ -291,6 +291,15 @@ public class LSY_QuizServiceImpl implements LSY_IQuizService{
 		return null;
 	}
 
+	@Override
+	public List<Lsy_ExamVo> retrieveEvalStudyCodes(String lecture_code) {
+		List<Lsy_ExamVo> result = quizDao.selectEvalStudyCodes(lecture_code);
+		if(result!=null) {
+			return result;
+		}
+		return null;
+	}
+
 //	@Override
 //	public List<Lsy_LectureInfos> retreiveLectureInfoForList(Map<String, String> proMap) {
 //		List<Lsy_LectureInfos> lectureInfo = quizDao.selectLectureInfoForList(proMap);
