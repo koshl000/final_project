@@ -34,13 +34,16 @@
 			authentication-success-handler-ref="customAuthenticationSuccessHandler"
 		/>
 		
-		<logout logout-url="/logout" success-handler-ref="logoutHandler" invalidate-session="false"/>
+		<logout logout-url="/logout" invalidate-session="true"/>
 		
 		<intercept-url pattern="/**" access="permitAll"/>
 		<custom-filter ref="authorityCheckFilter"
 			after="LAST"
 		/>
-		<csrf disabled="true"/>		
+		<csrf disabled="true"/>
+		<headers>
+			<frame-options policy="SAMEORIGIN"/>
+		</headers>
 	</http>
 	
 </beans:beans>

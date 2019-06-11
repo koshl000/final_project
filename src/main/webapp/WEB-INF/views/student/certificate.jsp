@@ -137,11 +137,11 @@
 						</table>
 						<div class="container">
 							<div class="row">
-								<textarea rows="4" cols="100">
+								<p>
 									신청(결제)한 매수만큼만 출력 가능합니다.
 						 			신청(결제)일 기준, 30일 내에만 취소/환불 가능합니다.
 						 			본 서비스를 통해 출력한 증명서는 원본증명서 입니다.
-								</textarea>
+								</p>
 							</div>
 						</div>
 					</div>

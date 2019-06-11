@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 <!-- Data Table JS
 		============================================ -->
 <link rel="stylesheet"
@@ -35,25 +35,21 @@
 			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 				<div class="data-table-list">
 					<div class="table-responsive">
-						<div id="data-table-basic_wrapper" class="dataTables_wrapper">
-							<div class="dataTables_length" id="data-table-basic_length">
-								<table id="data-table-basic">
-									<thead>
-										<tr>
-											<th>강좌코드</th>
-											<th>강좌명</th>
-											<th>이수구분</th>
-											<th>학점</th>
-											<th>평점</th>
-											<th>등급</th>
-											<th>교강사명</th>
-										</tr>
-									</thead>
-									<tbody id="listBody">
-									</tbody>
-								</table>
-							</div>
-						</div>
+						<table id="data-table-basic">
+							<thead>
+								<tr>
+									<th>강좌코드</th>
+									<th>강좌명</th>
+									<th>이수구분</th>
+									<th>학점</th>
+									<th>평점</th>
+									<th>등급</th>
+									<th>교강사명</th>
+								</tr>
+							</thead>
+							<tbody id="listBody">
+							</tbody>
+						</table>
 					</div>
 				</div>
 			</div>

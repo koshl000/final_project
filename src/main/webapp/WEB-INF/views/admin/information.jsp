@@ -58,6 +58,14 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath }/notika/css/datapicker/datepicker3.css">
 <script type="text/javascript">
 	$(function(){
+	$('body').on('hidden.bs.modal',function(){
+			
+			if($('.modal.in').length>0){
+				
+				$('body').addClass('modal-open');
+			}
+			
+		});
 		
 		settingDataTable();
 		function settingDataTable() {
@@ -145,6 +153,62 @@
 		
 		
 	});
+	
+	$table = $('#basicInfoList').DataTable();
+	$table.on('click', '.viewplanBtn', function() {
+		
+		var year =$($(this).parent().parent().find($('td'))[0]).text();
+		var semester =$($(this).parent().parent().find($('td'))[1]).text();
+		$('#viewtitle').html("<h2>"+year+"학년도"+semester+"학기 상세정보</h2>");
+		
+		var openseme_no = $(this).val();		
+		
+		$.ajax({
+			url :"${pageContext.request.contextPath}/retriveBIinfo?openseme_no="+openseme_no,
+			method : "get",
+			success : function(resp) {
+				
+				$('#pi1').val(resp.openseme_period1);  
+				$('#pi2').val(resp.openseme_period2);  
+				$('#a1').val(resp.openseme_attend1);
+				$('#a2').val(resp.openseme_attend2);
+				$('#mr1').val(resp.openseme_registgrade1);
+				$('#mr2').val(resp.openseme_registgrade2);
+				$('#mv1').val(resp.openseme_checkgrade1);
+				$('#mv2').val(resp.openseme_checkgrade2);
+				$('#fr1').val(resp.openseme_registgrade3);
+				$('#fr2').val(resp.openseme_registgrade4);
+				$('#fv1').val(resp.openseme_checkgrade3);
+				$('#fv2').val(resp.openseme_checkgrade4);
+				$('#ev1').val(resp.openseme_evaluate1);
+				$('#ev2').val(resp.openseme_evaluate2);
+			},
+			error : function(errorResp) {
+				
+				console.log(errorResp.status);
+			}
+		});
+		
+		
+		
+		
+		if (!($('.modal.in').length)) {
+			$('.modal-dialog').css({
+				top : 0,
+				left : 0
+			});
+		}
+		$('#viewmodal').modal({
+			backdrop : false,
+			show : true
+		});
+		
+		
+	});
+	
+	
+	
+	
 	
 	
 });
@@ -401,9 +465,27 @@
 													<input type="text" class="form-control" placeholder="강의평가 종료일" name="openseme_evaluate2">
 													</div>
 												</div>
-											</div>
+                                    	</tr>
+                                    	<tr>
+                                    	<td>
+                                    	</td>
+                                    	</tr>
+                                    	<tr>
+                                    	<td>
+                                    	</td>
+                                    	</tr>
+                                    	<tr>
+                                    	<td></td>
+                                    	</tr>
+                                    	<tr>
+                                    	<td></td>
+                                    	</tr>
+                                    	<tr>
+                                    	<td colspan="4">
+										 <h2>날짜를 입력하시고 저장 버튼을 누르면 등록됩니다.</h2>
 										</td>
-                                    </tr>
+                                    	</td>
+                                    	</tr>
                                     
                                    </tbody>
                                		<tfoot>
@@ -424,6 +506,190 @@
 </div>
 
 
+<div class="modal fade" id="viewmodal" role="dialog">
+    <div class="modal-dialog modal-large">
+        <div class="modal-content">
+            <div class="modal-header">
+            <div class="view-mail-hrd" id="viewtitle"></div>
+            </div>
+            <div class="modal-body">
+             <table class="table table-sc-ex">
+                                <thead>
+                                </thead>
+                                <tbody>
+                                   <tr role="row" class="even">
+                                        <td class="sorting_1">학기기간</td>
+										<td>
+                               				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+											<div class="form-group">
+                                    			<div class="nk-int-st">
+                                        			<input type="text" class="form-control" readonly id="pi1">
+                                   				 </div>
+                               				 </div>
+											</div>
+										</td>
+										<td></td>
+                                        <td>
+                                        	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+											<div class="form-group">
+                                    			<div class="nk-int-st">
+                                        			<input type="text" class="form-control" readonly id="pi2" >
+                                   				 </div>
+                               				 </div>
+											</div>
+										</td>
+                                    </tr>
+                                    
+                                    <tr role="row" class="odd">
+                                        <td class="sorting_1">수강신청기간</td>
+										<td>
+										<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+											<div class="form-group">
+                                    			<div class="nk-int-st">
+                                        			<input type="text" class="form-control" readonly id="a1">
+                                   				 </div>
+                               				 </div>
+											</div>
+										</td>
+										<td></td>
+                                        <td>
+                                        	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+											<div class="form-group">
+                                    			<div class="nk-int-st">
+                                        			<input type="text" class="form-control" readonly id="a2">
+                                   				 </div>
+                               				 </div>
+											</div>
+										</td>
+                                    </tr>
+                                    
+                                    
+                                    <tr role="row" class="even">
+                                        <td class="sorting_1">중간고사 성적등록</td>
+										<td>
+										<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+											<div class="form-group">
+                                    			<div class="nk-int-st">
+                                        			<input type="text" class="form-control" readonly id="mr1">
+                                   				 </div>
+                               				 </div>
+											</div>
+										</td>
+										<td></td>
+                                        <td>
+                                        	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+											<div class="form-group">
+                                    			<div class="nk-int-st">
+                                        			<input type="text" class="form-control" readonly id="mr2">
+                                   				 </div>
+                               				 </div>
+											</div>
+										</td>
+                                    </tr>
+                                    
+                                     <tr role="row" class="odd">
+                                        <td class="sorting_1">중간고사 <br/>성적 열람기간</td>
+										<td>
+										<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+											<div class="form-group">
+                                    			<div class="nk-int-st">
+                                        			<input type="text" class="form-control" readonly id="mv1">
+                                   				 </div>
+                               				 </div>
+											</div>
+										</td>
+										<td></td>
+                                        <td>
+                                        	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+											<div class="form-group">
+                                    			<div class="nk-int-st">
+                                        			<input type="text" class="form-control" readonly id="mv2">
+                                   				 </div>
+                               				 </div>
+											</div>
+										</td>
+                                    </tr>
+                                    <tr role="row" class="even">
+                                        <td class="sorting_1">기말고사 성적등록</td>
+										<td>
+										<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+											<div class="form-group">
+                                    			<div class="nk-int-st">
+                                        			<input type="text" class="form-control" readonly id="fr1">
+                                   				 </div>
+                               				 </div>
+											</div>
+										</td>
+										<td></td>
+                                        <td>
+                                        	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+											<div class="form-group">
+                                    			<div class="nk-int-st">
+                                        			<input type="text" class="form-control" readonly id="fr2">
+                                   				 </div>
+                               				 </div>
+											</div>
+										</td>
+                                    </tr>
+                                    
+                                     <tr role="row" class="odd">
+                                        <td class="sorting_1">기말고사 <br/>성적 열람기간</td>
+										<td>
+										<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+											<div class="form-group">
+                                    			<div class="nk-int-st">
+                                        			<input type="text" class="form-control" readonly id="fv1">
+                                   				 </div>
+                               				 </div>
+											</div>
+										</td>
+										<td></td>
+                                        <td>
+                                        	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+											<div class="form-group">
+                                    			<div class="nk-int-st">
+                                        			<input type="text" class="form-control" readonly id="fv2">
+                                   				 </div>
+                               				 </div>
+											</div>
+										</td>
+                                    </tr>
+                                    
+                                    <tr role="row" class="even">
+                                        <td class="sorting_1">강의평가기간</td>
+										<td>
+										<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+											<div class="form-group">
+                                    			<div class="nk-int-st">
+                                        			<input type="text" class="form-control" readonly id="ev1">
+                                   				 </div>
+                               				 </div>
+											</div>
+										</td>
+										<td></td>
+                                        <td>
+                                        	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" >
+											<div class="form-group">
+                                    			<div class="nk-int-st">
+                                        			<input type="text" class="form-control" readonly id="ev2">
+                                   				 </div>
+                               				 </div>
+											</div>
+                                    	</tr>
+                                    	
+                                   </tbody>
+                               		<tfoot>
+                               		</tfoot>
+                           		 </table>
+            	</div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal"
+					id="modi">수정</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <script	src="${pageContext.request.contextPath }/notika/js/dialog/sweetalert2.min.js"></script>

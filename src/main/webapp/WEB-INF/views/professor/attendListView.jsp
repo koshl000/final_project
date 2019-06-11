@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 <!-- Data Table JS
 	============================================ -->
 <link rel="stylesheet"
@@ -34,27 +34,23 @@
 			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 				<div class="data-table-list">
 					<div class="table-responsive">
-						<div id="data-table-basic_wrapper" class="dataTables_wrapper">
-							<div class="dataTables_length" id="data-table-basic_length">
-								<table id="data-table-basic">
-									<thead>
-										<tr>
-											<th></th>
-											<th>수강번호</th>
-											<th>학번</th>
-											<th>학년</th>
-											<th>이름</th>
-											<th>중간고사</th>
-											<th>기말고사</th>
-											<th>출석</th>
-											<th>과제물</th>
-										</tr>
-									</thead>
-									<tbody id="tableBody">
-									</tbody>
-								</table>
-							</div>
-						</div>
+						<table id="data-table-basic">
+							<thead>
+								<tr>
+									<th></th>
+									<th>수강번호</th>
+									<th>학번</th>
+									<th>학년</th>
+									<th>이름</th>
+									<th>중간고사</th>
+									<th>기말고사</th>
+									<th>출석</th>
+									<th>과제물</th>
+								</tr>
+							</thead>
+							<tbody id="tableBody">
+							</tbody>
+						</table>
 					</div>
 				</div>
 			</div>
@@ -67,7 +63,7 @@
 	src="${pageContext.request.contextPath }/notika/js/data-table/data-table-act.js"></script>
 <script>
 var t = $('#data-table-basic').DataTable({
-	scrollY : '200px',
+	scrollY : '400px',
 	scrollCollapse : true,
 	paging : false,
 	ajax : {

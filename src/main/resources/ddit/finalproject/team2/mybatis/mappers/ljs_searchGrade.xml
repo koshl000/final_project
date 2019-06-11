@@ -32,7 +32,7 @@
 		SELECT CURRENT_YEAR FROM STUDENT WHERE USER_ID = #{user_id}
 	</select>
 	
-	<resultMap type="Ljs_GradeDetailVo" id="detailMap">
+	<resultMap type="Ljs_GradeDetailVo" id="detailMap" autoMapping="true">
 		<id property="lecture.lecture_code" column="LECTURE_CODE"/>
 		<association property="lecture" autoMapping="true" javaType="LectureVo" />
 		<association property="grade" autoMapping="true" javaType="GradeVo" />

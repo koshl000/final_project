@@ -36,26 +36,22 @@
 			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 				<div class="data-table-list">
 					<div class="table-responsive">
-						<div id="data-table-basic_wrapper" class="dataTables_wrapper">
-							<div class="dataTables_length" id="data-table-basic_length">
-								<table id="data-table-basic">
-									<thead>
-										<tr>
-											<th>학년도/학기</th>
-											<th>학년</th>
-											<th>총과목</th>
-											<th>이수과목</th>
-											<th>취득학점</th>
-											<th>총점</th>
-											<th>평점평균</th>
-											<th>누적평점평균</th>
-										</tr>
-									</thead>
-									<tbody id="listBody">
-									</tbody>
-								</table>
-							</div>
-						</div>
+						<table id="data-table-basic">
+							<thead>
+								<tr>
+									<th>학년도/학기</th>
+									<th>학년</th>
+									<th>총과목</th>
+									<th>이수과목</th>
+									<th>취득학점</th>
+									<th>총점</th>
+									<th>평점평균</th>
+									<th>누적평점평균</th>
+								</tr>
+							</thead>
+							<tbody id="listBody">
+							</tbody>
+						</table>
 					</div>
 				</div>
 			</div>
