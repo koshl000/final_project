@@ -65,19 +65,18 @@
 		]]>
 	</select>
 	
-	<select id="selectStudyCode" parameterType="java.util.HashMap" resultType="ddit.finalproject.team2.vo.Lsy_ExamVo">
-		select es.evalstudy_code, e.exam_no 
-         from evaluationstudy es, exam e 
-         where es.lecture_code = #{lecture_code} 
-         and es.evalstudy_code = (select ev.evalstudy_code from evaluationstudy ev where ev.lecture_code = #{lecture_code} and ev.evalstudy_type like #{exam_type}||'%')
-         and e.exam_type like #{exam_type}||'%'
+	<select id="selectStudyCode" parameterType="java.util.HashMap" resultType="String">
+		select evalstudy_code
+		from evaluationstudy
+		where lecture_code = #{lecture_code}
+		and evalstudy_type like #{exam_type}||'%'
 	</select>
 	
 	<select id="selectExamNo" parameterType="java.util.HashMap" resultType="String">
 		select exam_no
 		from exam
 		where exam_type like #{exam_type}||'%'
-		and evalstudy_code = #{evalstudy_code};
+		and evalstudy_code = #{evalstudy_code}
 	</select>
 	
 	<select id="markingTest" parameterType="ddit.finalproject.team2.vo.Lsy_EmbraceAnswer" resultType="ddit.finalproject.team2.vo.Lsy_QuizQuestionVO">
@@ -96,11 +95,11 @@
 	
 	<select id="selectExamList" parameterType="java.util.HashMap" resultMap="allExam">
 		select *
-		from exam e inner join examquestion eq on e.exam_no = eq.exam_no
-		            left outer join examproblem ep on eq.question_no = ep.question_no
-		where e.evalstudy_code = #{evalCode}
-		and e.exam_type like #{exam_type}||'%'
-		and ep.exam_no = #{examNo}
+	    from exam e left outer join examquestion eq on (e.exam_no = eq.exam_no)
+	                left outer join examproblem ep on (eq.question_no = ep.question_no and eq.exam_no = ep.exam_no)
+	    where e.evalstudy_code = #{evalCode}
+	    and e.exam_type like #{exam_type}||'%'
+	    and e.exam_no = #{exam_no}
 	</select>
 	
 	<insert id="insertQuiz" parameterType="ddit.finalproject.team2.vo.Lsy_EmbraceQuizVo">
@@ -214,10 +213,19 @@
 	
 	<select id="selectOneExam" parameterType="java.util.HashMap" resultMap="allExam">
 		select *
-		from examquestion eq inner join exam e on e.exam_no = eq.exam_no
-		                     inner join examproblem ep on eq.question_no = ep.question_no
-		where ep.exam_no = #{exam_no}
+		from exam e left outer join examquestion eq on (e.exam_no = eq.exam_no)
+		         left outer join examproblem ep on (eq.question_no = ep.question_no and eq.exam_no = ep.exam_no)
+		where e.exam_no = #{exam_no}
 		and exam_type like #{exam_type}||'%'
+	</select>
+	
+	<select id="selectUpdatedExam" parameterType="java.util.HashMap" resultMap="allExam">
+		select * 
+		from exam e left outer join examquestion eq on e.exam_no = eq.exam_no
+		            left outer join examproblem ep on (eq.question_no = ep.question_no and eq.exam_no = ep.exam_no)
+		where e.exam_no = #{exam_no}
+		and exam_type like #{exam_type}||'%'
+		and eq.question_no = #{question_no}
 	</select>
 	
 	<select id="selectOneQuiz" parameterType="ddit.finalproject.team2.vo.Lsy_QuizQuestionVO" resultMap="allQ">

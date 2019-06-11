@@ -24,6 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
 import ddit.finalproject.team2.professor.service.Ljs_IGradeService;
 import ddit.finalproject.team2.util.AuthorityUtil;
 import ddit.finalproject.team2.vo.AttendVo;
+import ddit.finalproject.team2.vo.Ljs_EvaluationMaterialVo;
 import ddit.finalproject.team2.vo.Lsy_EmbraceAnswer;
 import ddit.finalproject.team2.vo.Lsy_EmbraceExamAnswer;
 import ddit.finalproject.team2.vo.Lsy_EmbraceExamVo;
@@ -287,6 +288,11 @@ public class ControllerForView {
 			examMap.put("exam_type", evalType);
 			examMap.put("lecture_code", lecture_code);
 			Lsy_ExamVo examVo = service.retrieveExamList(examMap);
+			if(examVo!=null) {
+				mav.getModel().put("examState", "already");
+			} else {
+				mav.getModel().put("examState", "new");
+			}
 			mav.getModel().put("btnType", "exam");
 			mav.getModel().put("examVo", examVo);
 			mav.getModel().put("lecture_code", lecture_code);
@@ -314,14 +320,14 @@ public class ControllerForView {
 				HashMap<String, Object> examNoAndStudyCode = (HashMap<String, Object>) service.examNoNextVal(examMap);
 				examMap.put("evalCode", examNoAndStudyCode.get("studyCode").toString());
 				List<String> problemSeq = (List<String>) examNoAndStudyCode.get("problemSeq");
-				examVo.getExamList().get(0).setExam_no(examNoAndStudyCode.get("examNo").toString());
+				examVo.getExamList().get(0).setExam_no(examNoAndStudyCode.get("createExamNo").toString());
 				examVo.getExamList().get(0).setEvalStudy_code(examNoAndStudyCode.get("studyCode").toString());
 				if(examVo.getExamList().get(0).getQuestionList()!=null) {
 					for (int j = 0; j < examVo.getExamList().get(0).getQuestionList().size(); j++) {
-						examVo.getExamList().get(0).getQuestionList().get(j).setExam_no(examNoAndStudyCode.get("examNo").toString());
+						examVo.getExamList().get(0).getQuestionList().get(j).setExam_no(examNoAndStudyCode.get("createExamNo").toString());
 						if(examVo.getExamList().get(0).getQuestionList().get(j).getProblemList()!=null) {
 							for (int k = 0; k < examVo.getExamList().get(0).getQuestionList().get(j).getProblemList().size(); k++) {
-								examVo.getExamList().get(0).getQuestionList().get(j).getProblemList().get(k).setExam_no(examNoAndStudyCode.get("examNo").toString());
+								examVo.getExamList().get(0).getQuestionList().get(j).getProblemList().get(k).setExam_no(examNoAndStudyCode.get("createExamNo").toString());
 								examVo.getExamList().get(0).getQuestionList().get(j).getProblemList().get(k).setProblem_no(problemSeq.get(problemIdx));
 								problemIdx++;
 							}
@@ -349,7 +355,7 @@ public class ControllerForView {
 				examMap.put("exam_no", examVo.getExam_no());
 				examMap.put("question_no", examVo.getQuestion_no());
 				examMap.put("exam_type", examVo.getExam_type());
-				Lsy_ExamVo ajaxExam = service.retrieveOneExam(examMap);
+				Lsy_ExamVo ajaxExam = service.retrieveUpdatedExam(examMap);
 				return ajaxExam;
 			}
 			return null;
@@ -370,8 +376,9 @@ public class ControllerForView {
 //			return thisQuiz;
 //		}
 		
-		@PostMapping("/professor/createExamAnswer")
-		public String sdad(@Validated @ModelAttribute Lsy_EmbraceExamAnswer answerList, BindingResult errors, Model model) {
+		@PostMapping("/professor/createExamAnswer/{lecture_code}/{exam_type}")
+		public String sdad(@Validated @ModelAttribute Lsy_EmbraceExamAnswer answerList, BindingResult errors, Model model,
+							Authentication au, @PathVariable String lecture_code, @PathVariable String exam_type) {
 			List<String> result = null;
 			model.addAttribute("result", "실패");
 			if(!errors.hasErrors()) {
@@ -382,10 +389,11 @@ public class ControllerForView {
 					answerList.getAnswerList().get(i).setAnswer_no(result.get(i));
 				}
 			}
-			int result2 = service.createExamAnswer(answerList);
+			Ljs_EvaluationMaterialVo material = new Ljs_EvaluationMaterialVo(((UserVo)au.getPrincipal()).getUser_id(), lecture_code);
+			int result2 = service.createExamAnswer(answerList, material, exam_type);
 			if(result2>0) {
 //				service.
-				model.addAttribute("result", "성공");
+				model.addAttribute("close", "close");
 			}
 			return "new/exam";
 		}

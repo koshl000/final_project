@@ -63,10 +63,16 @@ var selectSD;
 var btnType = $("#btnType").val();
 var surveyList; var classList; var examList;
 var identifying_code = "";
+if('${examState}'=="already"){
+	alert("이미 시험이 등록되었습니다. 수정을 원하시면 '보기'를 클릭하여 진행해주세요.");
+	self.close();
+}
+if('${close}'=='close'){
+	self.close();
+}
 $(function(){
 		var error = "";
 		var len; var len2; var len3;
-		
 		$(".container").on("change", '#whichType', function(event){
 			event.preventDefault();
 			var selectVal = $(this).val();
@@ -287,8 +293,6 @@ $(function(){
 					    		for (var idx = 0; idx < resp.examList.length; idx++) {
 									$(".selectYet").append("<option value='"+resp.examList[idx]+"'>"+resp.examList[idx]+"</option>");
 								}
-// 					    		if(${examVo.evalstudy_type}=="기말"){
-// 					    		}
 				    		}
 				    	}else {
 				    		$(".selectYet").find('option').remove();
