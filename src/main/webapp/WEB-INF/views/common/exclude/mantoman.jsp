@@ -101,6 +101,19 @@
         </div>
     </div>
 </div>
+</body>
+<script>
+    String.prototype.hashCode = function() {
+        var hash = 0, i, chr;
+        if (this.length === 0) return hash;
+        for (i = 0; i < this.length; i++) {
+            chr   = this.charCodeAt(i);
+            hash  = ((hash << 5) - hash) + chr;
+            hash |= 0; // Convert to 32bit integer
+        }
+        return hash;
+    };
+</script>
 <%--화상채팅js--%>
 <script>
     var connection = new RTCMultiConnection();
@@ -117,7 +130,7 @@
         OfferToReceiveVideo: true
     };
     let connectedCount = 0;
-    let roomid=100;
+    let roomid='${roomId}'.toString().hashCode();
     connection.openOrJoin(roomid, function (isRoomExist, roomid, error) {
         if (error) {
             alert(error);
@@ -339,6 +352,8 @@
     });
 
     $(document).on("dblclick",".contact",function(e){
+        $j(".modal").modal({backdrop: 'static', keyboard: false});
+
         //alert($(this).find(".name").text());
 
     });
