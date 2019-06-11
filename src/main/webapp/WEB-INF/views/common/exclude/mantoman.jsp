@@ -258,6 +258,36 @@
         user_name: '${user.user_name}'
     };
 
+    //유저 상태 변경
+    $("#status-options ul li").click(function () {
+        $("#profile-img").removeClass();
+        $("#status-online").removeClass("active");
+        $("#status-busy").removeClass("active");
+        $("#status-offline").removeClass("active");
+        $(this).addClass("active");
+
+        if ($("#status-online").hasClass("active")) {
+            $("#profile-img").addClass("online");
+        } else if ($("#status-busy").hasClass("active")) {
+            $("#profile-img").addClass("busy");
+        } else if ($("#status-offline").hasClass("active")) {
+            $("#profile-img").addClass("offline");
+        } else {
+            $("#profile-img").removeClass();
+        }
+        $("#status-options").removeClass("active");
+
+        socket.emit('status_change',$("profile-img").attr('class'),userInfo);
+    });
+
+    socket.on('status_change',function(status,info){
+        $(".contacts").find("contact").each(function(index){
+            if($(this ).text().indexOf(info.user_id)!==-1){
+                $(this).
+            }
+        })
+    });
+
     function user_info(id, name) {
         var out =
             "<li class=\"contact\">\n" +
@@ -319,31 +349,20 @@
         $("#status-options").toggleClass("active");
     });
 
-    //유저 상태 변경
-    $("#status-options ul li").click(function () {
-        $("#profile-img").removeClass();
-        $("#status-online").removeClass("active");
-        $("#status-busy").removeClass("active");
-        $("#status-offline").removeClass("active");
-        $(this).addClass("active");
-
-        if ($("#status-online").hasClass("active")) {
-            $("#profile-img").addClass("online");
-        } else if ($("#status-busy").hasClass("active")) {
-            $("#profile-img").addClass("busy");
-        } else if ($("#status-offline").hasClass("active")) {
-            $("#profile-img").addClass("offline");
-        } else {
-            $("#profile-img").removeClass();
-        }
-        $("#status-options").removeClass("active");
-    });
-
     socket.on('chat message', function (msg, info) {
         if (info.user_id !== userInfo.user_id) {
             $('.messages ul').append(message1(msg, info));
         }
     });
+
+    // socket.emit('status_change',$("profile-img").attr('class'),userInfo);
+
+    var testPtag =null;
+
+    function test(pTag){
+        testPtag = pTag;
+        return pTag;
+    }
 
     $('.submit').click(function () {
         message = $(".message-input input").val();
@@ -360,9 +379,11 @@
     });
 
     $(document).on("dblclick", ".contact", function (e) {
-        $(".modal").modal({backdrop: 'static', keyboard: false});
-        // if($(this).find(".name").text()
-        //alert($(this).find(".name").text());
+        if($(this).find("span").hasClass("busy")||$(this).find("span").hasClass("offline")){
+            alert("오프라인&화상채팅 중인 유저는 초대할수 없습니다.");
+        }else{
+            $(".modal").modal({backdrop: 'static', keyboard: false});
+        }
     });
 </script>
 

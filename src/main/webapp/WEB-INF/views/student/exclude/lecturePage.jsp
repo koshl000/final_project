@@ -45,7 +45,7 @@
             }
 
             vid = videojs("my-video", {
-                preload: 'auto', muted: true, controls: true,
+                preload: 'auto', muted: false, controls: true,
                 sources: [{
                     src: '${continuePlay.FILE_URL}',
                     type: 'video/mp4'
