@@ -102,6 +102,13 @@ public class MainController {
 //		return mv;
 //	}
 	
+	@GetMapping("openChat")
+	public ModelAndView goOpenChat(ModelAndView mv, Authentication au){
+		mv.setViewName("professor/allLecture");
+		mv.getModel().put("user", (UserVo)au.getPrincipal());
+		return mv;
+	}
+	
 	@GetMapping("mantoman/{lecture_code}")
 	public ModelAndView goMantoMan(ModelAndView mv, Authentication au, @PathVariable String lecture_code) {
 		mv.setViewName("common/exclude/mantoman");
