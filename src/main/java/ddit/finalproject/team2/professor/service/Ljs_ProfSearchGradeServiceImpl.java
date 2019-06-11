@@ -7,14 +7,15 @@ import javax.inject.Inject;
 
 import org.springframework.stereotype.Service;
 
-import ddit.finalproject.team2.professor.dao.Ljs_IPropSearchGradeDao;
+import ddit.finalproject.team2.professor.dao.Ljs_IProfSearchGradeDao;
 import ddit.finalproject.team2.vo.LectureVo;
+import ddit.finalproject.team2.vo.Ljs_AttendVo;
 import ddit.finalproject.team2.vo.OpenSemesterVo;
 
 @Service
-public class Ljs_PropSearchGradeServiceImpl implements Ljs_IPropSearchGradeService{
+public class Ljs_ProfSearchGradeServiceImpl implements Ljs_IProfSearchGradeService{
 	@Inject
-	Ljs_IPropSearchGradeDao dao;
+	Ljs_IProfSearchGradeDao dao;
 
 	@Override
 	public List<LectureVo> retrieveLectureListforProfessor(LectureVo lecture) {
@@ -31,7 +32,16 @@ public class Ljs_PropSearchGradeServiceImpl implements Ljs_IPropSearchGradeServi
 		String openseme_no = dao.selectOpensemeNo(vo);
 		lecture.setOpenseme_no(openseme_no);
 		
-		return dao.selectLectureListForProfessor(lecture);
+		List<LectureVo> lectureList = dao.selectLectureListForProfessor(lecture);
+		for(LectureVo lec : lectureList){
+			lec.setLecture_name(lec.getLecture_name(), lec.getLecture_code());
+		}
+		return lectureList;
+	}
+
+	@Override
+	public List<Ljs_AttendVo> retrieveAttendList(String lecture_code) {
+		return dao.selectAttendList(lecture_code);
 	}
 
 }

@@ -15,6 +15,7 @@
 						<div id="searchDiv"></div>
 						<thead>
 							<tr>
+								<th></th>
 								<th>분류</th>
 								<th>글번호</th>
 								<th>제목</th>
@@ -45,9 +46,9 @@
 			"dataType" : "JSON"
 		},
 		columns : [ {
-			data : "board_type"
+			data : "lecture.lecture_target"
 		}, {
-			data : "board_no"
+			data : "board_type"
 		}, {
 			data : "board_title"
 		}, {
@@ -58,8 +59,48 @@
 			data : "board_date"
 		}, {
 			data : "board_hit"
-		} ],
-		"order" : []
+		} ]
+		, columnDefs : [ {
+	        "searchable": false,
+	        "orderable": false,
+	        "targets": 0
+	    } ]
+		, "order" : []
+		,initComplete: function () {
+            this.api().columns().every( function () {
+                var column = this;
+                var select = $('<select><option value=""></option></select>')
+                   .appendTo( $('#searchDiv') )
+                   .on( 'change', function () {
+                      var val = $.fn.dataTable.util.escapeRegex(
+                         $(this).val()
+                      );
+                      
+                      column
+                         .search( val ? '^'+val+'$' : '', true, false )
+                         .draw();
+                   });
+
+                column.data().unique().sort().each( function ( d, j ) {
+                   select.append( '<option value="'+d+'">'+d+'</option>' )
+                });
+                
+             });
+             $('#searchDiv').find('select:eq(0)').attr('id', 'code').css('display', 'none');
+             $('#searchDiv').find('select:eq(1)').attr('id', 'name').attr('class', 'selectpicker');
+             $('#searchDiv').find('select:eq(2)').attr('id', 'course').attr('class', 'selectpicker');
+             $('#searchDiv').find('select:eq(3)').attr('id', 'credit').attr('class', 'selectpicker');
+             $('#searchDiv').find('select:eq(4)').attr('id', 'grade').attr('class', 'selectpicker');
+             $('#searchDiv').find('select:eq(5)').attr('id', 'prof').css('display', 'none');
+             $('#searchDiv').find('select:eq(6)').attr('id', 'capacity').css('display', 'none');
+             $("#grade").after($("#name"));
+             $("#grade").after($("#course"));
+             $("#grade").after($("#credit"));
+             $("<span class='selectSpan'>학년</span>").insertBefore($('#grade'));
+             $("<span class='selectSpan'>과목</span>").insertBefore($('#name'));
+             $("<span class='selectSpan'>이수구분</span>").insertBefore($('#course'));
+             $("<span class='selectSpan'>학점</span>").insertBefore($('#credit'));
+          }
 	});
 
 	//등록 버튼
@@ -72,46 +113,4 @@
 		var no = $(this).attr("href");
 		location.href = "${pageContext.request.contextPath}/manageBoard/"+ no;
 	});
-	
-	$('#data-table-basic_filter').find('label').prop('style', 'display:none;');
-	$('#data-table-basic_filter').on('click',$('#searchBtn'),function() {
-		$.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-			var chosenType = $('#types').val();
-			var searchWord = $('#searchInput').val();
-			console.log(searchWord);
-
-			var type = data[0];
-			var no = data[1];
-			var title = data[2];
-			var count = data[3];
-			var writer = data[4];
-			var date = data[5];
-			var hit = data[6];
-
-			if ((chosenType == 'all' || chosenType == type)
-					&& (searchWord == ''
-							|| searchWord == no
-							|| searchWord == title
-							|| searchWord == count
-							|| searchWord == writer
-							|| searchWord == date || searchWord == hit)) {
-				return true;
-			}
-			return false;
-		});
-		table.draw();
-	});
-
-	var select = $('<select>').prop('id', 'types').append(
-			$('<option>').text('all'), $('<option>').text('notice'),
-			$('<option>').text('lecture'), $('<option>').text('popup'));
-	var button = $('<button>').prop({
-		type : 'button',
-		'class' : 'btn btn-default notika-btn-default',
-		id : 'searchBtn'
-	}).text("검색");
-	$('#data-table-basic_filter').prepend($('<input>').prop({
-		type : 'text',
-		id : 'searchInput'
-	})).prepend(button).prepend(select);
 </script>

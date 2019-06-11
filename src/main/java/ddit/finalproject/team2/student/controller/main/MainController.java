@@ -121,7 +121,7 @@ public class MainController {
 	 */
 	@GetMapping("notice")
 	public ModelAndView goNotice(ModelAndView mv, Authentication au) {
-		mv.setViewName("common/notice");
+		mv.setViewName("student/notice");
 		mv.getModel().put("id", au.getName());
 		mv.getModel().put("user", (UserVo)au.getPrincipal());
 		return mv;
