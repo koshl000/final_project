@@ -158,7 +158,8 @@ $(function(){
 			console.log($("#yaoZhuannSong"))
 			if($('#identifier').val()=='ROLE_PROFESSOR'){
 				alert("등록하시겠습니까?");
-				$("#yaoZhuannSong").attr("action", "${pageContext.request.contextPath}/student/submit");
+				var lecture_code = $("#lecture_code").val();
+				$("#yaoZhuannSong").attr("action", "${pageContext.request.contextPath}/professor/createExam/"+lecture_code);
 				$("#yaoZhuannSong").submit();
 			}
 			
@@ -199,7 +200,7 @@ $(function(){
 			var twoBtn = "<div class='row'><div='col-xs-8 col-lg-8 col-sm-8'>" +
 							"<button class='btn' disabled type='button' id='prev'>이전</button>"+
 							"<button class='btn' type='button' id='next'>다음</button>" +
-							"<button class='btn' disabled type='button' id='complete'>제출</button>"
+							"<button class='btn' disabled type='button' id='complete'>등록</button>"
 			if(btnType=='quiz'){
 				var result = makeQuestion("#boddy", btnType, 5, 4)
 				$("#quiz").prop("disabled", true);
@@ -286,6 +287,8 @@ $(function(){
 					    		for (var idx = 0; idx < resp.examList.length; idx++) {
 									$(".selectYet").append("<option value='"+resp.examList[idx]+"'>"+resp.examList[idx]+"</option>");
 								}
+// 					    		if(${examVo.evalstudy_type}=="기말"){
+// 					    		}
 				    		}
 				    	}else {
 				    		$(".selectYet").find('option').remove();
@@ -319,7 +322,7 @@ $(function(){
 	<div class="container">
 		<div class='row timeCnt'>
 			<div class="col-xs-12 col-sm-12 timeCnt">
-				<span><h3>${lectureInfos.lectureWeekInfos[0].lectureWeekClass[0].lecture_subname} / ${lectureInfos.lectureWeekInfos[0].lecture_week}주차 ${lectureInfos.lectureWeekInfos[0].lectureWeekClass[0].lecture_class}교시 : 퀴즈</h3>
+				<span><h3>${lectureInfos.lecture_name} / ${week}주차 : 시험등록</h3>
 				</span>
 				<span style="font-size: 10pt; font-weight: 500" class="timee"> 
 				<span style="padding-left: 8px; font-weight: 500" class="timee">Timer</span>
@@ -364,7 +367,7 @@ $(function(){
 <input id="user_id" type="hidden" value="${userVo.user_id}"/>
 <input id="btnType" type='hidden' value="${btnType}"/>
 <input id="class_identifying_code" type='hidden' value="${lectureInfos.lectureWeekInfos[0].lectureWeekClass[0].class_identifying_code}"/>
-<form id="yaoZhuannSong" action="${pageContext.request.contextPath}/professor/createExam" method="post">
+<form id="yaoZhuannSong" action="${pageContext.request.contextPath}/professor/createExam/"+"${lectureInfos.lectureWeekInfos[0].lecture_code}" method="post">
 	<input id="lecture_code" type='hidden' value="${lectureInfos.lectureWeekInfos[0].lecture_code}"/>
 </form>
 <!-- autosize JS

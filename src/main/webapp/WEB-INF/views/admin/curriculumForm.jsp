@@ -112,9 +112,20 @@
 				            	</c:forEach>
 				            </select><br>
 				            
-				            <span>교과목 개요</span><textArea></textArea><br>
-				            <span>수업진행방법</span><textArea></textArea><br>
-				            <span>교재/참고자료</span><textArea></textArea><br>
+				            <div>
+				            	<p><h5>반영비율</h5></p>
+				            	<div>
+					            	<span>중간고사</span><input type="text" name="midterm" />
+					            	<span>기말고사</span><input type="text" name="final" />
+					            	<span>출석</span><input type="text" name="absence" />
+					            	<span>과제물</span><input type="text" name="assignment" />
+				            	</div>
+				            </div>
+							<div>
+					            <span>교과목 개요</span><textArea></textArea><br>
+					            <span>수업진행방법</span><textArea></textArea><br>
+					            <span>교재/참고자료</span><textArea></textArea><br>
+							</div>				            
 				            <button type="button" class="btn btn-default notika-btn-default waves-effect listBtn" onclick="listLocation()">목록</button>
 				            <button type="submit" class="btn btn-default notika-btn-default waves-effect saveBtn">설정저장</button><br>
 				         </div>

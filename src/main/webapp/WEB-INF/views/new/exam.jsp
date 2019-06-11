@@ -64,7 +64,7 @@ img.visible {
 			$("#boddy").after("<div class='row'>"+"<div class='col-xs-6 col-sm-6 btnSpace'>" +
 					"<button class='btn' disabled type='button' id='prev'>이전</button>"+
 					"<button class='btn' type='button' id='next'>다음</button>"+
-					"<button class='btn' type='button' id='complete'></button>"
+					"<button class='btn' type='button' id='complete'>등록</button>"
 						);	
 		}
 		$('textArea').hide();
@@ -207,7 +207,7 @@ img.visible {
 		console.log($("#yaoZhuannSong"))
 		if($('#identifier').val()=='ROLE_PROFESSOR'){
 			alert("등록하시겠습니까?");
-			$("#yaoZhuannSong").attr("action", "${pageContext.request.contextPath}/student/submit");
+			$("#yaoZhuannSong").attr("action", "${pageContext.request.contextPath}/professor/createExam/"+"${lecture_code}");
 			$("#yaoZhuannSong").submit();
 		} else if($('#identifier').val()=='ROLE_STUDENT'){
 			alert("제출 이후에는 수정이 불가합니다.\n제출하시겠습니까?")
@@ -324,7 +324,7 @@ img.visible {
 						}
 					</c:forEach>
 					} else if(resp.questionList[0].subjective_answer!=null){
-						$(havingAll).find('.ForSubjec').text(resp.questionList[0].subjective_answer).show()
+						$(havingAll).find('.subjectAnswer').text(resp.questionList[0].subjective_answer).show()
 					}
 		    	}
 			},

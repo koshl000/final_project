@@ -18,7 +18,7 @@ function makeQuestionPage(identifier, boddy, btnType){
 		$(boddy).find('input:checkbox.student').iCheck('destroy');
 		$(boddy).find('.student').remove();
 		$('input:checkbox').attr('disabled', true);
-	} else if(identifier=="ROLE_STUDENT"&&btnType=='exam'){
+	} else if(identifier=="ROLE_STUDENT"){
 		$(boddy).find('input:checkbox').iCheck('destroy').hide();
 		var forms = $(boddy).find('.formT');
 		$(boddy).find('.professor').remove();

@@ -113,6 +113,7 @@ public class ControllerForView {
 								@PathVariable String class_identifying_code,
 								@PathVariable String lecture_class,
 								@PathVariable String lecture_code, Authentication au){
+					System.out.println("들어왔다");
 					Map<String, String> lectureMap = new HashMap<String, String>();
 					lectureMap.put("lecture_code", lecture_code);
 					lectureMap.put("class_identifying_code", class_identifying_code);
@@ -224,12 +225,12 @@ public class ControllerForView {
 //			return "new/survey";
 //		}
 
-		@GetMapping("/professor/showExam/{evalType}/{evalCode}/{lecture_code}/{class_identifying_code}")
+		@GetMapping("/professor/showExam/{evalType}/{evalCode}/{lecture_code}/{week}")
 		public ModelAndView showExam(ModelAndView mav, @PathVariable String evalType,
 								@PathVariable String evalCode, @PathVariable String lecture_code,
-								Authentication au, @PathVariable String class_identifying_code) {
+								Authentication au, @PathVariable String week) {
 			HashMap<String, String> examMap = new HashMap<String, String>();
-			examMap.put("examType", evalType);
+			examMap.put("exam_type", evalType);
 			examMap.put("lecture_code", lecture_code);
 			mav.getModel().put("btnType", "exam");
 			List<String> auth = AuthorityUtil.getAuthorityList(au);
@@ -238,10 +239,7 @@ public class ControllerForView {
 			Lsy_ExamVo examVo = service.retrieveExamList(examMap);
 			System.out.println(evalType+"/"+lecture_code+"/"+auth+"/"+examVo);
 			mav.getModel().put("examVo", examVo);
-			Map<String, String> lectureMap = new HashMap<String, String>();
-			lectureMap.put("lecture_code", lecture_code);
-			lectureMap.put("class_identifying_code", class_identifying_code);
-			Lsy_LectureInfos lectureInfos = service.retrieveLectureInfoForOneViews(lectureMap);
+			Lsy_LectureInfos lectureInfos = service.retrieveLectureInfoForViews(lecture_code);
 			mav.getModel().put("lecture_code", lecture_code);
 			mav.getModel().put("start", 0);
 			mav.getModel().put("end", 5);
@@ -250,15 +248,16 @@ public class ControllerForView {
 			otherType.add("①"); otherType.add("②"); otherType.add("③"); otherType.add("④");
 			mav.getModel().put("numList", otherType);
 			mav.setViewName("new/exam");
+			mav.getModel().put("week", week);
 			return mav;
 		}
 		
-		@GetMapping("/student/showExam/{evalType}/{evalCode}/{lecture_code}")
+		@GetMapping("/student/showExam/{evalType}/{evalCode}/{lecture_code}/{week}")
 		public ModelAndView showExamSt(ModelAndView mav, @PathVariable String evalType,
 								@PathVariable String evalCode, @PathVariable String lecture_code,
-								Authentication au) {
+								Authentication au, @PathVariable String week) {
 			HashMap<String, String> examMap = new HashMap<String, String>();
-			examMap.put("examType", evalType);
+			examMap.put("exam_type", evalType);
 			examMap.put("lecture_code", lecture_code);
 			mav.getModel().put("btnType", "exam");
 			List<String> auth = AuthorityUtil.getAuthorityList(au);
@@ -274,25 +273,29 @@ public class ControllerForView {
 			otherType.add("①"); otherType.add("②"); otherType.add("③"); otherType.add("④");
 			mav.getModel().put("numList", otherType);
 			mav.setViewName("new/exam");
+			mav.getModel().put("week", week);
 			return mav;
 		}
 		
-		@GetMapping("/professor/createExam/{evalType}/{evalCode}/{lecture_code}")
+		@GetMapping("/professor/createExam/{evalType}/{evalCode}/{lecture_code}/{week}")
 		public ModelAndView asdad(ModelAndView mav, @PathVariable String evalType,
 				@PathVariable String evalCode, @PathVariable String lecture_code,
-				Authentication au) {
+				Authentication au, @PathVariable String week) {
+			Lsy_LectureInfos lectureInfos = service.retrieveLectureInfoForViews(lecture_code);
+			mav.getModel().put("lectureInfos", lectureInfos);
 			HashMap<String, String> examMap = new HashMap<String, String>();
-			examMap.put("examType", evalType);
+			examMap.put("exam_type", evalType);
 			examMap.put("lecture_code", lecture_code);
 			Lsy_ExamVo examVo = service.retrieveExamList(examMap);
 			mav.getModel().put("btnType", "exam");
-			mav.getModel().put("lectureInfos", examVo);
+			mav.getModel().put("examVo", examVo);
 			mav.getModel().put("lecture_code", lecture_code);
 			mav.getModel().put("start", 0);
 			mav.getModel().put("end", 5);
 			List<String> auth = AuthorityUtil.getAuthorityList(au);
 			mav.getModel().put("identifier", auth);
 			mav.getModel().put("userVo", (UserVo)au.getPrincipal());
+			mav.getModel().put("week", week);
 			mav.setViewName("new/createQuestion");
 			return mav;
 		}
@@ -305,7 +308,7 @@ public class ControllerForView {
 			int problemIdx = 0;
 			if(examVo!=null) {
 				HashMap<String, String> examMap = new HashMap<String, String>();
-				examMap.put("examType", examVo.getExamList().get(0).getExam_type().substring(0, 2));
+				examMap.put("exam_type", examVo.getExamList().get(0).getExam_type().substring(0, 2));
 				examMap.put("lecture_code", lecture_code);
 				examMap.put("problemSize", String.valueOf(problemSize));
 				HashMap<String, Object> examNoAndStudyCode = (HashMap<String, Object>) service.examNoNextVal(examMap);

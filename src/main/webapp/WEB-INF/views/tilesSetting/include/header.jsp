@@ -27,9 +27,6 @@
                                 <div id="ringList" class="hd-message-info">
                                    
                                 </div>
-                                <div class="hd-mg-va">
-                                    <a href="#">View All</a>
-                                </div>
                             </div>
                         </li>
                         
@@ -107,10 +104,13 @@
 							$('<div>').prop('class', 'hd-message-sn').append(
 								$('<a>').prop({
 									'href' : v.ring_move_address,
-									'id' : v.ring_code
+									'id' : v.ring_code,
 								}).append(
 									$('<div>').prop('class', 'hd-message-sn').append(
-										$('<div>').prop('class', 'hd-mg-ctn').append(
+										$('<div>').prop({
+											'class' : 'hd-mg-ctn',
+											'style' : 'width:340px;'
+										}).append(
 											$('<h3>').text(v.ring_type)
 											, $('<p>').text(v.ring_title)
 										)
