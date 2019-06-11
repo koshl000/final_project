@@ -108,36 +108,34 @@ public class ControllerForView {
 					return mav;
 				}
 				
-//				@GetMapping("/student/quiz/{class_identifying_code}/{lecture_class}/{lecture_code}")
-//				public ModelAndView showQuizStudent(@Validated @ModelAttribute Lsy_QuizQuestionVO quizVo, ModelAndView mav,
-//								@PathVariable String class_identifying_code,
-//								@PathVariable String lecture_class,
-//								@PathVariable String lecture_code, Authentication au){
-//					System.out.println("왔다오ㅓㅏㅆ어");
-//					Map<String, String> lectureMap = new HashMap<String, String>();
-//					lectureMap.put("lecture_code", lecture_code);
-//					lectureMap.put("class_identifying_code", class_identifying_code);
-//					Lsy_LectureInfos lectureInfos = service.retrieveLectureInfoForOneViews(lectureMap);
-//					System.out.println(lectureInfos);
-//					mav.getModel().put("lectureInfos", lectureInfos);
-//					mav.getModel().put("userVo", (UserVo)au.getPrincipal());
-//					List<String> auth = AuthorityUtil.getAuthorityList(au);
-//					mav.getModel().put("btnType", "quiz");
-//					mav.getModel().put("identifier", auth);
-//					quizVo.setClass_identifying_code("11");
-//					quizVo.setLecture_code("lecture_code_1");
-//					mav.getModel().put("start", 1);
-//					mav.getModel().put("end", 5);
-//					//학생, 교수 구분해서 정보 가져오기.
-////					model.addAttribute("attend_no", "1");
-//					List<String> otherType = new ArrayList<String>();
-//					otherType.add("①"); otherType.add("②"); otherType.add("③"); otherType.add("④");
-//					List<Lsy_QuizQuestionVO> thisQuiz = service.retreiveQuiz(quizVo);
-//					mav.getModel().put("quizList", thisQuiz);
-//					mav.getModel().put("numList", otherType);
-//					mav.setViewName("new/quiz");
-//					return mav;
-//				}
+				@GetMapping("/student/quiz/{class_identifying_code}/{lecture_class}/{lecture_code}")
+				public ModelAndView showQuizPro2(@Validated @ModelAttribute Lsy_QuizQuestionVO quizVo, ModelAndView mav,
+								@PathVariable String class_identifying_code,
+								@PathVariable String lecture_class,
+								@PathVariable String lecture_code, Authentication au){
+					Map<String, String> lectureMap = new HashMap<String, String>();
+					lectureMap.put("lecture_code", lecture_code);
+					lectureMap.put("class_identifying_code", class_identifying_code);
+					Lsy_LectureInfos lectureInfos = service.retrieveLectureInfoForOneViews(lectureMap);
+					mav.getModel().put("lectureInfos", lectureInfos);
+					mav.getModel().put("userVo", (UserVo)au.getPrincipal());
+					List<String> auth = AuthorityUtil.getAuthorityList(au);
+					mav.getModel().put("btnType", "quiz");
+					mav.getModel().put("identifier", auth);
+					quizVo.setClass_identifying_code(class_identifying_code);
+					quizVo.setLecture_code(lecture_code);
+					mav.getModel().put("start", 1);
+					mav.getModel().put("end", 5);
+					//학생, 교수 구분해서 정보 가져오기.
+//					model.addAttribute("attend_no", "1");
+					List<String> otherType = new ArrayList<String>();
+					otherType.add("①"); otherType.add("②"); otherType.add("③"); otherType.add("④");
+					List<Lsy_QuizQuestionVO> thisQuiz = service.retreiveQuiz(quizVo);
+					mav.getModel().put("quizList", thisQuiz);
+					mav.getModel().put("numList", otherType);
+					mav.setViewName("new/quiz");
+					return mav;
+				}
 				
 				//quiz 등록 클릭했을 때
 				@GetMapping("/professor/createQuiz/{class_identifying_code}/{lecture_class}/{lecture_code}")

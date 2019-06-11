@@ -99,9 +99,7 @@ $(function(){
 				$(".lecture_code").val(lecture_code);
 				var lecture_class = '${lectureInfos.lectureWeekInfos[0].lectureWeekClass[0].lecture_class}'
 				$("#yaoZhuannSong").submit();
-			
 		});
-		
 		
 			var btnType = $('#btnType').val();
 			var twoBtn = "<div class='row'>"+"<div class='col-xs-6 col-sm-6 btnSpace'>" +
