@@ -21,23 +21,24 @@
 									   'width=800, height=700'); return false;
 	}
 	
-	function openMakeExam(evalType, evalCode, lecture_code, class_identifying_code){
-		MakeQuestionPage = window.open('${path}professor/createExam/'+evalType+'/'+evalCode+'/'+lecture_code+'/'+class_identifying_code, '',
+	function openMakeExam(evalType, evalCode, lecture_code, week){
+		MakeQuestionPage = window.open('${path}professor/createExam/'+evalType+'/'+evalCode+'/'+lecture_code+'/'+week, '',
 										'width=800, height=700'); return false;
 	}
 	
 	function openQuizSt(class_identifying_code, lecture_class, lecture_code){
+		alert("들어왔다")
 		newPage = window.open('${path}student/quiz/'+class_identifying_code+'/'+lecture_class+'/'+lecture_code, '',
 		  'width=800, height=700'); return false;
 	}
 	
-	function openNewExamPage(evalType, evalCode, lecture_code, class_identifying_code){
+	function openNewExamPage(evalType, evalCode, lecture_code, week){
 		if('${identifier}'=='ROLE_STUDENT'){
 			alert("확인을 누르시면 시험이 진행됩니다. 아직 준비가 되지 않으셨다면 취소를 눌러주세요.")
-			MakeQuestionPage = window.open('${path}student/showExam/'+evalType+'/'+evalCode+'/'+lecture_code+'/'+class_identifying_code, '',
+			MakeQuestionPage = window.open('${path}student/showExam/'+evalType+'/'+evalCode+'/'+lecture_code+'/'+week, '',
 											'width=800, height=700'); return false;
 		} else {
-			MakeQuestionPage = window.open('${path}professor/showExam/'+evalType+'/'+evalCode+'/'+lecture_code+'/'+class_identifying_code, '',
+			MakeQuestionPage = window.open('${path}professor/showExam/'+evalType+'/'+evalCode+'/'+lecture_code+'/'+week, '',
 											'width=800, height=700'); return false;
 		}
 	}
@@ -45,6 +46,15 @@
 	function openMakeSurvey(){
 		MakeQuestionPage = window.open('${path}professor/createSurvey', '', 'width=800, height=700'); return false;
 	}
+	
+	$(function(){
+		$("#accordionGreen-1").attr('class',"active");
+		
+		$(".container").on('click', '.aTag',function(){
+				$("#accordionGreen-1").removeClass("active");
+		})
+		
+	})
 </script>
 
 <div class="accordion-area">
@@ -64,13 +74,13 @@
 								<div class="panel panel-collapse notika-accrodion-cus">
 			                    	<div class="panel-heading" role="tab">
 			                        	<h4 class="panel-title">
-			                            <a class="collapsed" data-toggle="collapse" data-parent="#accordionGreen" href="#accordionGreen-${vs.count}" aria-expanded='${vs.count eq 1?true:false}'>
+			                            <a class="collapsed aTag" data-toggle="collapse" data-parent="#accordionGreen" href="#accordionGreen-${vs.count}" ${vs.count eq 1?"active":""} aria-expanded='${vs.count eq 1?true:false}'>
 											${vs.count}주차
 										</a>
 			                            </h4>
 			                        </div>
 			                		<div id="accordionGreen-${vs.count}" class="collapse" role="tabpanel">
-			                			<c:if test="${vs.count ne 7}">
+			                			<c:if test="${vs.count ne 8 && vs.count ne 16}">
 			                			<c:forEach items="${weekInfo.lectureWeekClass}" var="lectureWeekClass">
 				                        	<div class="panel-body">
 				                            	<div style="display: inline-block; padding-left: 20px;">
@@ -101,7 +111,7 @@
 				                            </div>
 			                            </c:forEach>
 			                            </c:if>
-			                            <c:if test="${vs.count eq 7}">
+			                            <c:if test="${vs.count eq 8}">
 			                            	<div class="panel-body">
 				                            	<div style="display: inline-block; padding-left: 20px;">
 													<span style="display:inline-block; padding-right:20px;">
@@ -114,13 +124,37 @@
 													'${evalTypeAndCode[0].evalStudy_type}',	
 													'${evalTypeAndCode[0].evalStudy_code}',
 													'${lectureInfos.lecture_code}',
-													'${lectureWeekClass.class_identifying_code}'
+													'${vs.count}'
 													)">보기</button>
 													<button class="btn-sm" onClick="openMakeExam(
 													'${evalTypeAndCode[0].evalStudy_type}',	
 													'${evalTypeAndCode[0].evalStudy_code}',
 													'${lectureInfos.lecture_code}',
-													'${lectureWeekClass.class_identifying_code}'
+													'${vs.count}'
+													)">등록</button>
+												</div>
+				                            </div>
+			                            </c:if>
+			                            <c:if test="${vs.count eq 16}">
+			                            	<div class="panel-body">
+				                            	<div style="display: inline-block; padding-left: 20px;">
+													<span style="display:inline-block; padding-right:20px;">
+													</span>
+													<strong id="classesName">기말</strong>
+												</div>
+												<div style="display: inline-block; padding-left: 50px;">
+													<strong>시험</strong>
+													<button class="btn-sm" onClick="openNewExamPage(
+													'${evalTypeAndCode[1].evalStudy_type}',	
+													'${evalTypeAndCode[1].evalStudy_code}',
+													'${lectureInfos.lecture_code}',
+													'${vs.count}'
+													)">보기</button>
+													<button class="btn-sm" onClick="openMakeExam(
+													'${evalTypeAndCode[1].evalStudy_type}',	
+													'${evalTypeAndCode[1].evalStudy_code}',
+													'${lectureInfos.lecture_code}',
+													'${vs.count}'
 													)">등록</button>
 												</div>
 				                            </div>
@@ -132,13 +166,13 @@
 			                     <div class="panel panel-collapse notika-accrodion-cus">
 			                    	<div class="panel-heading" role="tab">
 			                        	<h4 class="panel-title">
-			                            <a class="collapsed" data-toggle="collapse" data-parent="#accordionGreen" href="#accordionGreen-${vs.count}" aria-expanded=${vs.count eq 1?true:false}>
+			                            <a class="collapsed aTag" data-toggle="collapse" data-parent="#accordionGreen" href="#accordionGreen-${vs.count}" ${vs.count eq 1?'active':''} aria-expanded=${vs.count eq 1?true:false}>
 											${vs.count}주차
 										</a>
 			                            </h4>
 			                        </div>
 			                		<div id="accordionGreen-${vs.count}" class="collapse" role="tabpanel">
-			                			<c:if test="${vs.count ne 7}">
+			                			<c:if test="${vs.count ne 8 && vs.count ne 16}">
 			                			<c:forEach begin="0" end="2" varStatus="vs2">
 				                        	<div class="panel-body">
 				                            	<div style="display: inline-block; padding-left: 20px;">
@@ -169,7 +203,7 @@
 				                            </div>
 			                            </c:forEach>
 			                            </c:if>
-			                            <c:if test="${vs.count eq 7}">
+			                            <c:if test="${vs.count eq 8}">
 			                            	<div class="panel-body">
 				                            	<div style="display: inline-block; padding-left: 20px;">
 													<span style="display:inline-block; padding-right:20px;">
@@ -182,13 +216,37 @@
 													'${evalTypeAndCode[0].evalStudy_type}',	
 													'${evalTypeAndCode[0].evalStudy_code}',
 													'${lectureInfos.lecture_code}',
-													'${lectureWeekClass.class_identifying_code}'
+													'${vs.count}'
 													)">보기</button>
 													<button class="btn-sm" onClick="openMakeExam(
 													'${evalTypeAndCode[0].evalStudy_type}',	
 													'${evalTypeAndCode[0].evalStudy_code}',
 													'${lectureInfos.lecture_code}',
-													'${lectureWeekClass.class_identifying_code}'
+													'${vs.count}'
+													)">등록</button>
+												</div>
+				                            </div>
+			                            </c:if>
+			                            <c:if test="${vs.count eq 16}">
+			                            	<div class="panel-body">
+				                            	<div style="display: inline-block; padding-left: 20px;">
+													<span style="display:inline-block; padding-right:20px;">
+													</span>
+													<strong id="classesName">기말고사</strong>
+												</div>
+												<div style="display: inline-block; padding-left: 50px;">
+													<strong>시험</strong>
+													<button class="btn-sm" onClick="openNewExamPage(
+													'${evalTypeAndCode[1].evalStudy_type}',	
+													'${evalTypeAndCode[1].evalStudy_code}',
+													'${lectureInfos.lecture_code}',
+													'${vs.count}'
+													)">보기</button>
+													<button class="btn-sm" onClick="openMakeExam(
+													'${evalTypeAndCode[1].evalStudy_type}',	
+													'${evalTypeAndCode[1].evalStudy_code}',
+													'${lectureInfos.lecture_code}',
+													'${vs.count}'
 													)">등록</button>
 												</div>
 				                            </div>
