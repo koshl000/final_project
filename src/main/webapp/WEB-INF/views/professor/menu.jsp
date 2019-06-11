@@ -157,7 +157,7 @@
                     <%--증명서--%>
                     <div id="cert" class="tab-pane notika-tab-menu-bg animated flipInX">
                         <ul class="notika-main-menu-dropdown">
-                            <li><a href="flot-charts.html">증명서</a>
+                            <li><a href="${pageContext.request.contextPath }/professor/certificate">증명서</a>
                             </li>
                         </ul>
                     </div>
