@@ -36,7 +36,7 @@ public class Jch_LectureController {
 	@Inject
 	Jch_CurriculumService service;
 	
-	@GetMapping("alectureList")
+	@GetMapping("lectureList")
 	public ModelAndView lectureList(Authentication au, ModelAndView mv){
 		Jch_UserVo userVo = service.getProfInfo(au.getName());
 		Jch_LecturePlanVo jlpVo = service.getLecturePlanVO();
@@ -62,7 +62,7 @@ public class Jch_LectureController {
 		if (ServiceResult.OK.equals(result)) {
 	    	view = "professor/registerLecture";
 		} else {
-			view = "professor/alectureList";
+			view = "professor/lectureList";
 		}
 		return view;
 	}
@@ -108,7 +108,7 @@ public class Jch_LectureController {
 		
 		ServiceResult result = service.insertLectureWeekList(vo);
 		if (ServiceResult.OK.equals(result)) {
-	    	view = "redirect:alectureList";
+	    	view = "redirect:lectureList";
 		} else {
 			view = "professor/lectureList";
 		}
@@ -138,7 +138,7 @@ public class Jch_LectureController {
 		
 	    System.out.println(params.toString());
 	    if (ServiceResult.OK.equals(result)) {
-	    	view = "redirect:alectureList";
+	    	view = "redirect:lectureList";
 		} else {
 			view = "professor/lectureList";
 		}

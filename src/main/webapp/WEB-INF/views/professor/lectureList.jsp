@@ -206,7 +206,7 @@
 					alert("강의주차 등록이 완료되었습니다.");
 					console.log(resp);
 					$('#myModalthree').modal("hide");
-					window.location.href = "${pageContext.request.contextPath}/professor/alectureList";
+					window.location.href = "${pageContext.request.contextPath}/professor/lectureList";
 				},
 				error : function(errorResp) {
 					console.log(errorResp.status);
@@ -244,7 +244,7 @@
 					alert("강의계획 등록이 완료되었습니다.");
 					console.log(resp);
 					$('#myModalfour').modal("hide");
-					window.location.href = "${pageContext.request.contextPath}/professor/alectureList";
+					window.location.href = "${pageContext.request.contextPath}/professor/lectureList";
 				},
 				error : function(errorResp) {
 					console.log(errorResp.status);
