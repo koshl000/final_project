@@ -27,6 +27,7 @@ public class LectureVo implements Serializable{
 	@NotNull private Date mid_date;
 	@NotNull private Date final_date;
 	private String syllabusBtn = "<button type='button' class='btn btn-default notika-btn-default syllabus'>보기</button>";
+	private String openBtn;
 	
 	public LectureVo(String lecture_code){
 		this.lecture_code = lecture_code;
@@ -43,5 +44,9 @@ public class LectureVo implements Serializable{
 	
 	public void setLecture_nameForMyLecture(String lecture_name, String lecture_code){
 		this.lecture_name = "<a target='_blank' href='subjectPage/"+lecture_code+"/eduGoal'>"+lecture_name+"</a>";
+	}
+	
+	public void setOpenBtn(String lecture_code){
+		this.openBtn = "<button type='button' class='btn btn-default notika-btn-default open' id='"+lecture_code+"'>개설</button>";
 	}
 }

@@ -52,8 +52,8 @@ html, body {
 <div class="col-md-6 test">
 				<h3>Quick menu</h3>
 				<div class="color-single nk-blue mg-t-30" style="float:left; margin-left: 2px; margin-right: 20px;">
-                                    <h2>나의강의</h2>
-                                    <a href="${pageContext.request.contextPath}/professorMain/MyLecture" style="color:#fff">  
+                                    <h2>강의목록</h2>
+                                    <a href="${pageContext.request.contextPath}/professor/lectureList" style="color:#fff">  
                                     <i class="notika-icon notika-draft" style="font-size:50px;"></i></a>
                                     </div>
 				<div class="color-single nk-pink mg-t-30" style="float:left; margin-right: 20px;" >
@@ -62,8 +62,8 @@ html, body {
                                     <i class="notika-icon notika-bar-chart" style="font-size:50px;"></i></a>
                                 </div>
  				<div class="color-single nk-orange mg-t-30" style="float:left; margin-right: 20px;">
-                                   <h2>강의게시판 </h2>
-                                   <a href="${pageContext.request.contextPath}/subjectPage/lecture_code_1/lectureBoard" style="color:#fff">  
+                                   <h2>증명서신청 </h2>
+                                   <a href="${pageContext.request.contextPath }/professor/certificate" style="color:#fff">  
                                    <i class="notika-icon notika-form" style="font-size:50px;"></i></a>
                                 </div>
                                 

@@ -11,10 +11,13 @@
 					<div class="row">
 						<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 							<div class="breadcomb-wp">
+							<div class="breadcomb-icon">
+										<i class="notika-icon notika-draft"></i>
+									</div>
 								<div class="breadcomb-ctn">
 									<h2>나의강의</h2>
 									<p>
-										나의강의 페이지 <span class="bread-ntd"></span>
+									강의명을 클릭하시면  해당 과목페이지로 이동합니다. <span class="bread-ntd"></span>
 									</p>
 								</div>
 							</div>

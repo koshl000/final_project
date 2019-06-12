@@ -22,6 +22,7 @@ public interface LSY_QuizDAO {
 	public List<Lsy_QuizQuestionVO> selectQuizList(Lsy_QuizQuestionVO quizList);
 	public Lsy_QuizQuestionVO selectOneQuiz(String question_no);
 	public Lsy_ExamVo selectOneExam(Map<String, String> examMap);
+	public Lsy_ExamVo selectUpdatedExam(Map<String, String> examMap);
 	
 	public int insertQuiz(Lsy_EmbraceQuizVo quizChunk);
 	public int insertStAnswer(Lsy_EmbraceAnswer stQuizChunk);
@@ -41,7 +42,7 @@ public interface LSY_QuizDAO {
 	public String examNoNextVal();
 	public List<String> answerNoSeqVal(int answerSize);
 	
-	public Lsy_ExamVo selectStudyCode(Map<String, String> examMap);
+	public String selectStudyCode(Map<String, String> examMap);
 	public Lsy_ExamVo selectExamList(Map<String, String> examMap);
 	public Lsy_LectureInfos selectLectureInfoForViews(String lecture_code);
 	public Lsy_LectureInfos selectLectureInfoForOneViews(Map<String, String> lectureMap);

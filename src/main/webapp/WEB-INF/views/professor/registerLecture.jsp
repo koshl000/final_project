@@ -27,7 +27,6 @@
 	}
 	
 	function openQuizSt(class_identifying_code, lecture_class, lecture_code){
-		alert("들어왔다")
 		newPage = window.open('${path}student/quiz/'+class_identifying_code+'/'+lecture_class+'/'+lecture_code, '',
 		  'width=800, height=700'); return false;
 	}

@@ -283,7 +283,6 @@
     socket.on('status_change',function(status,info){
         $(".contacts").find("contact").each(function(index){
             if($(this ).text().indexOf(info.user_id)!==-1){
-                $(this).
             }
         })
     });
@@ -295,7 +294,7 @@
             "       <span class=\"contact-status online\"></span>\n" +
             "       <img src=\"${pageContext.request.contextPath}/res/images/male.png\" alt=\"\"/>\n" +
             "       <div class=\"meta\">\n" +
-            "       <p class=\"name\">" + name + "(" + id + ")</p>\n" +
+            "       <p id=\"" + id + "\" class=\"name\">" + name + "(" + id + ")</p>\n" +
             "       </div>\n" +
             "   </div>\n" +
             "</li>";
@@ -382,7 +381,29 @@
         if($(this).find("span").hasClass("busy")||$(this).find("span").hasClass("offline")){
             alert("오프라인&화상채팅 중인 유저는 초대할수 없습니다.");
         }else{
-            $(".modal").modal({backdrop: 'static', keyboard: false});
+//             $(".modal").modal({backdrop: 'static', keyboard: false});
+			var roomId = '${roomId}';
+			var targetId = $(this).find('p').hasClass('name').prop('id');
+			var sendData = {
+				'targetId' : targetId,
+				'roomId' : roomId,
+				'lecture_code' : '${lecture_code}'
+			};
+			console.log(sendData);
+			var jsonData = JSON.stringify(sendData);
+			$.ajax({
+				url : '${pageContext.request.contextPath}/invitation/sending',
+				method : 'post',
+				data : jsonData,
+				contentType : 'application/json;charset=UTF-8',
+				dataType : 'text',
+				success : function(resp){
+					alert(resp);
+				},
+				error : function(resp){
+					alert(resp);
+				}
+			});
         }
     });
 </script>

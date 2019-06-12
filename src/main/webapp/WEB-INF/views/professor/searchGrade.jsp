@@ -13,10 +13,13 @@
 					<div class="row">
 						<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 							<div class="breadcomb-wp">
+								<div class="breadcomb-icon">
+										<i class="notika-icon notika-draft"></i>
+									</div>
 								<div class="breadcomb-ctn">
 									<h2>성적조회</h2>
 									<p>
-										성적조회 페이지<span class="bread-ntd"></span>
+										성적을 조회하실 수 있습니다.<span class="bread-ntd"></span>
 									</p>
 								</div>
 							</div>

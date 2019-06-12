@@ -44,11 +44,14 @@ img{
 }
 img.visible { 
     visibility:visible; 
-} 
+}
+div.yaoRemove{
+	padding:1px;
+	margin:2px;
+}
 </style>
-	
 <script>
-<c:if test="${result eq '성공'}">
+<c:if test="${close eq 'close'}">
 	self.close();
 </c:if>
 	var source;
@@ -59,7 +62,7 @@ img.visible {
 	var resp;
 	var saveBtn; var modifyBtn; var aTags = []; var checkBoxes; var inputTexts; var textAreas; var strongs;
 	function completePage(){
-		if($("#identifier")=="ROLE_PROFESSOR"&&'${btnType}'=='exam'){
+		if("${identifier[0]}"=="ROLE_PROFESSOR"&&'${btnType}'=='exam'){
 			$('.timee').hide();
 			$("#boddy").after("<div class='row'>"+"<div class='col-xs-6 col-sm-6 btnSpace'>" +
 					"<button class='btn' disabled type='button' id='prev'>이전</button>"+
@@ -98,7 +101,7 @@ img.visible {
 		} 
 	}
 	
-	$(".container").on('click', '#next', function(event){
+	$("body").on('click', '#next', function(event){
 		event.preventDefault;
 		if(end<20){
 			start += 5;
@@ -108,7 +111,7 @@ img.visible {
 		}
 	})
 	
-	$(".container").on('click', '#prev', function(event){
+	$("body").on('click', '#prev', function(event){
 		event.preventDefault;
 		if(end!=5){
 			start -= 5;
@@ -211,7 +214,7 @@ img.visible {
 			$("#yaoZhuannSong").submit();
 		} else if($('#identifier').val()=='ROLE_STUDENT'){
 			alert("제출 이후에는 수정이 불가합니다.\n제출하시겠습니까?")
-			$("#yaoZhuannSong").attr("action", "${pageContext.request.contextPath}/professor/createExamAnswer");
+			$("#yaoZhuannSong").attr("action", "${pageContext.request.contextPath}/professor/createExamAnswer/"+'${lecture_code}'+'/'+'${examVo.exam_type}');
 			$("#yaoZhuannSong").submit();
 		}
 	})
@@ -340,7 +343,7 @@ img.visible {
 	<div class="container">
 		<div class='row timeCnt'>
 			<div class="col-xs-12 col-sm-12 timeCnt">
-				<span><h3>과목명 중간고사</h3>
+				<span><h3>${lectureInfos.lecture_name} / ${week}주차 : 시험</h3>
 				</span>
 				<span style="font-size: 10pt; font-weight: 500" class="timee"> 
 				<span style="padding-left: 8px; font-weight: 500" class="timee">Timer</span>
@@ -416,12 +419,13 @@ img.visible {
 								"<input class='student' name='answerList[${vs.index}].exam_no' type='hidden' value='${examVo.exam_no}'/>"+
 								"<input class='student' name='answerList[${vs.index}].attend_no' type='hidden'/>"+
 								"<input class='student' name='answerList[${vs.index}].question_no' type='hidden' value='${questionVo.question_no}'/>"+
-								"<input class='student' name='answerList[${vs.index}].subjective_answer' type='text'/>"+
+								"<input class='student subjectInput' name='answerList[${vs.index}].subjective_answer' type='text'/>"+
 								"<input class='student' name='answerList[${vs.index}].exam_no' type='hidden'/>"+
 								"<c:forEach var='problemVo' items='${questionVo.problemList}' varStatus='vs3'>";
 									if(${not empty fn:trim(questionVo.subjective_answer)}){
 										source += "<div class='yaoRemove'><input name='' type='hidden' class='examproblem_nno i-checks checkQAnswer question_answer professor' ${questionVo.objective_answer.contains(problemVo.problem_no.substring(0,1))?'checked':''} value='${vs3.count}'/>" +
-										"<input name='examList[0].questionList[${vs.index}].problemList[${vs3.index}].problem_content' class='examproblem_nno PContent problem_content checkQAnswer professor' type='hidden' placeholder='선택지를 입력하세요' value='${problemVo.problem_content}'/>";
+										"<input name='examList[0].questionList[${vs.index}].problemList[${vs3.index}].problem_content' class='examproblem_nno PContent problem_content checkQAnswer professor' type='hidden' placeholder='선택지를 입력하세요' value='${problemVo.problem_content}'/>"+
+										"<input name='answerList[${vs.index}].problem_no' type='checkbox' class='examproblem_nno checkQAnswer student' value=''/>";
 									} else if(${not empty fn:trim(questionVo.objective_answer)}){
 										source += "<div class='yaoRemove'><input name='' type='checkbox' class='examproblem_nno i-checks checkQAnswer question_answer professor' ${questionVo.objective_answer.contains(problemVo.problem_no.substring(0,1))?'checked':''} value='${vs3.count}'/>" +
 										 "<input name='answerList[${vs.index}].problem_no' type='checkbox' class='examproblem_nno checkQAnswer student' value='${vs3.count}'/>" +
@@ -432,7 +436,7 @@ img.visible {
 									source += "<input type='hidden' class='examproblem_nno problem_question_no professor' name='examList[0].questionList[${vs.index}].problemList[${vs3.index}].question_no' value='${problemVo.question_no}'>" +
 									"<input type='hidden' class='examproblem_nno problem_no professor' name='examList[0].questionList[${vs.index}].problemList[${vs3.index}].problem_no' value='${problemVo.problem_no}'>" +
 									"<input type='hidden' id='exam_no' class='examproblem_nno problem_exam_no professor' name='examList[0].questionList[${vs.index}].problemList[${vs3.index}].exam_no' value='${examVo.exam_no}'/>" +
-								"</c:forEach>"+"</div></div></form>";
+								"</div></c:forEach>"+"</div></form>";
 								$(".left").append(source);
 							</script>
 						</c:when>
@@ -461,12 +465,13 @@ img.visible {
 							"<input class='student' name='answerList[${vs.index}].exam_no' type='hidden' value='${examVo.exam_no}'/>"+
 							"<input class='student' name='answerList[${vs.index}].attend_no' type='hidden'/>"+
 							"<input class='student' name='answerList[${vs.index}].question_no' type='hidden' value='${questionVo.question_no}'/>"+
-							"<input class='student' name='answerList[${vs.index}].subjective_answer' type='text'/>"+
+							"<input class='student subjectInput' name='answerList[${vs.index}].subjective_answer' type='text'/>"+
 							"<input class='student' name='answerList[${vs.index}].exam_no' type='hidden'/>"+
 							"<c:forEach var='problemVo' items='${questionVo.problemList}' varStatus='vs3'>";
 								if(${not empty fn:trim(questionVo.subjective_answer)}){
 									source += "<div class='yaoRemove'><input name='' type='hidden' class='examproblem_nno i-checks checkQAnswer question_answer professor' ${questionVo.objective_answer.contains(problemVo.problem_no.substring(0,1))?'checked':''} value='${vs3.count}'/>" +
-									"<input name='examList[0].questionList[${vs.index}].problemList[${vs3.index}].problem_content' class='examproblem_nno PContent problem_content checkQAnswer professor' type='hidden' placeholder='선택지를 입력하세요' value='${problemVo.problem_content}'/>";
+									"<input name='examList[0].questionList[${vs.index}].problemList[${vs3.index}].problem_content' class='examproblem_nno PContent problem_content checkQAnswer professor' type='hidden' placeholder='선택지를 입력하세요' value='${problemVo.problem_content}'/>" +
+									"<input name='answerList[${vs.index}].problem_no' type='checkbox' class='examproblem_nno checkQAnswer student' value=''/>";
 								} else if(${not empty fn:trim(questionVo.objective_answer)}){
 									source += "<div class='yaoRemove'><input name='' type='checkbox' class='examproblem_nno i-checks checkQAnswer question_answer professor' ${questionVo.objective_answer.contains(problemVo.problem_no.substring(0,1))?'checked':''} value='${vs3.count}'/>" +
 									 "<input name='answerList[${vs.index}].problem_no' type='checkbox' class='examproblem_nno checkQAnswer student' value='${vs3.count}'/>" +
@@ -477,7 +482,7 @@ img.visible {
 								source += "<input type='hidden' class='examproblem_nno problem_question_no professor' name='examList[0].questionList[${vs.index}].problemList[${vs3.index}].question_no' value='${problemVo.question_no}'>" +
 								"<input type='hidden' class='examproblem_nno problem_no professor' name='examList[0].questionList[${vs.index}].problemList[${vs3.index}].problem_no' value='${problemVo.problem_no}'>" +
 								"<input type='hidden' id='exam_no' class='examproblem_nno problem_exam_no professor' name='examList[0].questionList[${vs.index}].problemList[${vs3.index}].exam_no' value='${examVo.exam_no}'/>" +
-							"</c:forEach>"+"</div></div></form>";
+							"</div></c:forEach>"+"</div></form>";
 									$(".center").append(source);
 							</script>
 						</c:when>

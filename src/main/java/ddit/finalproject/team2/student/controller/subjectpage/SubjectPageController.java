@@ -174,6 +174,7 @@ public class SubjectPageController {
         UserVo uv=(UserVo) au.getPrincipal();
         mv.getModel().put("id", au.getName());
         mv.getModel().put("user", uv);
+        mv.getModel().put("lecture_code", lecture_code);
         if(roomId!=null&&(!roomId.isEmpty())){
             mv.getModel().put("roomId",roomId);
         }else{
