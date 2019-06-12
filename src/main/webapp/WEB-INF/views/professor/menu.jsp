@@ -141,7 +141,7 @@
                         <ul class="notika-main-menu-dropdown">
                             <li><a href="animations.html">교육목표</a>
                             </li>
-                            <li><a href="${pageContext.request.contextPath}/professor/lectureList">강의목록</a>
+                            <li><a href="${pageContext.request.contextPath}/professor/alectureList">강의목록</a>
                             </li>
                             <li><a href="${pageContext.request.contextPath}/professorMain/openChat">화상채팅개설</a>
                             </li>
