@@ -112,8 +112,8 @@
         if (this.length === 0) return hash;
         for (i = 0; i < this.length; i++) {
             chr = this.charCodeAt(i);
-            hash = ((hash << 5) - hash) + chr;
-            hash |= 0; // Convert to 32bit integer
+            // hash = ((hash << 5) - hash) + chr;
+            // hash |= 0; // Convert to 32bit integer
         }
         return hash;
     };
@@ -123,7 +123,7 @@
     var connection = new RTCMultiConnection();
     // connection.socketURL = 'https://192.168.207.208:9002/';
     connection.socketURL = 'https://rtcmulticonnection.herokuapp.com:443/';
-    connection.socketMessageEvent = 'videoevent';
+    connection.socketMessageEvent = 'videoEvent001';
 
     connection.session = {
         audio: true,
@@ -196,7 +196,7 @@
         setTimeout(function () {
             video.play();
         }, 5000);
-        mediaElement.id = event.streamid;
+        video.id = event.streamid;
         // to keep room-id in cache
         localStorage.setItem(connection.socketMessageEvent, connection.sessionid);
         if (event.type === 'local') {
@@ -276,8 +276,6 @@
             $("#profile-img").removeClass();
         }
         $("#status-options").removeClass("active");
-
-        socket.emit('status_change',$("profile-img").attr('class'),userInfo);
     });
 
     socket.on('status_change',function(status,info){
