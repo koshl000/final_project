@@ -1,3 +1,4 @@
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%--
   Created by IntelliJ IDEA.
   User: a
@@ -27,11 +28,13 @@ ${pageContext.request.contextPath}/professor/regVideo
     <form action="#" enctype="multipart/form-data" method="post">
         <div class="form-group">
             <label>Bootstrap style button 2</label>
-            <input type="file" id="BSbtnsuccess" name="file">
+            <form>
+                <input type="file" id="BSbtnsuccess" name="file">
+            </form>
         </div>
-        <input type="submit" value="파일전송">
-<%--        <input type="hidden" name="lecture_code" value="${lecture_code}">--%>
-<%--        <input type="hidden" name="class_identifying_code" value="${class_identifying_code}">--%>
+        <input type="hidden" name="lecture_code" value="${lecture_code}">
+        <input type="hidden" name="class_identifying_code" value="${class_identifying_code}">
+        <input type="submit" value="파일전송" id="fileSubmit">
     </form>
 </div>
 <div class="bs-example">
@@ -47,5 +50,12 @@ ${pageContext.request.contextPath}/professor/regVideo
         buttonName: 'btn-success',
         buttonText: ' Open'
     });
+    $()
+    $.ajax({
+        type:"post",
+        enctype:'multipart/form-data',
+        url:"/"
+
+    })
 </script>
 </html>

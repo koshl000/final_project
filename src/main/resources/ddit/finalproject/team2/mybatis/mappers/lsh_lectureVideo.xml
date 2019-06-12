@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ddit.finalproject.team2.professor.dao.Lsh_ILectureFileDao">
+    <insert id="insertVideo" parameterType="VideoFileVo">
+        insert into VIDEOFILE (file_no, file_url, file_name, videofile_time, class_identifying_code, lecture_code)
+        values (VFILE_SEQ.nextval,#{file_url},#{file_name},#{videofile_tile},#{class_identifying_code},#{lecture_code})
+    </insert>
+    <select id="selectVideo" resultType="VideoFileVo" parameterType="map">
+        select * from VIDEOFILE;
+    </select>
+</mapper>
