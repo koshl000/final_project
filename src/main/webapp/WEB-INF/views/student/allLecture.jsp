@@ -50,7 +50,7 @@
 				, {data : "lecture_target"}
 				, {data : "user_id"}
 				, {data : "lecture_capacity"}
-				, {data : "lecture_planBtn"}
+				, {data : "lecturePlanBtn"}
 			],
 			"order" : []
 			,

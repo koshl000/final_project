@@ -112,8 +112,8 @@
         if (this.length === 0) return hash;
         for (i = 0; i < this.length; i++) {
             chr = this.charCodeAt(i);
-            hash = ((hash << 5) - hash) + chr;
-            hash |= 0; // Convert to 32bit integer
+            // hash = ((hash << 5) - hash) + chr;
+            // hash |= 0; // Convert to 32bit integer
         }
         return hash;
     };
@@ -121,9 +121,9 @@
 <%--화상채팅js--%>
 <script>
     var connection = new RTCMultiConnection();
-    connection.socketURL = 'https://192.168.207.208:9002/';
-    // connection.socketURL = 'https://rtcmulticonnection.herokuapp.com:443/';
-    connection.socketMessageEvent = 'videoevent';
+    // connection.socketURL = 'https://192.168.207.208:9002/';
+    connection.socketURL = 'https://rtcmulticonnection.herokuapp.com:443/';
+    connection.socketMessageEvent = 'videoEvent001';
 
     connection.session = {
         audio: true,
@@ -134,8 +134,9 @@
         OfferToReceiveVideo: true
     };
     let connectedCount = 0;
-    let roomid = '${roomId}'.toString().hashCode();
-    connection.openOrJoin(roomid, function (isRoomExist, roomid, error) {
+    <%--let roomid = '${roomId}'.toString().hashCode();--%>
+    let roomid=100;
+    connection.openOrJoin(100, function (isRoomExist, roomid, error) {
         if (error) {
             alert(error);
         }
@@ -149,63 +150,112 @@
         event.mediaElement.muted = true;
         event.mediaElement.volume = 0;
 
-        let video = document.createElement("video");
+        var video = document.createElement('video');
 
         try {
             video.setAttributeNode(document.createAttribute('autoplay'));
             video.setAttributeNode(document.createAttribute('playsinline'));
+
         } catch (e) {
             video.setAttribute('autoplay', true);
             video.setAttribute('playsinline', true);
+            video.setAttribute('height','100%');
+            video.setAttribute('width','100%');
+            video.setAttribute('object-fit',)
         }
 
-        if (event.type === 'local') {
-            video.setAttribute("width", "100%");
-            video.setAttribute("height", "100%");
+        if(event.type === 'local') {
             video.volume = 0;
             try {
                 video.setAttributeNode(document.createAttribute('muted'));
             } catch (e) {
                 video.setAttribute('muted', true);
             }
-
-        } else if (event.type === 'remote') {
-            if (video_cnt >= 4) {
-                alert("허용인원 초과");
-                return;
-            }
-            if (video_cnt === 1) {
-                videos[0].setAttribute("height", "50%");
-                video.setAttribute("width", "100%");
-                video.setAttribute("height", "50%");
-            } else if (video_cnt === 2) {
-                videos[1].setAttribute("width", "50%");
-                video.setAttribute("width", "50%");
-                video.setAttribute("height", "50%");
-            } else if (video_cnt === 3) {
-                videos[0].setAttribute("width", "50%");
-                video.setAttribute("width", "50%");
-                video.setAttribute("height", "50%");
-            }
-            video_cnt++;
         }
-        vid_con.appendChild(video);
-        videos.push(video);
-
         video.srcObject = event.stream;
-        setTimeout(function () {
+        //
+        // var mediaElement = getHTMLMediaElement(video, {
+        //     buttons: ['full-screen'],
+        //     showOnMouseEnter: false
+        // });
+        // mediaElement.style.maxHeight=null;
+        // mediaElement.style.height='100%';
+
+        vid_con.appendChild(video);
+
+        setTimeout(function() {
             video.play();
         }, 5000);
-        mediaElement.id = event.streamid;
+
+        video.id = event.streamid;
+
         // to keep room-id in cache
         localStorage.setItem(connection.socketMessageEvent, connection.sessionid);
-        if (event.type === 'local') {
-            connection.socket.on('disconnect', function () {
-                if (!connection.getAllParticipants().length) {
+
+        if(event.type === 'local') {
+            connection.socket.on('disconnect', function() {
+                if(!connection.getAllParticipants().length) {
                     location.reload();
                 }
             });
         }
+        // let video = document.createElement("video");
+        //
+        // try {
+        //     video.setAttributeNode(document.createAttribute('autoplay'));
+        //     video.setAttributeNode(document.createAttribute('playsinline'));
+        // } catch (e) {
+        //     video.setAttribute('autoplay', true);
+        //     video.setAttribute('playsinline', true);
+        // }
+        //
+        // if (event.type === 'local') {
+        //     video.setAttribute("width", "100%");
+        //     video.setAttribute("height", "100%");
+        //     video.volume = 0;
+        //     try {
+        //         video.setAttributeNode(document.createAttribute('muted'));
+        //     } catch (e) {
+        //         video.setAttribute('muted', true);
+        //     }
+        //
+        // } else if (event.type === 'remote') {
+        //     if (video_cnt >= 4) {
+        //         alert("허용인원 초과");
+        //         return;
+        //     }
+        //     if (video_cnt === 1) {
+        //         videos[0].setAttribute("height", "50%");
+        //         video.setAttribute("width", "100%");
+        //         video.setAttribute("height", "50%");
+        //     } else if (video_cnt === 2) {
+        //         videos[1].setAttribute("width", "50%");
+        //         video.setAttribute("width", "50%");
+        //         video.setAttribute("height", "50%");
+        //     } else if (video_cnt === 3) {
+        //         videos[0].setAttribute("width", "50%");
+        //         video.setAttribute("width", "50%");
+        //         video.setAttribute("height", "50%");
+        //     }
+        //     video_cnt++;
+        // }
+        // vid_con.appendChild(video);
+        // videos.push(video);
+        //
+        // video.srcObject = event.stream;
+        // setTimeout(function () {
+        //     video.play();
+        // }, 5000);
+        // video.id = event.streamid;
+        // // to keep room-id in cache
+        // localStorage.setItem(connection.socketMessageEvent, connection.sessionid);
+        // if (event.type === 'local') {
+        //     connection.socket.on('disconnect', function () {
+        //         if (!connection.getAllParticipants().length) {
+        //             location.reload();
+        //         }
+        //     });
+        // }
     };
     connection.onstreamended = function (event) {
         var mediaElement = document.getElementById(event.streamid);
@@ -251,7 +301,7 @@
 </script>
 <%--문자채팅 및 유저 리스트--%>
 <script>
-    var socket = io('https://192.168.0.9:9003');
+    var socket = io('https://192.168.207.208:9003');
 
     var userInfo = {
         user_id: '${user.user_id}',
@@ -276,13 +326,12 @@
             $("#profile-img").removeClass();
         }
         $("#status-options").removeClass("active");
-
-        socket.emit('status_change',$("profile-img").attr('class'),userInfo);
     });
 
     socket.on('status_change',function(status,info){
-        $(".contacts").find("contact").each(function(index){
-            if($(this ).text().indexOf(info.user_id)!==-1){
+        $(".contacts").find(".contact").each(function(index){
+            if($(this).find("p").first().text().indexOf(info.user_id)!==-1){
+                $(this).find("span").first().addClass();
             }
         })
     });

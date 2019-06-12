@@ -57,35 +57,27 @@ public class LSY_QuizServiceImpl implements LSY_IQuizService{
 	
 	@Override
 	@Transactional
-	public int createStAnswer(Lsy_EmbraceAnswer stQuizChunk) {
-//		int realSize = 0;
-//		for(Lsy_QuizAnswerVo vo : stQuizChunk.getAnswerList()) {
-//			vo.splitQuizproblem_no();
-//			if(vo.getQuizProblem_no_div()!=null) {
-//				int lengths = vo.getQuizProblem_no_div().length;
-//				realSize += lengths;
-//			}
-//		}
-		
-//		List<String> keys = quizDao.stAnswerNextVal(realSize);
+	public int createStAnswer(Lsy_EmbraceAnswer stQuizChunk, Lsy_QuizQuestionVO quizMap) {
+		int standard = 0;
 		List<String> keys = quizDao.stAnswerNextVal(stQuizChunk.getAnswerList().size());
 		for (int i = 0; i < stQuizChunk.getAnswerList().size(); i++) {
 			stQuizChunk.getAnswerList().get(i).setQuizAnswer_code(keys.get(i));
 		}
-//			if(stQuizChunk.getAnswerList().get(i).getQuizProblem_no_div().length>1) {
-//				for (int j = 0; j < stQuizChunk.getAnswerList().get(i).getQuizProblem_no_div().length; j++) {
-//					stQuizChunk.getAnswerList().get(i).splitQuizAnswer_code(keys.get(i));
-//				}
-//			} else {
-//				stQuizChunk.getAnswerList().get(i).splitQuizAnswer_code(keys.get(i));
-//			}
-//		}
-		
-		int result = quizDao.insertStAnswer(stQuizChunk);
-		if(result>0) {
-			return result;
+		List<Lsy_QuizQuestionVO> result2 = retreiveQuiz(quizMap);
+		if(result2!=null) {
+			for (int i = 0; i < result2.size(); i++) {
+				if(result2.get(i).getQuestion_no().equals(stQuizChunk.getAnswerList().get(i).getQuestion_no())) {
+					boolean flag = result2.get(i).getQuestion_answer().equals(stQuizChunk.getAnswerList().get(i).getStSelect_no());
+					if(flag==true) {
+						standard++;
+					}
+				}
+			}
 		}
-		return 0;
+		if(standard > 2) {
+			int result = quizDao.insertStAnswer(stQuizChunk);
+		}
+		return standard;
 	}
 	
 	@Override
@@ -245,8 +237,8 @@ public class LSY_QuizServiceImpl implements LSY_IQuizService{
 	}
 
 	@Override
-	public Lsy_ExamVo retrieveOneExam(Map<String, String> examMap) {
-		Lsy_ExamVo result = quizDao.selectOneExam(examMap);
+	public Lsy_ExamVo retrieveOneExam(String examNo) {
+		Lsy_ExamVo result = quizDao.selectOneExam(examNo);
 		if(result!=null) {
 			return result;
 		}

@@ -211,13 +211,13 @@
 		and problem_no = #{problem_no}
 	</update>
 	
-	<select id="selectOneExam" parameterType="java.util.HashMap" resultMap="allExam">
+	<select id="selectOneExam" parameterType="String" resultMap="allExam">
 		select *
 		from exam e left outer join examquestion eq on (e.exam_no = eq.exam_no)
 		         left outer join examproblem ep on (eq.question_no = ep.question_no and eq.exam_no = ep.exam_no)
 		where e.exam_no = #{exam_no}
-		and exam_type like #{exam_type}||'%'
 	</select>
+<!-- 		and exam_type like #{exam_type}||'%' -->
 	
 	<select id="selectUpdatedExam" parameterType="java.util.HashMap" resultMap="allExam">
 		select * 

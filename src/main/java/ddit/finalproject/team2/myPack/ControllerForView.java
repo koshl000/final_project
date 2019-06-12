@@ -44,10 +44,13 @@ public class ControllerForView {
 	
 	@Inject
 	Ljs_IGradeService ljs_service;
-	
-		@PostMapping("/student/submit")
-		public String dsadada12(@Validated @ModelAttribute Lsy_EmbraceAnswer answerList, Model model, Authentication au) {
-			Lsy_QuizQuestionVO quizVo = new Lsy_QuizQuestionVO();
+
+		@PostMapping("/student/submit/{lecture_code}/{class_identifying_code}")
+		public String dsadada12(@Validated @ModelAttribute Lsy_EmbraceAnswer answerList, Model model, Authentication au,
+								@PathVariable String lecture_code, @PathVariable String class_identifying_code) {
+			Lsy_QuizQuestionVO quizMap = new Lsy_QuizQuestionVO();
+			quizMap.setLecture_code(lecture_code);
+			quizMap.setClass_identifying_code(class_identifying_code);
 			List<AttendVo> attendNo = ((UserVo)au.getPrincipal()).getAttendNoList();
 			System.out.println(attendNo.get(0).getAttend_no());
 			List<String> keyVal = service.stAnswerNextVal(answerList.getAnswerList().size());
@@ -55,14 +58,15 @@ public class ControllerForView {
 			for (int idx = 0; idx < answerList.getAnswerList().size(); idx++) {
 				answerList.getAnswerList().get(idx).setQuizAnswer_code(keyVal.get(idx));
 			}
-			int result = service.createStAnswer(answerList);
-			if(result>0) {
-				//성적테이블에 성적넣는 작업해야함
-//				ljs_service.createExamGrade(material)
+			int result = service.createStAnswer(answerList, quizMap);
+			if(result>2) {
 				model.addAttribute("close", "close");
-				return "new/quiz";
+				model.addAttribute("quizResult", result);
+			} else {
+				model.addAttribute("close", "no");
+				model.addAttribute("quizResult", result);
 			}
-			return null;
+			return "new/quiz";
 		}
 		
 		@GetMapping("/professor/register/{lecture_code}")
@@ -114,7 +118,6 @@ public class ControllerForView {
 								@PathVariable String class_identifying_code,
 								@PathVariable String lecture_class,
 								@PathVariable String lecture_code, Authentication au){
-					System.out.println("들어왔다");
 					Map<String, String> lectureMap = new HashMap<String, String>();
 					lectureMap.put("lecture_code", lecture_code);
 					lectureMap.put("class_identifying_code", class_identifying_code);
@@ -258,6 +261,7 @@ public class ControllerForView {
 								@PathVariable String evalCode, @PathVariable String lecture_code,
 								Authentication au, @PathVariable String week) {
 			HashMap<String, String> examMap = new HashMap<String, String>();
+			System.out.println(evalType+"\n"+evalCode+"\n"+lecture_code+"\n"+week);
 			examMap.put("exam_type", evalType);
 			examMap.put("lecture_code", lecture_code);
 			mav.getModel().put("btnType", "exam");
@@ -268,8 +272,10 @@ public class ControllerForView {
 			System.out.println(evalType+"/"+lecture_code+"/"+auth+"/"+examVo);
 			mav.getModel().put("examVo", examVo);
 			mav.getModel().put("lecture_code", lecture_code);
+			Lsy_LectureInfos lectureInfos = service.retrieveLectureInfoForViews(lecture_code);
 			mav.getModel().put("start", 0);
 			mav.getModel().put("end", 5);
+			mav.getModel().put("lectureInfos", lectureInfos);
 			List<String> otherType = new ArrayList<String>();
 			otherType.add("①"); otherType.add("②"); otherType.add("③"); otherType.add("④");
 			mav.getModel().put("numList", otherType);

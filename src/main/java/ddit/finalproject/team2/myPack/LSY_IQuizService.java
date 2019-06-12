@@ -21,13 +21,13 @@ import ddit.finalproject.team2.vo.ProfessorVo;
 
 public interface LSY_IQuizService {
 	public int createQuiz(Lsy_EmbraceQuizVo quizChunk);
-	public int createStAnswer(Lsy_EmbraceAnswer stQuizChunk);
+	public int createStAnswer(Lsy_EmbraceAnswer stQuizChunk, Lsy_QuizQuestionVO quizMap);
 	public int createExam(Lsy_EmbraceExamVo examChunk);
 	public int createExamAnswer(Lsy_EmbraceExamAnswer answerList, Ljs_EvaluationMaterialVo material, String exam_type);
 	
 	public List<Lsy_QuizQuestionVO> retreiveQuiz(Lsy_QuizQuestionVO quizList);
 	public Lsy_QuizQuestionVO retrieveOneQuiz(String question_no);
-	public Lsy_ExamVo retrieveOneExam(Map<String, String> examMap);
+	public Lsy_ExamVo retrieveOneExam(String examNo);
 	public Lsy_ExamVo retrieveUpdatedExam(Map<String, String> examMap);
 	
 	public List<Lsy_QuizQuestionVO> markingTest(Lsy_EmbraceAnswer stQuizChunk);

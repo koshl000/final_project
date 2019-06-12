@@ -21,7 +21,7 @@ import ddit.finalproject.team2.vo.ProfessorVo;
 public interface LSY_QuizDAO {
 	public List<Lsy_QuizQuestionVO> selectQuizList(Lsy_QuizQuestionVO quizList);
 	public Lsy_QuizQuestionVO selectOneQuiz(String question_no);
-	public Lsy_ExamVo selectOneExam(Map<String, String> examMap);
+	public Lsy_ExamVo selectOneExam(String examNo);
 	public Lsy_ExamVo selectUpdatedExam(Map<String, String> examMap);
 	
 	public int insertQuiz(Lsy_EmbraceQuizVo quizChunk);

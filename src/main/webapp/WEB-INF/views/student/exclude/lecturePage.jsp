@@ -73,10 +73,16 @@
             });
             //동영상 선택
             $j(".list.unit.unit_lecture").on("click", function () {
-                var obj = JSON.parse($j(this).attr("fxd-data"));
-
-                location.href = "${pageContext.request.contextPath}/subjectPage/${continuePlay.LECTURE_CODE}/lecturePage/" + obj.id;
-
+            	if($j(this).hasClass("midExam")){
+            		window.open('${pageContext.request.contextPath}/student/showExam/중간/${evalStCodes[0].evalStudy_code}/${lecture_code}/8', '',
+            					'width=800, height=700'); return false;	
+            	} else if($j(this).hasClass("finalExam")){
+            		window.open('${pageContext.request.contextPath}/student/showExam/기말/${evalStCodes[1].evalStudy_code}/${lecture_code}/16', '',
+    							'width=800, height=700'); return false;	
+            	} else {
+	                var obj = JSON.parse($j(this).attr("fxd-data"));
+	                location.href="${pageContext.request.contextPath}/subjectPage/${continuePlay.LECTURE_CODE}/lecturePage/" + obj.id;
+            	}
             });
 
             //나가기버튼
@@ -344,26 +350,26 @@
                         <c:set var="start" value="${0}"/>
                         <c:set var="end" value="${credit-1}"/>
                         <c:set var="count" value="${1}"/>
-                        <c:forEach var="i" begin="1" end="13">
-                            <c:if test="${i eq 7}">
+                        <c:forEach var="i" begin="1" end="16">
+                            <c:if test="${i eq 8}">
                                 <li class="list unit unit_section   "
                                     fxd-data='{"id":${count},"preview":false}'>
                                     <span class="list-item unit_title">중간고사</span>
                                 </li>
-                                <li class="list unit unit_lecture" fxd-data='{"id":middle,"preview":true}'>
+                                <li class="list unit unit_lecture midExam" fxd-data='{"id":middle,"preview":true}'>
                                 <span class="list-item unit_title">중간고사
                                     <a href="/lecturePage/middle?"></a></span>
                             </c:if>
-                            <c:if test="${i eq 13}">
+                            <c:if test="${i eq 16}">
                                 <li class="list unit unit_section   "
                                     fxd-data='{"id":${count},"preview":false}'>
                                     <span class="list-item unit_title">기말고사</span>
                                 </li>
-                                <li class="list unit unit_lecture" fxd-data='{"id":final,"preview":true}'>
+                                <li class="list unit unit_lecture finalExam" fxd-data='{"id":final,"preview":true}'>
                                 <span class="list-item unit_title">기말고사
                                     <a href="/lecturePage/final?"></a></span>
                             </c:if>
-                            <c:if test="${i!=7 && i!=13}">
+                            <c:if test="${i!=8 && i!=16}">
                                 <li class="list unit unit_section   "
                                     fxd-data='{"id":${count},"preview":false}'>
                                     <span class="list-item unit_title">${i}주차</span>
