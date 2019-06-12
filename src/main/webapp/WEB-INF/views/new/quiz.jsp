@@ -60,66 +60,66 @@ img.visible {
 		$('.timee').hide();
 		$('textArea').hide();
 		$("input[type='text']").attr('type', 'hidden');
-		if(btnType=="exam"){
-		$("#boddy").after("<div class='row'>"+"<div class='col-xs-6 col-sm-6 btnSpace'>" +
-				"<button class='btn' disabled type='button' id='prev'>이전</button>"+
-				"<button class='btn' type='button' id='next'>다음</button>");	
-		}
+// 		if(btnType=="exam"){
+// 		$("#boddy").after("<div class='row'>"+"<div class='col-xs-6 col-sm-6 btnSpace'>" +
+// 				"<button class='btn' disabled type='button' id='prev'>이전</button>"+
+// 				"<button class='btn' type='button' id='next'>다음</button>");	
+// 		}
 	}
 	
 	$(function(){
 		completePage();
 		var identifier = $("#identifier").val();
 		makeQuestionPage(identifier, $(".container"), '${btnType}');
-		$('.questionBody').hide();
+// 		$('.questionBody').hide();
 		
-		for (start;  start <= end; start++) {
-			questions[idx] = $(".questionBody"+eval(start))
-			questions[idx++].show();
-		}
-		if(end<20){
-			$("#next").attr('disabled', false);
-		}
+// 		for (start;  start <= end; start++) {
+// 			questions[idx] = $(".questionBody"+eval(start))
+// 			questions[idx++].show();
+// 		}
+// 		if(end<20){
+// 			$("#next").attr('disabled', false);
+// 		}
 	})
 	
-	$("body").on("click", '#next', function(event){
-		event.preventDefault();
-		if(end<20){
-			start += 5;
-			end += 5;
-		}
-		$('.questionBody').hide();
-		for (start;  start <= end; start++) {
-			questions[idx] = $(".questionBody"+eval(start))
-			questions[idx++].show();
-		}
-		if(end==20){
-			$("#next").attr('disabled', true);
-		}
-		if(start>5){
-			$("#prev").attr('disabled', false);
-		}
-	})
+// 	$("body").on("click", '#next', function(event){
+// 		event.preventDefault();
+// 		if(end<20){
+// 			start += 5;
+// 			end += 5;
+// 		}
+// 		$('.questionBody').hide();
+// 		for (start;  start <= end; start++) {
+// 			questions[idx] = $(".questionBody"+eval(start))
+// 			questions[idx++].show();
+// 		}
+// 		if(end==20){
+// 			$("#next").attr('disabled', true);
+// 		}
+// 		if(start>5){
+// 			$("#prev").attr('disabled', false);
+// 		}
+// 	})
 	
-	$("body").on("click", '#prev', function(event){
-		event.preventDefault();
-		if(start>5){
-			start -= 5;
-			end -= 5;
-		}
-		$('.questionBody').hide();
-		for (start;  start <= end; start++) {
-			questions[idx] = $(".questionBody"+eval(start))
-			questions[idx++].show();
-		}
-		console.log(start)
-		if(start<5){
-			$("#prev").attr('disabled', false);
-		}
-		if(end<20){
-			$("#next").attr('disabled', false);
-		}
-	})
+// 	$("body").on("click", '#prev', function(event){
+// 		event.preventDefault();
+// 		if(start>5){
+// 			start -= 5;
+// 			end -= 5;
+// 		}
+// 		$('.questionBody').hide();
+// 		for (start;  start <= end; start++) {
+// 			questions[idx] = $(".questionBody"+eval(start))
+// 			questions[idx++].show();
+// 		}
+// 		console.log(start)
+// 		if(start<5){
+// 			$("#prev").attr('disabled', false);
+// 		}
+// 		if(end<20){
+// 			$("#next").attr('disabled', false);
+// 		}
+// 	})
 	
 	$("body").on("click", ".stAnswer", function(event){
 		event.preventDefault();

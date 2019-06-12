@@ -31,6 +31,11 @@
 		  'width=800, height=700'); return false;
 	}
 	
+	function openUploadVideo(lecture_code, class_identifying_code){
+		newPage = window.open('${path}professor/'+lecture_code+'/'+class_identifying_code+'/regvideo', '',
+		  'width=800, height=700'); return false;
+	}
+	
 	function openNewExamPage(evalType, evalCode, lecture_code, week){
 		if('${identifier}'=='ROLE_STUDENT'){
 			alert("확인을 누르시면 시험이 진행됩니다. 아직 준비가 되지 않으셨다면 취소를 눌러주세요.")
@@ -93,7 +98,10 @@
 														'${lectureWeekClass.class_identifying_code}',
 														'${lectureWeekClass.lecture_class}',
 														'${lectureInfos.lecture_code}')">보기</button>
-													<button class="btn-sm">등록</button>
+													<button class="btn-sm" onClick="openUploadVideo(
+														'${lectureInfos.lecture_code}',
+														'${lectureWeekClass.class_identifying_code}',
+													)">등록</button>
 													<button class="btn-sm">수정</button>
 												</div>
 													<div style="display: inline-block; padding-left: 50px;">

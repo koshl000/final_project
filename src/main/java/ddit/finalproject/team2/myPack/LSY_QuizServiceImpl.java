@@ -82,9 +82,13 @@ public class LSY_QuizServiceImpl implements LSY_IQuizService{
 //		}
 		
 		int result = quizDao.insertStAnswer(stQuizChunk);
-		if(result>0) {
-			return result;
-		}
+//		if(result>0) {
+//			stQuizChunk.getAnswerList().get(0).get
+//			if(result2.size()>0) {
+//				System.out.println(result2);
+//			}
+//			return result;
+//		}
 		return 0;
 	}
 	

@@ -343,7 +343,7 @@ div.yaoRemove{
 	<div class="container">
 		<div class='row timeCnt'>
 			<div class="col-xs-12 col-sm-12 timeCnt">
-				<span><h3>${lectureInfos.lecture_name} / ${week}주차 : 시험</h3>
+				<span><h3>${lectureInfos.lecture_name} / ${week}주차 : ${week eq 8?'중간':'기말'}고사</h3>
 				</span>
 				<span style="font-size: 10pt; font-weight: 500" class="timee"> 
 				<span style="padding-left: 8px; font-weight: 500" class="timee">Timer</span>

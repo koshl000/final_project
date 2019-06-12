@@ -258,6 +258,7 @@ public class ControllerForView {
 								@PathVariable String evalCode, @PathVariable String lecture_code,
 								Authentication au, @PathVariable String week) {
 			HashMap<String, String> examMap = new HashMap<String, String>();
+			System.out.println(evalType+"\n"+evalCode+"\n"+lecture_code+"\n"+week);
 			examMap.put("exam_type", evalType);
 			examMap.put("lecture_code", lecture_code);
 			mav.getModel().put("btnType", "exam");
@@ -268,8 +269,10 @@ public class ControllerForView {
 			System.out.println(evalType+"/"+lecture_code+"/"+auth+"/"+examVo);
 			mav.getModel().put("examVo", examVo);
 			mav.getModel().put("lecture_code", lecture_code);
+			Lsy_LectureInfos lectureInfos = service.retrieveLectureInfoForViews(lecture_code);
 			mav.getModel().put("start", 0);
 			mav.getModel().put("end", 5);
+			mav.getModel().put("lectureInfos", lectureInfos);
 			List<String> otherType = new ArrayList<String>();
 			otherType.add("①"); otherType.add("②"); otherType.add("③"); otherType.add("④");
 			mav.getModel().put("numList", otherType);
