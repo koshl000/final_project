@@ -261,11 +261,11 @@
 			success : function(resp) {
 				
 				$('#lPlandheader').html("<h2>"+lecture_name+" 강의 계획서</>");
-				$('#lec_plan_summary').text(resp.lec_plan_summary);
-				$('#introduction').text(resp.introduction);
-				$('#week_content').text(resp.week_content);
-				$('#lec_plan_method').text(resp.lec_plan_method);
-				$('#book_material').text(resp.book_material);
+				$('#lec_plan_summary').html(resp.lec_plan_summary);
+				$('#introduction').html(resp.introduction);
+				$('#week_content').html(resp.week_content);
+				$('#lec_plan_method').html(resp.lec_plan_method);
+				$('#book_material').html(resp.book_material);
 			},
 			error : function(errorResp) {
 				console.log(errorResp.status);
