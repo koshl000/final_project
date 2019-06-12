@@ -5,10 +5,7 @@ import com.amazonaws.services.s3.transfer.TransferManager;
 import com.amazonaws.services.s3.transfer.TransferManagerBuilder;
 import com.amazonaws.services.s3.transfer.Upload;
 import ddit.finalproject.team2.professor.service.Lsh_ILectureFileService;
-import ddit.finalproject.team2.student.service.Lsh_ILectureService;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Service;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.annotation.Resource;
 import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
@@ -38,9 +34,9 @@ public class Lsh_LectureFileController {
         mv.setViewName("new/regVideo");
         return mv;
     }
-    @PostMapping("/professor/regvideo")
-    public void uploadVideoService(@RequestParam Map<String,String> map, MultipartFile file,@PathVariable String lecture_code) throws IOException {
-        Map<String,String> map1=map;
+    @PostMapping("/professor/${lecture_code}/${class_identifying_code}/regvideo")
+    public void uploadVideoService(MultipartFile file) throws IOException {
+//        Map<String,String> map1=map;
         String savedName=file.getOriginalFilename();
 
         File target=new File(savedName);
@@ -50,8 +46,8 @@ public class Lsh_LectureFileController {
         try {
             ObjectMetadata meta=new ObjectMetadata();
             meta.setContentLength(file.getSize());
-            Upload xfer = xfer_mgr.upload("finalproject001/"+lecture_code, savedName, file.getInputStream(), meta);
-            service.showTransferProgress(xfer);
+//            Upload xfer = xfer_mgr.upload("finalproject001/"+lecture_code, savedName, file.getInputStream(), meta);
+//            service.showTransferProgress(xfer);
         } catch (Exception e) {
             e.printStackTrace();
         }

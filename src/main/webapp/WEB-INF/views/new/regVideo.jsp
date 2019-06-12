@@ -24,16 +24,11 @@
     <script type="text/javascript" src="${pageContext.request.contextPath}/res/js/bootstrap-filestyle.min.js"></script>
 </head>
 <body>
-${pageContext.request.contextPath}/professor/regVideo
 <div>
     <form id="data" enctype="multipart/form-data" method="post">
         <div class="form-group">
-            <form>
-                <input type="file" name="file" id="BSbtnsuccess">
-                <input type="hidden" name="lecture_code" value="${lecture_code}">
-                <input type="hidden" name="class_identifying_code" value="${class_identifying_code}">
-                <button>업로드</button>
-            </form>
+            <input type="file" name="file" id="BSbtnsuccess">
+            <input type="submit" value="업로드" id="BSbtnsuccess">
         </div>
     </form>
 </div>
@@ -50,15 +45,21 @@ ${pageContext.request.contextPath}/professor/regVideo
         buttonName: 'btn-success',
         buttonText: ' Open'
     });
-    $('#fileSubmit').submit(function () {
+    $('#form#data').submit(function (e) {
+        e.preventDefault();
+        var formData = new FormData(this);
         $.ajax({
-            type: "post",
-            enctype: 'multipart/form-data',
-            url: "/professor/regvideo",
-            data:
-
-        })
-    })
+            url: "${pageContext.request.contextPath}/professor/${lecture_code}/${class_identifying_code}/regvideo",
+            type: 'POST',
+            data: formData,
+            success: function (data) {
+                alert(data)
+            },
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+    });
 
 </script>
 </html>

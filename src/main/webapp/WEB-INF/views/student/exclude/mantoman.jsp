@@ -318,7 +318,7 @@
     });
 </script>
 <script>
-    var socket = io('https://localhost:9003');
+    var socket = io('https://localhost:9003/');
 
     var userInfo = {
         user_id: '${user.user_id}',
@@ -333,6 +333,7 @@
         return false;
     });
     socket.on('connect', function () {
+        console.log('connected.........');
     });
     socket.on('userInfo', function (users) {
         $('.userInfo').html('');

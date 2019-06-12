@@ -11,6 +11,23 @@
 	}
 </style>
 <script>
+	function PopupCenter(url, title, w, h) {
+		// Fixes dual-screen position                         Most browsers      Firefox
+		var dualScreenLeft = window.screenLeft != undefined ? window.screenLeft : window.screenX;
+		var dualScreenTop = window.screenTop != undefined ? window.screenTop : window.screenY;
+
+		var width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
+		var height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
+
+		var systemZoom = width / window.screen.availWidth;
+		var left = (width - w) / 2 / systemZoom + dualScreenLeft
+		var top = (height - h) / 2 / systemZoom + dualScreenTop
+		var newWindow = window.open(url, title, 'scrollbars=yes, width=' + w / systemZoom + ', height=' + h / systemZoom + ', top=' + top + ', left=' + left);
+
+		// Puts focus on the newWindow
+		if (window.focus) newWindow.focus();
+	}
+
 	function openNewQuizPage(class_identifying_code, lecture_class, lecture_code){
 		newPage = window.open('${path}professor/quiz/'+class_identifying_code+'/'+lecture_class+'/'+lecture_code, '',
 							  'width=800, height=700'); return false;
@@ -30,10 +47,9 @@
 		newPage = window.open('${path}student/quiz/'+class_identifying_code+'/'+lecture_class+'/'+lecture_code, '',
 		  'width=800, height=700'); return false;
 	}
-	
+
 	function openUploadVideo(lecture_code, class_identifying_code){
-		newPage = window.open('${path}professor/'+lecture_code+'/'+class_identifying_code+'/regvideo', '',
-		  'width=800, height=700'); return false;
+		PopupCenter('${path}professor/'+lecture_code+'/'+class_identifying_code+'/regvideo','강의영상 등록',700,300);
 	}
 	
 	function openNewExamPage(evalType, evalCode, lecture_code, week){
