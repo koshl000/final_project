@@ -45,13 +45,15 @@ img.visible {
     visibility:visible; 
 } 
 </style>
-	
 <script>
-<c:if test="${close eq 'close'}">
-	self.close();
-</c:if>
-	var start = ${not empty start?start:1};
-	var end = ${not empty end?end:5};
+	if(eval('${quizResult gt 2}')){
+		alert("${quizResult}개 맞으셨습니다. 3개 이상 정답을 맞추셨으므로 수강이 완료됩니다.");
+		self.close();
+	} else {
+		alert("${quizResult}개 맞으셨습니다. 3개 이상 정답을 맞추지 못하셨으므로 문제를 다시 푸셔야합니다.");
+	}
+	var start = '${not empty start?start:1}';
+	var end = '${not empty end?end:5}';
 	var questions = [];
 	var idx = 0;
 	var resp;
@@ -181,11 +183,11 @@ img.visible {
 			console.log($('#yaoZhuannSong').html())
 			if($('#identifier').val()=='ROLE_PROFESSOR'){
 				alert("등록하시겠습니까?");
-				$("#yaoZhuannSong").attr("action", "${pageContext.request.contextPath}/student/submit");
+				$("#yaoZhuannSong").attr("action", "${pageContext.request.contextPath}/student/submit/${lectureInfos.lectureWeekInfos[0].lecture_code}/${lectureInfos.lectureWeekInfos[0].lectureWeekClass[0].class_identifying_code}");
 				$("#yaoZhuannSong").submit();
 			} else if($('#identifier').val()=='ROLE_STUDENT'){
 				alert("제출 이후에는 수정이 불가합니다.\n제출하시겠습니까?")
-				$("#yaoZhuannSong").attr("action", "${pageContext.request.contextPath}/student/submit");
+				$("#yaoZhuannSong").attr("action", "${pageContext.request.contextPath}/student/submit/${lectureInfos.lectureWeekInfos[0].lecture_code}/${lectureInfos.lectureWeekInfos[0].lectureWeekClass[0].class_identifying_code}");
 				$("#yaoZhuannSong").submit();
 				console.log($('#yaoZhuannSong').html())
 			}
@@ -270,7 +272,7 @@ img.visible {
 
 </script>
 
-	<form id="yaoZhuannSong" action="${pageContext.request.contextPath}/student/submit" method="post"></form>
+	<form id="yaoZhuannSong" method="post"></form>
 	<div class="container">
 		<div class='row timeCnt'>
 			<div class="col-xs-12 col-sm-12 timeCnt">
@@ -312,6 +314,7 @@ img.visible {
 			<div class="col-xs-5 col-sm-5 center">
 			</div>
 			<div class="col-xs-1 col-sm-1 right">
+			<span>${quizResult}</span>
 			</div>
 			
 				<c:forEach var="quiz" items="${quizList}" varStatus="vs">
@@ -366,7 +369,6 @@ img.visible {
 						</c:when>
 				</c:choose>
 			</c:forEach>
-			<span id='testTextA'></span>
 		</div>
 	</div>
 </div>
