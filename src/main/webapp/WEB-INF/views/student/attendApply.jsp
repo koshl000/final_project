@@ -386,10 +386,11 @@
 						<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 							<div class="breadcomb-wp">
 								<div class="breadcomb-icon">
-									<i class="notika-icon notika-bar-chart"></i>
+									<i class="notika-icon notika-edit"></i>
 								</div>
 								<div class="breadcomb-ctn">
 									<h2>수강신청</h2>
+									<p>수강신청을 하고 취소하실 수 있는 페이지 입니다. </p>
 								</div>
 							</div>
 						</div>

@@ -194,7 +194,7 @@
 							responsive : true,
 							title : {
 								display : true,
-								text : '시간대별 포털 접속자'
+								text : '시간대별 시스템 접속자'
 							},
 							tooltips : {
 								mode : 'index',
@@ -350,7 +350,7 @@
 									<i class="notika-icon notika-bar-chart"></i>
 								</div>
 								<div class="breadcomb-ctn">
-									<h2>포털 접속자통계</h2>
+									<h2>시스템 접속자통계</h2>
 								</div>
 
 							</div>

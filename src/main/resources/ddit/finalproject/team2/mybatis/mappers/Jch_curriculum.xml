@@ -58,14 +58,12 @@
 	</insert>
 	
 	<select id="getLectureList" resultType="ddit.finalproject.team2.vo.Jch_LectureVo" parameterType="string">
-		SELECT
-		    O.OPENSEME_NO, O.OPENSEME_YEAR, O.OPENSEME_SEMESTER, U.USER_NAME,
-		    L.LECTURE_CODE, L.USER_ID, L.LECTURE_COURSETYPE, L.LECTURE_NAME, L.LECTURE_CREDIT,
-		    L.LECTURE_TARGET, L.LECTURE_CAPACITY, L.MID_DATE, L.FINAL_DATE,
-		    L.LOWER_ORGANIZATION, L.LECTURE_CURRENT
-		FROM
-		    OPENSEMESTER O INNER JOIN LECTURE L ON (O.OPENSEME_NO=L.OPENSEME_NO) INNER JOIN USERS U ON(L.USER_ID=U.USER_ID)
-		WHERE L.USER_ID = #{name}
+		SELECT NVL(COUNT_LECTURE, 0) AS CHECKLEC, NVL(COUNT_LECPLAN, 0) AS CHECKPLAN, L.*, O.OPENSEME_NO, O.OPENSEME_YEAR, O.OPENSEME_SEMESTER, U.USER_NAME 
+		FROM LECTURE L LEFT OUTER JOIN (SELECT LECTURE_CODE, COUNT(CLASS_IDENTIFYING_CODE) AS COUNT_LECTURE FROM LECTUREWEEK GROUP BY LECTURE_CODE) LW ON (L.LECTURE_CODE=LW.LECTURE_CODE) 
+			LEFT OUTER JOIN (SELECT LECTURE_CODE, COUNT(LECTURE_CODE) AS COUNT_LECPLAN FROM LECTUREPLAN GROUP BY LECTURE_CODE) LP ON (L.LECTURE_CODE=LP.LECTURE_CODE) 
+			LEFT OUTER JOIN OPENSEMESTER O ON (O.OPENSEME_NO=L.OPENSEME_NO) 
+			LEFT OUTER JOIN USERS U ON(L.USER_ID=U.USER_ID) 
+		WHERE L.USER_ID=#{name}
 	</select>
 	
 	<insert id="insertLectureWeekList" parameterType="ddit.finalproject.team2.vo.Jch_LectureWeekVo">
@@ -76,5 +74,34 @@
 		</foreach>
 		SELECT * FROM DUAL
 	</insert>
+	
+	<select id="getLectureCode" parameterType="string" resultType="int">
+		SELECT COUNT(LECTURE_CODE) FROM LECTUREWEEK WHERE LECTURE_CODE = #{code}
+	</select>
+	
+	<select id="getProfInfo" parameterType="string" resultType="ddit.finalproject.team2.vo.Jch_UserVo">
+		SELECT * FROM USERS U LEFT OUTER JOIN PROFESSOR P ON (U.USER_ID=P.USER_ID) WHERE U.USER_ID=#{name}
+	</select>
+	<select id="getLecturePlanVO" resultType="ddit.finalproject.team2.vo.Jch_LecturePlanVo">
+		SELECT * FROM LECTUREPLAN WHERE LECTURE_CODE= 'lecture_code_1'
+	</select>
+	
+	<insert id="insertLecturePlan" parameterType="ddit.finalproject.team2.vo.Jch_LecturePlanVo">
+		INSERT INTO lectureplan (
+		    LECTURE_CODE, WEEK_CONTENT, ASSIGNMENT_INFO, INTRODUCTION,
+		    LEC_PLAN_SUMMARY, LEC_PLAN_METHOD, BOOK_MATERIAL
+		) VALUES (
+		    #{lecture_code}, #{week_content}, #{assignment_info}, #{introduction},
+		    #{lec_plan_summary}, #{lec_plan_method}, #{book_material}
+		)  
+	</insert>
+	
+	<select id="getLecturePlanView" parameterType="string" resultType="ddit.finalproject.team2.vo.Jch_LecturePlanVo">
+		SELECT 
+			LECTURE_CODE, WEEK_CONTENT, ASSIGNMENT_INFO, INTRODUCTION,
+			LEC_PLAN_SUMMARY, LEC_PLAN_METHOD, BOOK_MATERIAL
+		FROM LECTUREPLAN
+		WHERE LECTURE_CODE=#{no}
+	</select>
 	
 </mapper>

@@ -50,7 +50,7 @@
 				, {data : "lecture_target"}
 				, {data : "user_id"}
 				, {data : "lecture_capacity"}
-				, {data : "lecture_planBtn"}
+				, {data : "lecturePlanBtn"}
 			],
 			"order" : []
 			,
@@ -107,10 +107,13 @@
 					<div class="row">
 						<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 							<div class="breadcomb-wp">
+							<div class="breadcomb-icon">
+										<i class="notika-icon notika-draft"></i>
+									</div>
 								<div class="breadcomb-ctn">
 									<h2>모든강의</h2>
 									<p>
-										모든강의 조회 페이지 <span class="bread-ntd"></span>
+									개설된 모든 강좌를 조회하실 수 있습니다. <span class="bread-ntd"></span>
 									</p>
 								</div>
 							</div>

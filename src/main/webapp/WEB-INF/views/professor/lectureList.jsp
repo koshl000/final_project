@@ -11,6 +11,7 @@
 * 관리자 교육과정관리 (강좌관리)화면
  --%>
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/css/bootstrap-select.min.css">
 <style>
 	tfoot { 
     	display: table-header-group; 
@@ -57,13 +58,14 @@
 			columns : [
 				{data : "openseme_year"}
 				, {data : "openseme_semester"}
-				, {data : "user_name"}
 				, {data : "lecture_code"}
 				, {data : "lecture_name"}
 				, {data : "lecture_coursetype"}
 				, {data : "lecture_credit"}
 				, {data : "lecture_target"}
 				, {data : "lecture_capacity"}
+				, {data : "lecUpdateBtn"}
+				, {data : "lecturePlanBtn"}
 				, {data : "lectureAddBtn"}
 			],
 			"order" : []
@@ -109,6 +111,7 @@
 		$table = $('#data-table-basic').DataTable();
 		$table.on('click', '.lectureAddBtn', function() {
 			var tr = $(this).parents('tr');
+			$(tr).unbind("click").on("click", function() {});
 			var no = table.row(tr).data().lecture_code;
 			var name = table.row(tr).data().lecture_name;
 			
@@ -127,10 +130,59 @@
 			var normals = $('#adda').find('input:eq(65)').val();
 			var finals = $('#adda').find('input:eq(131)').val();
 			$("input[name=lecture_subname]").val(name);
-			$('#adda').find('input:eq(65)').val(normals);
-			$('#adda').find('input:eq(131)').val(finals);
-			
+			$('.normamlSub').val(normals);
+			$('.finalSub').val(finals);
 		});
+		
+		//강의주차수정버튼
+		$table = $('#data-table-basic').DataTable();
+		$table.on('click', '.lectureUpdateBtn', function() {
+			var tr = $(this).parents('tr');
+			var no = table.row(tr).data().lecture_code;
+			var name = table.row(tr).data().lecture_name;
+		});
+		
+		$table = $('#data-table-basic').DataTable();
+		$table.on('click', '.lecPlanAddBtn', function() {
+			var tr = $(this).parents('tr');
+			var no = table.row(tr).data().lecture_code;
+			var name = table.row(tr).data().lecture_name;
+			
+			if (!($('.modal.in').length)) {
+				$('.modal-dialog').css({
+					top : 0,
+					left : 0
+				});
+			}
+			$('#myModalfour').modal({
+				backdrop : false,
+				show : true
+			});
+			$("#eeee").text(name);
+			$("#noo").text(no);
+			$("input[name=lecture_subname]").val(name);
+		});
+		
+		//
+// 		$table = $('#data-table-basic').DataTable();
+// 		$table.on('click', 'tr', function() {
+// 			var no = table.row(this).data().lecture_code;
+// 			var jsonData = {"no" : no};	
+// 			$.ajax({
+// 				url : "${pageContext.request.contextPath}/professor/getLectureCode",
+// 				method : "get",
+// 				data : jsonData,
+// 				dataType : "text", // request header(Accept), response header(Content-Type),
+// 				success : function(resp) {
+// 					window.location.href = "${pageContext.request.contextPath}/professor/register/"+no;
+// 				},
+// 				error : function(errorResp) {
+// 					alert("해당 강의 주차정보가 없습니다. 주차정보를 등록해주세요.");
+// 					console.log(errorResp.status);
+// 				}
+// 			});
+// 		});
+		
 		
 		$(".lectureWeekAddBtn").on("click", function() {
 			var inputs = $("#adda").find(":input");
@@ -143,7 +195,7 @@
 				sendDataTd[prop+index]=value;
 			});
 			var jsonData = JSON.stringify(sendDataTd);
-			
+			console.log(jsonData);
 			$.ajax({
 				url : "${pageContext.request.contextPath}/professor/lectureWeekAdd",
 				method : "post",
@@ -151,14 +203,122 @@
 				contentType : "application/json; charset=UTF-8",
 				dataType : "text", // request header(Accept), response header(Content-Type),
 				success : function(resp) {
-					alert("강의계획 등록이 완료되었습니다.");
+					alert("강의주차 등록이 완료되었습니다.");
 					console.log(resp);
 					$('#myModalthree').modal("hide");
+					window.location.href = "${pageContext.request.contextPath}/professor/lectureList";
 				},
 				error : function(errorResp) {
 					console.log(errorResp.status);
 				}
 			});
+		});
+		
+		$(".lecturePlanAddBtn").on("click", function() {
+			var weekCon = $("#weekCon").val();
+			var studyAssi = $("#studyAssi").val();
+			var profInfo = $("#profInfo").val();
+			var lecSummary = $("#lecSummary").val();
+			var lecMethod = $("#lecMethod").val();
+			var book = $("#book").val();
+			
+			var sendDataTd = {};
+			var no = $("#noo").text();
+			sendDataTd["no"]=no;
+			sendDataTd["weekCon"]=weekCon;
+			sendDataTd["studyAssi"]=studyAssi;
+			sendDataTd["profInfo"]=profInfo;
+			sendDataTd["lecSummary"]=lecSummary;
+			sendDataTd["lecMethod"]=lecMethod;
+			sendDataTd["book"]=book;
+			var jsonData = JSON.stringify(sendDataTd);
+			console.log(jsonData);
+			
+			$.ajax({
+				url : "${pageContext.request.contextPath}/professor/lecturePlanAdd",
+				method : "post",
+				data : jsonData,
+				contentType : "application/json; charset=UTF-8",
+				dataType : "text", // request header(Accept), response header(Content-Type),
+				success : function(resp) {
+					alert("강의계획 등록이 완료되었습니다.");
+					console.log(resp);
+					$('#myModalfour').modal("hide");
+					window.location.href = "${pageContext.request.contextPath}/professor/lectureList";
+				},
+				error : function(errorResp) {
+					console.log(errorResp.status);
+				}
+			});
+		});
+		
+		$table = $('#data-table-basic').DataTable();
+		$table.on('click', '.lecturePlan', function() {
+			var tr = $(this).parents('tr');
+			var no = table.row(tr).data().lecture_code;
+			var name = table.row(tr).data().lecture_name;
+			
+			$.ajax({
+				url : "${pageContext.request.contextPath}/professor/lecturePlanView",
+				method : "get",
+				data : {"no" : no},
+				dataType : "json",
+				success : function(resp) {
+					
+					$('#lPlandheader').html("<h2>"+name+" 강의 계획서</>");
+					$('#lec_plan_summary').text(resp.lec_plan_summary);
+					$('#introduction').text(resp.introduction);
+					$('#week_content').text(resp.week_content);
+					$('#lec_plan_method').text(resp.lec_plan_method);
+					$('#book_material').text(resp.book_material);
+				},
+				error : function(errorResp) {
+					console.log(errorResp.status);
+				}
+			});//ajax
+			
+			if (!($('.modal.in').length)) {
+				$('.modal-dialog').css({
+					top : 0,
+					left : 0
+				});
+			}
+			$('#myModalFive').modal({
+				backdrop : false,
+				show : true
+			});
+		});
+		
+		$table = $('#data-table-basic').DataTable();
+		$table.on('click', '.lecUpdateBtn', function() {
+			var tr = $(this).parents('tr');
+			var no = table.row(tr).data().lecture_code;
+			var name = table.row(tr).data().lecture_name;
+			
+			$.ajax({
+				url : "${pageContext.request.contextPath}/professor/lectureUpdateView",
+				method : "get",
+				data : {"no" : no},
+				dataType : "text",
+				success : function(resp) {
+					
+				},
+				error : function(errorResp) {
+					console.log(errorResp.status);
+				}
+			});//ajax
+
+			if (!($('.modal.in').length)) {
+				$('.modal-dialog').css({
+					top : 0,
+					left : 0
+				});
+			}
+			$('#myModalsix').modal({
+				backdrop : false,
+				show : true
+			});
+			
 		});
 		
 	});
@@ -208,14 +368,15 @@
 								<tr>
 									<th>년도</th>
 									<th>학기</th>
-									<th>담당교수</th>
 									<th>과목코드</th>
 									<th>과목명</th>
 									<th>이수구분</th>
 									<th>학점</th>
 									<th>학년</th>
 									<th>수강인원</th>
+									<th>강의정보</th>
 									<th>강의계획</th>
+									<th>주차</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -257,7 +418,7 @@
 													<td>
 														<input class="form-control" type="hidden" name="lecture_week" value="${i}" />
 														<input class="form-control" type="hidden" name="lecture_class" value="1" />
-														<input class="form-control" type="text" name="lecture_subname" value="중간고사" readonly="readonly"/>
+														<input class="form-control normamlSub" type="text" name="lecture_subname" value="중간고사" readonly="readonly"/>
 													</td>
 												</tr>
 											</c:when>
@@ -268,7 +429,7 @@
 													<td>
 														<input class="form-control" type="hidden" name="lecture_week" value="${i}" />
 														<input class="form-control" type="hidden" name="lecture_class" value="1" />
-														<input class="form-control" type="text" name="lecture_subname" value="기말고사" readonly="readonly"/>
+														<input class="form-control finalSub" type="text" name="lecture_subname" value="기말고사" readonly="readonly"/>
 													</td>
 												</tr>
 											</c:when>
@@ -315,5 +476,207 @@
     </div>
 </div>
 
-<script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<div class="modal fade" id="myModalfour" role="dialog">
+    <div class="modal-dialog modal-large">
+        <div class="modal-content">
+            <div class="modal-header">
+            </div>
+            <div class="modal-body">
+            	<div class="row">
+	                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+	                    <div class="widget-tabs-int">
+	                        <div class="tab-hd" id="lPlandheader">
+	                           <h2 id="eeee"></h2>
+	                           <span id="noo" style="display: none"></span>
+	                        </div>
+	                        <div class="widget-tabs-list">
+	                            <table class="table table-bordered" id="adada">
+	                            	<tr>
+	                            		<th>제목</th>
+	                            		<th>내용</th>
+	                            	</tr>
+	                            	<tr>
+	                            		<th>주별 강의 내용</th>
+	                            		<td>
+	                            			<textArea id="weekCon">${jlpVo.week_content }</textArea>
+	                            		</td>
+	                            	</tr>
+	                            	<tr>
+	                            		<th>학습과제물안내</th>
+	                            		<td>
+	                            			<textArea id="studyAssi">${jlpVo.assignment_info }</textArea>
+	                            		</td>
+	                            	</tr>
+	                            	<tr>
+	                            		<th>교수소개</th>
+	                            		<td>
+	                            			<textArea id="profInfo">${jlpVo.introduction }</textArea>
+	                            		</td>
+	                            	</tr>
+	                            	<tr>
+	                            		<th>교과목 개요</th>
+	                            		<td>
+	                            			<textArea id="lecSummary">${jlpVo.lec_plan_summary }</textArea>
+	                            		</td>
+	                            	</tr>
+	                            	<tr>
+	                            		<th>수업진행방식</th>
+	                            		<td>
+	                            			<textArea id="lecMethod">${jlpVo.lec_plan_method }</textArea>
+	                            		</td>
+	                            	</tr>
+	                            	<tr>
+	                            		<th>교재/참고자료</th>
+	                            		<td>
+	                            			<textArea id="book">${jlpVo.book_material }</textArea>
+	                            		</td>
+	                            	</tr>
+								</table>
+	                        </div>
+	                    </div>
+	                </div>
+	            </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default lecturePlanAddBtn">저장</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
 
+<div class="modal fade" id="myModalFive" role="dialog">
+    <div class="modal-dialog modal-large">
+        <div class="modal-content">
+            <div class="modal-header">
+            </div>
+            <div class="modal-body">
+             <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="widget-tabs-int">
+                        <div class="tab-hd" id="lPlandheader">
+                           
+                        </div>
+                        <div class="widget-tabs-list">
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a data-toggle="tab" href="#home">교과목 개요</a></li>
+                                <li><a data-toggle="tab" href="#pro">담당교수</a></li>
+                                <li><a data-toggle="tab" href="#menu1">주차별 강의내용</a></li>
+                                <li><a data-toggle="tab" href="#menu2">시험 및 과제물 안내</a></li>
+                                <li><a data-toggle="tab" href="#menu3">교재/참고자료</a></li>
+                            </ul>
+                            <div class="tab-content tab-custom-st">
+                                <div id="home" class="tab-pane fade in active">
+                                    <div class="tab-ctn" id="lec_plan_summary">
+                                    </div>
+                                </div>
+                                <div id="pro" class="tab-pane fade">
+                                    <div class="tab-ctn" id ="introduction">
+                                    </div>
+                                </div>
+                                <div id="menu1" class="tab-pane fade">
+                                    <div class="tab-ctn" id ="week_content">
+                                    </div>
+                                </div>
+                                <div id="menu2" class="tab-pane fade" >
+                                    <div class="tab-ctn" id="lec_plan_method">
+                                    </div>
+                                </div>
+                                <div id="menu3" class="tab-pane fade">
+                                    <div class="tab-ctn" id="book_material">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModalsix" role="dialog">
+    <div class="modal-dialog modal-large">
+        <div class="modal-content">
+            <div class="modal-header">
+            </div>
+            <div class="modal-body">
+             <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="widget-tabs-int">
+                        <div class="tab-hd" id="lPlandheader">
+                           
+                        </div>
+                        <div class="widget-tabs-list">
+                            <table class="table table-bordered">
+								<tr>
+									<th><span>학기</span></th>
+									<td><input name="lecture_name" type="text" class="form-control" value="${lecture.openseme_no }" disabled="disabled"/></td>
+					            	<th><span>교과목명</span></th>
+						            <td><input name="lecture_name" type="text" class="form-control" value="${lecture.lecture_code }"/></td>
+					            </tr>
+					            <tr>
+						            <th><span>대상학년</span></th>
+						            <td>
+							            <select name="lecture_target" class="academicYear form-control">
+							            	<option value=""></option>
+							            	<option value="0" ${"0" eq lecture.lecture_target ? "selected":"" }>0학년</option>
+							            	<option value="1" ${"1" eq lecture.lecture_target ? "selected":"" }>1학년</option>
+							            	<option value="2" ${"2" eq lecture.lecture_target ? "selected":"" }>2학년</option>
+							            	<option value="3" ${"3" eq lecture.lecture_target ? "selected":"" }>3학년</option>
+							            	<option value="4" ${"4" eq lecture.lecture_target ? "selected":"" }>4학년</option>
+							            </select>
+						            </td>
+						            <th><span>이수구분</span>
+						            <td>
+						            	<select name="lecture_coursetype" class="courseType form-control">
+						            		<option value=""></option>
+						            		<option value="전공" ${"전공" eq lecture.lecture_coursetype ? "selected":"" }>전공</option>
+						            		<option value="교양" ${"교양" eq lecture.lecture_coursetype ? "selected":"" }>교양</option>
+						            	</select>
+					            	</td>
+					            </tr>
+				            	<tr>
+						            <th><span>학점</span></th>
+						            <td>
+						            <select name="lecture_credit" class="credit form-control">
+						            	<option value=""></option>
+						            	<option value="3">3</option>
+						            </select>
+						            </td>
+						            <th><span>학과선택</span></th>
+						            <td>
+						            <select name="lower_organization" class="form-control lower">
+						            	<option value=""></option>
+						            	<c:forEach items="${lowerList}" var="lower" >
+						            		<option value="${lower.lower_organization }">${lower.lower_organization }</option>
+						            	</c:forEach>
+						            </select>
+					            </tr>
+				            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.ckeditor.com/4.11.4/standard-all/ckeditor.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript">
+	CKEDITOR.replace("weekCon");
+	CKEDITOR.replace("studyAssi");
+	CKEDITOR.replace("profInfo");
+	CKEDITOR.replace("lecSummary");
+	CKEDITOR.replace("lecMethod");
+	CKEDITOR.replace("book");
+</script>

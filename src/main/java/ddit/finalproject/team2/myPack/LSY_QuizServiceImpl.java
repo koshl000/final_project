@@ -12,6 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ddit.finalproject.team2.myPack.dao.LSY_QuizDAO;
+import ddit.finalproject.team2.professor.service.Ljs_IGradeService;
+import ddit.finalproject.team2.util.enumpack.ServiceResult;
+import ddit.finalproject.team2.vo.Ljs_EvaluationMaterialVo;
 import ddit.finalproject.team2.vo.Lsy_EmbraceAnswer;
 import ddit.finalproject.team2.vo.Lsy_EmbraceExamAnswer;
 import ddit.finalproject.team2.vo.Lsy_EmbraceExamVo;
@@ -30,6 +33,9 @@ import ddit.finalproject.team2.vo.ProfessorVo;
 public class LSY_QuizServiceImpl implements LSY_IQuizService{
 	@Inject
 	LSY_QuizDAO quizDao;
+	
+	@Inject
+	Ljs_IGradeService ljsService;
 	
 	@Override
 	@Transactional
@@ -76,9 +82,13 @@ public class LSY_QuizServiceImpl implements LSY_IQuizService{
 //		}
 		
 		int result = quizDao.insertStAnswer(stQuizChunk);
-		if(result>0) {
-			return result;
-		}
+//		if(result>0) {
+//			stQuizChunk.getAnswerList().get(0).get
+//			if(result2.size()>0) {
+//				System.out.println(result2);
+//			}
+//			return result;
+//		}
 		return 0;
 	}
 	
@@ -164,18 +174,21 @@ public class LSY_QuizServiceImpl implements LSY_IQuizService{
 		String result = quizDao.examNoNextVal();
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 		if(result!=null) {
-			Lsy_ExamVo result2 = retrieveStudyCode(examMap);
+			String evalstudy_code = retrieveStudyCode(examMap);
+			examMap.put("evalstudy_code", evalstudy_code);
+			String examNo = selectExamNo(examMap);
 			List<String> problemSeq = problemNoSeqVal(Integer.parseInt(examMap.get("problemSize")));
-			returnMap.put("examNo", result);
-			returnMap.put("studyCode", result2.getEvalStudy_code());
+			returnMap.put("createExamNo", result);
+			returnMap.put("examNo", examNo);
+			returnMap.put("studyCode", evalstudy_code);
 			returnMap.put("problemSeq", problemSeq);
 		}
 		return returnMap;
 	}
 
 	@Override
-	public Lsy_ExamVo retrieveStudyCode(HashMap<String, String> examMap) {
-		Lsy_ExamVo result = quizDao.selectStudyCode(examMap);
+	public String retrieveStudyCode(HashMap<String, String> examMap) {
+		String result = quizDao.selectStudyCode(examMap);
 		return result;
 	}
 
@@ -188,12 +201,16 @@ public class LSY_QuizServiceImpl implements LSY_IQuizService{
 
 	@Override
 	public Lsy_ExamVo retrieveExamList(HashMap<String, String> examMap) {
-		Lsy_ExamVo result = retrieveStudyCode(examMap);
-		if(result!=null) {
-			examMap.put("evalCode", result.getEvalStudy_code());
-			examMap.put("examNo", result.getExam_no());
-			Lsy_ExamVo result2 = quizDao.selectExamList(examMap);
-			return result2;
+		String evalstudy_code = retrieveStudyCode(examMap);
+		examMap.put("evalstudy_code", evalstudy_code);
+		if(evalstudy_code!=null) {
+			examMap.put("evalCode", evalstudy_code);
+			String examNo = selectExamNo(examMap);
+			if(examNo!=null) {
+				examMap.put("exam_no", examNo);
+				Lsy_ExamVo result2 = quizDao.selectExamList(examMap);
+				return result2;
+			} 
 		}
 		return null;
 	}
@@ -250,10 +267,17 @@ public class LSY_QuizServiceImpl implements LSY_IQuizService{
 	}
 
 	@Override
-	public int createExamAnswer(Lsy_EmbraceExamAnswer answerList) {
+	@Transactional
+	public int createExamAnswer(Lsy_EmbraceExamAnswer answerList, Ljs_EvaluationMaterialVo material, String exam_type) {
 		int result = quizDao.insertExamAnswer(answerList);
 		if(result>0) {
-			return result;
+			ljsService.createExamGrade(material);
+			if("기말".equals(exam_type)) {
+				ServiceResult serviceResult = ljsService.createAbsenceAndAssignmentGrade(material);
+				if(ServiceResult.OK.equals(serviceResult)) {
+					return result;
+				}
+			}
 		}
 		return 0;
 	}
@@ -294,6 +318,24 @@ public class LSY_QuizServiceImpl implements LSY_IQuizService{
 	@Override
 	public List<Lsy_ExamVo> retrieveEvalStudyCodes(String lecture_code) {
 		List<Lsy_ExamVo> result = quizDao.selectEvalStudyCodes(lecture_code);
+		if(result!=null) {
+			return result;
+		}
+		return null;
+	}
+
+	@Override
+	public String selectExamNo(Map<String, String> examMap) {
+		String examNo = quizDao.selectExamNo(examMap);
+		if(examNo!=null) {
+			return examNo;
+		}
+		return null;
+	}
+
+	@Override
+	public Lsy_ExamVo retrieveUpdatedExam(Map<String, String> examMap) {
+		Lsy_ExamVo result = quizDao.selectUpdatedExam(examMap);
 		if(result!=null) {
 			return result;
 		}

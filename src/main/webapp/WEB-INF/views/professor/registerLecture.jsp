@@ -27,8 +27,12 @@
 	}
 	
 	function openQuizSt(class_identifying_code, lecture_class, lecture_code){
-		alert("들어왔다")
 		newPage = window.open('${path}student/quiz/'+class_identifying_code+'/'+lecture_class+'/'+lecture_code, '',
+		  'width=800, height=700'); return false;
+	}
+	
+	function openUploadVideo(lecture_code, class_identifying_code){
+		newPage = window.open('${path}professor/'+lecture_code+'/'+class_identifying_code+'/regvideo', '',
 		  'width=800, height=700'); return false;
 	}
 	
@@ -94,7 +98,10 @@
 														'${lectureWeekClass.class_identifying_code}',
 														'${lectureWeekClass.lecture_class}',
 														'${lectureInfos.lecture_code}')">보기</button>
-													<button class="btn-sm">등록</button>
+													<button class="btn-sm" onClick="openUploadVideo(
+														'${lectureInfos.lecture_code}',
+														'${lectureWeekClass.class_identifying_code}',
+													)">등록</button>
 													<button class="btn-sm">수정</button>
 												</div>
 													<div style="display: inline-block; padding-left: 50px;">

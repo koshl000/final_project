@@ -550,10 +550,11 @@
 						<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 							<div class="breadcomb-wp">
 								<div class="breadcomb-icon">
-									<i class="notika-icon notika-bar-chart"></i>
+									<i class="notika-icon notika-edit"></i>
 								</div>
 								<div class="breadcomb-ctn">
 									<h2>과제물 관리</h2>
+									<P>과제물 등록과 채점을 하실 수 있습니다.</P>
 								</div>
 							</div>
 						</div>
