@@ -33,4 +33,6 @@ public interface Jch_CurriculumService {
 
 	Jch_LecturePlanVo getLecturePlanView(String no);
 
+	Jch_LectureVo getLectureData(String no);
+
 }

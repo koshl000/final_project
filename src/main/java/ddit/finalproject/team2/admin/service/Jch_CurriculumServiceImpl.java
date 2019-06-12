@@ -105,4 +105,9 @@ public class Jch_CurriculumServiceImpl implements Jch_CurriculumService {
 		return curDao.getLecturePlanView(no);
 	}
 
+	@Override
+	public Jch_LectureVo getLectureData(String no) {
+		return curDao.getLectureData(no);
+	}
+
 }

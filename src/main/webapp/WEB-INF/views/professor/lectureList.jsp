@@ -299,9 +299,11 @@
 				url : "${pageContext.request.contextPath}/professor/lectureUpdateView",
 				method : "get",
 				data : {"no" : no},
-				dataType : "text",
+				dataType : "json",
 				success : function(resp) {
-					
+					console.log(resp);
+					console.log(resp.lowerList);
+					console.log(resp.lecture);
 				},
 				error : function(errorResp) {
 					console.log(errorResp.status);

@@ -65,10 +65,10 @@
 				<div class="data-table-list">
 					<form:form modelAttribute="lecture" method="post" id="lectureForm">
 						<div>
-							<table class="table table-bordered">
+							<table class="table table-bordered col-md-8">
 								<tr>
 									<th><span>학기선택</span></th>
-									<td>
+									<td colspan="2">
 							            <select name="openseme_no" class="semester form-control">
 							            	<option value=""></option>
 							            		<c:set var="osVo" value="${osVo}" />
@@ -85,13 +85,13 @@
 					            </tr>
 					            <tr>
 					            	<th><span>교과목명</span></th>
-						            <td><input name="lecture_name" type="text" class="form-control" value="${lecture.lecture_code }"/></td>
+						            <td colspan="2"><input name="lecture_name" type="text" class="form-control" value="${lecture.lecture_code }"/></td>
 					            </tr>
 					            <tr>
 						            <th>
 						            	<span>대상학년</span>
 						            </th>
-						            <td>
+						            <td colspan="2">
 							            <select name="lecture_target" class="academicYear form-control">
 							            	<option value=""></option>
 							            	<option value="0" ${"0" eq lecture.lecture_target ? "selected":"" }>0학년</option>
@@ -105,7 +105,7 @@
 					            
 					            <tr>
 						            <th><span>이수구분</span>
-						            <td>
+						            <td colspan="2">
 					            	<select name="lecture_coursetype" class="courseType form-control">
 					            		<option value=""></option>
 					            		<option value="전공" ${"전공" eq lecture.lecture_coursetype ? "selected":"" }>전공</option>
@@ -115,7 +115,7 @@
 				            	</tr>
 				            	<tr>
 						            <th><span>학점</span></th>
-						            <td>
+						            <td colspan="2">
 						            <select name="lecture_credit" class="credit form-control">
 						            	<option value=""></option>
 						            	<option value="3">3</option>
@@ -124,7 +124,7 @@
 					            </tr>
 					            <tr>
 						            <th><span>담당교수선택</span></th>
-						            <td>
+						            <td colspan="2">
 						            <select name="user_id" class="form-control prof">
 						            	<option value=""></option>
 						            	<c:forEach items="${profList}" var="item" >
@@ -135,7 +135,7 @@
 					            </tr>
 					            <tr>
 						            <th><span>학과선택</span></th>
-						            <td>
+						            <td colspan="2">
 						            <select name="lower_organization" class="form-control lower">
 						            	<option value=""></option>
 						            	<c:forEach items="${lowerList}" var="lower" >
@@ -143,85 +143,24 @@
 						            	</c:forEach>
 						            </select>
 					            </tr>
+					            <tr>
+					            	<th rowspan="4"><span>반영비율</span></th>
+					            	<td><span>중간고사</span></td><td><input type="text" name="midterm" class="form-control" /></td>
+					            </tr>
+					            <tr>
+					            	<td><span>기말고사</span></td><td><input type="text" name="final" class="form-control" /></td>
+					            </tr>
+					            <tr>
+					            	<td><span>출석</span></td><td><input type="text" name="absence" class="form-control" /></td>
+					            </tr>
+					            <tr>
+					            	<td><span>과제물</span></td><td><input type="text" name="assignment" class="form-control" /></td>
+					            </tr>
 				            </table>
-				            <c:choose>
-				            	<c:when test="${not empty lecture }">
-						            <span>교과목 개요</span><textArea id="lectureInfo"></textArea><br>
-						            <span>수업진행방법</span><textArea id="classProgress"></textArea><br>
-						            <span>교재/참고자료</span><textArea id="textBook"></textArea><br>
-				            	</c:when>
-				            </c:choose>
-				            <span>학기선택</span>
-				            <select name="openseme_no" class="semester">
-				            	<option value=""></option>
-				            		<c:set var="osVo" value="${osVo}" />
-									<c:choose>
-										<c:when test="${not empty osVo}">
-											<option value="${osVo.next_openseme_no }">${osVo.next_openseme_year}년${osVo.next_openseme_semester}학기</option>
-										</c:when>
-										<c:otherwise>
-											<option value=""></option>
-										</c:otherwise>
-									</c:choose>
-				            </select><br>
-				            
-				            <span>교과목명</span><input name="lecture_name" type="text" /><br>
-				            
-				            <span>대상학년</span>
-				            <select name="lecture_target" class="academicYear">
-				            	<option value=""></option>
-				            	<option value="0">0학년</option>
-				            	<option value="1">1학년</option>
-				            	<option value="2">2학년</option>
-				            	<option value="3">3학년</option>
-				            	<option value="4">4학년</option>
-				            </select><br>
-				            
-				            <span>이수구분</span>
-			            	<select name="lecture_coursetype" class="courseType">
-			            		<option value=""></option>
-			            		<option value="전공">전공</option>
-			            		<option value="교양">교양</option>
-			            	</select><br>
-			            	
-				            <span>학점</span>
-				            <select name="lecture_credit" class="credit">
-				            	<option value=""></option>
-				            	<option value="3">3</option>
-				            </select><br>
-				            
-				            <span>담당교수선택</span>
-				            <select name="user_id" class="prof">
-				            	<option value=""></option>
-				            	<c:forEach items="${profList}" var="item" >
-				            		<option value="${item.user_id }">${item.user_name }</option>
-				            	</c:forEach>
-				            </select><br>
-				            
-				            <span>학과선택</span>
-				            <select name="lower_organization" class="lower">
-				            	<option value=""></option>
-				            	<c:forEach items="${lowerList}" var="lower" >
-				            		<option value="${lower.lower_organization }">${lower.lower_organization }</option>
-				            	</c:forEach>
-				            </select><br>
-				            
 				            <div>
-				            	<p><h5>반영비율</h5></p>
-				            	<div>
-					            	<span>중간고사</span><input type="text" name="midterm" />
-					            	<span>기말고사</span><input type="text" name="final" />
-					            	<span>출석</span><input type="text" name="absence" />
-					            	<span>과제물</span><input type="text" name="assignment" />
-				            	</div>
+					            <button type="button" class="btn btn-default notika-btn-default waves-effect listBtn" onclick="listLocation()">목록</button>
+					            <button type="submit" class="btn btn-default notika-btn-default waves-effect saveBtn">설정저장</button><br>
 				            </div>
-							<div>
-					            <span>교과목 개요</span><textArea></textArea><br>
-					            <span>수업진행방법</span><textArea></textArea><br>
-					            <span>교재/참고자료</span><textArea></textArea><br>
-							</div>				            
-				            <button type="button" class="btn btn-default notika-btn-default waves-effect listBtn" onclick="listLocation()">목록</button>
-				            <button type="submit" class="btn btn-default notika-btn-default waves-effect saveBtn">설정저장</button><br>
 				         </div>
 			         </form:form>
 				</div>  

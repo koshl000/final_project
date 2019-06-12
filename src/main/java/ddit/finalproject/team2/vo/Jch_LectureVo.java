@@ -2,6 +2,7 @@ package ddit.finalproject.team2.vo;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
@@ -34,6 +35,7 @@ public class Jch_LectureVo implements Serializable{
 	private int checklec;
 	private int checkplan;
 	
+	private List<Jch_LectureVo> lowerList;
 	
 	private String lecUpdateBtn = "<button class='btn btn-default notika-btn-default waves-effect lecUpdateBtn'>강의정보수정</button>";
 	private String lecturePlanBtn = "<button class='btn btn-default notika-btn-default waves-effect lecturePlan'>강의계획서</button>";

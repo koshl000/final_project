@@ -104,4 +104,8 @@
 		WHERE LECTURE_CODE=#{no}
 	</select>
 	
+	<select id="getLectureData" parameterType="string" resultType="ddit.finalproject.team2.vo.Jch_LectureVo">
+		SELECT * FROM LECTURE WHERE LECTURE_CODE=#{no}
+	</select>
+	
 </mapper>

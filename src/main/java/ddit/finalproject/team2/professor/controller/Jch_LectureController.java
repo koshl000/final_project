@@ -156,11 +156,13 @@ public class Jch_LectureController {
 	
 	@GetMapping(value="lectureUpdateView")
 	@ResponseBody
-	public ModelAndView getLectureUpdateView(String no, Authentication au, ModelAndView mv){
+	public Jch_LectureVo getLectureUpdateView(String no, Authentication au, ModelAndView mv){
 		List<Jch_LectureVo> lowerList = service.getLowerList();
 		no = no.replaceAll("<a href='register/", "");
 		no = no.substring(0, no.indexOf("'"));
-		return mv;
+		Jch_LectureVo lecture = service.getLectureData(no);
+		lecture.setLowerList(lowerList);
+		return lecture;
 	}
 	
 }
