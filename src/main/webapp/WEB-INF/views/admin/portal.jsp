@@ -16,6 +16,15 @@
 	});
 </script>
 <style>
+   .selectSpan {
+      font-size: 16px;
+      font-weight: bold;
+      margin : 0 5px 0 20px;
+   }
+   #grade, #credit, #course {
+      width: 60px;
+   }
+   
     .sangyup {
        display: inline;
         float:right;

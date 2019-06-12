@@ -116,14 +116,51 @@ public class Jch_LectureController {
 	}
 	
 	@PostMapping(value="lecturePlanAdd")
-	public void lecturePlanAdd(@RequestBody Map<String, String> params, HttpServletRequest request) {
+	public String lecturePlanAdd(@RequestBody Map<String, String> params, HttpServletRequest request) {
 		String view = null;
 		String lecture_code = params.get("no");
+		lecture_code = lecture_code.replaceAll("<a href='register/", "");
+		lecture_code = lecture_code.substring(0, lecture_code.indexOf("'"));
+		System.out.println(lecture_code);
 	    if(lecture_code!=null) {
 	    	params.remove("no");
 	    }
+	    Jch_LecturePlanVo vo = new Jch_LecturePlanVo();
+		vo.setLecture_code(lecture_code);
+		vo.setAssignment_info(params.get("studyAssi"));
+		vo.setBook_material(params.get("book"));
+		vo.setIntroduction(params.get("profInfo"));
+		vo.setLec_plan_method(params.get("lecMethod"));
+		vo.setLec_plan_summary(params.get("lecSummary"));
+		vo.setWeek_content(params.get("weekCon"));
+		
+		ServiceResult result = service.insertLecturePlan(vo);
+		
 	    System.out.println(params.toString());
-//	    return view;
+	    if (ServiceResult.OK.equals(result)) {
+	    	view = "redirect:alectureList";
+		} else {
+			view = "professor/lectureList";
+		}
+		return view;
+	}
+	
+	@GetMapping(value="lecturePlanView")
+	@ResponseBody
+	public Jch_LecturePlanVo getLecturePlanView(String no, Authentication au){
+		no = no.replaceAll("<a href='register/", "");
+		no = no.substring(0, no.indexOf("'"));
+		Jch_LecturePlanVo vo = service.getLecturePlanView(no);
+		return vo;
+	}
+	
+	@GetMapping(value="lectureUpdateView")
+	@ResponseBody
+	public ModelAndView getLectureUpdateView(String no, Authentication au, ModelAndView mv){
+		List<Jch_LectureVo> lowerList = service.getLowerList();
+		no = no.replaceAll("<a href='register/", "");
+		no = no.substring(0, no.indexOf("'"));
+		return mv;
 	}
 	
 }

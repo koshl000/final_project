@@ -51,10 +51,6 @@
 		<div class="row">
 			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 				<div class="data-table-list">
-					<div>
-						<span>이름</span><span>이상엽</span> <span>학부</span><span>전산학부</span> <span>학과</span><span>콤퓨타</span>
-						<span>학년</span><span>4학년</span>
-					</div>
 					<div class="table-responsive">
 						<div id="data-table-basic_wrapper" class="dataTables_wrapper">
 							<div class="dataTables_length" id="data-table-basic_length">

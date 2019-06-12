@@ -86,4 +86,22 @@
 		SELECT * FROM LECTUREPLAN WHERE LECTURE_CODE= 'lecture_code_1'
 	</select>
 	
+	<insert id="insertLecturePlan" parameterType="ddit.finalproject.team2.vo.Jch_LecturePlanVo">
+		INSERT INTO lectureplan (
+		    LECTURE_CODE, WEEK_CONTENT, ASSIGNMENT_INFO, INTRODUCTION,
+		    LEC_PLAN_SUMMARY, LEC_PLAN_METHOD, BOOK_MATERIAL
+		) VALUES (
+		    #{lecture_code}, #{week_content}, #{assignment_info}, #{introduction},
+		    #{lec_plan_summary}, #{lec_plan_method}, #{book_material}
+		)  
+	</insert>
+	
+	<select id="getLecturePlanView" parameterType="string" resultType="ddit.finalproject.team2.vo.Jch_LecturePlanVo">
+		SELECT 
+			LECTURE_CODE, WEEK_CONTENT, ASSIGNMENT_INFO, INTRODUCTION,
+			LEC_PLAN_SUMMARY, LEC_PLAN_METHOD, BOOK_MATERIAL
+		FROM LECTUREPLAN
+		WHERE LECTURE_CODE=#{no}
+	</select>
+	
 </mapper>

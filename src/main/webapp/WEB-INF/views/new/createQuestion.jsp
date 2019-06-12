@@ -156,10 +156,12 @@ $(function(){
 				}
 			}
 			console.log($("#yaoZhuannSong"))
-			if($('#identifier').val()=='교수'){
+			if($('#identifier').val()=='ROLE_PROFESSOR'){
 				alert("등록하시겠습니까?");
+				var lecture_code = $("#lecture_code").val();
+				$("#yaoZhuannSong").attr("action", "${pageContext.request.contextPath}/professor/createExam/"+lecture_code);
 				$("#yaoZhuannSong").submit();
-			} 
+			}
 			
 			if(btnType=="quiz"||btnType=="test"){
 					var QCinputs = $('.QContent');
@@ -198,14 +200,14 @@ $(function(){
 			var twoBtn = "<div class='row'><div='col-xs-8 col-lg-8 col-sm-8'>" +
 							"<button class='btn' disabled type='button' id='prev'>이전</button>"+
 							"<button class='btn' type='button' id='next'>다음</button>" +
-							"<button class='btn' disabled type='button' id='complete'>제출</button>"
+							"<button class='btn' disabled type='button' id='complete'>등록</button>"
 			if(btnType=='quiz'){
 				var result = makeQuestion("#boddy", btnType, 5, 4)
 				$("#quiz").prop("disabled", true);
 				$("#boddy").append(result)
 				  		  .after(twoBtn);
 				$('#boddy').find('a').hide();
-				$(".lecture_code").val('lecture_code_1');
+				$(".lecture_code").val();
 				$(".lecture_week").val('1');
 				$(".container").find('.textQAnswer').hide();
 			} else if(btnType=='exam'){
@@ -285,6 +287,8 @@ $(function(){
 					    		for (var idx = 0; idx < resp.examList.length; idx++) {
 									$(".selectYet").append("<option value='"+resp.examList[idx]+"'>"+resp.examList[idx]+"</option>");
 								}
+// 					    		if(${examVo.evalstudy_type}=="기말"){
+// 					    		}
 				    		}
 				    	}else {
 				    		$(".selectYet").find('option').remove();
@@ -318,7 +322,8 @@ $(function(){
 	<div class="container">
 		<div class='row timeCnt'>
 			<div class="col-xs-12 col-sm-12 timeCnt">
-				<span>퀴즈인지 시험인지 구분할 것 / ${quizList[0].lecture_code} / 주차와 차시 or 주차와 시험구분</span>
+				<span><h3>${lectureInfos.lecture_name} / ${week}주차 : 시험등록</h3>
+				</span>
 				<span style="font-size: 10pt; font-weight: 500" class="timee"> 
 				<span style="padding-left: 8px; font-weight: 500" class="timee">Timer</span>
 				<span id="min" style="width: 15px; font-weight: 500; text-align: right" class="timee">
@@ -346,23 +351,24 @@ $(function(){
 // 			updateTime();
 		</script>
 		<div class='row' id='boddy'>
-			<div class="col-xs-4 col-sm-4 left">
+			<div class="col-xs-1 col-sm-1 veryLeft">
 			</div>
-			<div class="col-xs-4 col-sm-4 center">
+			<div class="col-xs-5 col-sm-5 left">
 			</div>
-			<div class="col-xs-4 col-sm-4 right">
+			<div class="col-xs-5 col-sm-5 center">
+			</div>
+			<div class="col-xs-1 col-sm-1 right">
 			</div>
 		</div>
 	</div>
 </div>
-<input id="qStart" type="hidden" value="1"/>
-<input id="identifier" type="hidden" value="교수"/>
-<input id="attend_no" type="hidden" value="1"/>
-<input id="user_id" type="hidden" value="st_001"/>
+<input id="identifier" type="hidden" value="${identifier[0]}"/>
+<input id="attend_no" type="hidden" value="2"/>
+<input id="user_id" type="hidden" value="${userVo.user_id}"/>
 <input id="btnType" type='hidden' value="${btnType}"/>
-<input id="class_identifying_code" type='hidden' value="${quizList[0].class_identifying_code}"/>
-<form id="yaoZhuannSong" action="${pageContext.request.contextPath}/professor/createExam" method="post">
-	<input id="lecture_code" type='hidden' value="${quizList[0].lecture_code}"/>
+<input id="class_identifying_code" type='hidden' value="${lectureInfos.lectureWeekInfos[0].lectureWeekClass[0].class_identifying_code}"/>
+<form id="yaoZhuannSong" action="${pageContext.request.contextPath}/professor/createExam/"+"${lectureInfos.lectureWeekInfos[0].lecture_code}" method="post">
+	<input id="lecture_code" type='hidden' value="${lectureInfos.lectureWeekInfos[0].lecture_code}"/>
 </form>
 <!-- autosize JS
 		============================================ -->

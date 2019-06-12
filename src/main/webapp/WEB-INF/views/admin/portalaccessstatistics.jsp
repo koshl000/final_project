@@ -14,6 +14,38 @@
 
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/notika/css/datapicker/datepicker3.css">
+	
+	<style>
+   tfoot { 
+       display: table-header-group; 
+   }
+   select {
+       border: 1px solid #eee;
+       height: 35px;
+       padding: 7px 15px;
+       font-size: 13px;
+       border-radius: 2px;
+       -webkit-appearance: none;
+       -moz-appearance: none;
+       line-height: 100%;
+       background-color: #fff;
+       outline: none;
+   }
+   
+   select :hover  {
+      background-color: #00c292 !important;
+       color: #fff !important;
+   }
+   .selectSpan {
+      font-size: 16px;
+      font-weight: bold;
+      margin : 0 5px 0 20px;
+   }
+   #grade, #credit, #course {
+      width: 60px;
+   }
+   
+</style>
 <script type="text/javascript">
 	$(function() {
 
@@ -162,7 +194,7 @@
 							responsive : true,
 							title : {
 								display : true,
-								text : '시간대별 포털 접속자'
+								text : '시간대별 시스템 접속자'
 							},
 							tooltips : {
 								mode : 'index',
@@ -318,7 +350,7 @@
 									<i class="notika-icon notika-bar-chart"></i>
 								</div>
 								<div class="breadcomb-ctn">
-									<h2>포털 접속자통계</h2>
+									<h2>시스템 접속자통계</h2>
 								</div>
 
 							</div>

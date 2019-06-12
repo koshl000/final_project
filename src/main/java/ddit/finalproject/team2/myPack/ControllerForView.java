@@ -21,7 +21,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import ddit.finalproject.team2.professor.service.Ljs_IGradeService;
 import ddit.finalproject.team2.util.AuthorityUtil;
+import ddit.finalproject.team2.vo.AttendVo;
 import ddit.finalproject.team2.vo.Lsy_EmbraceAnswer;
 import ddit.finalproject.team2.vo.Lsy_EmbraceExamAnswer;
 import ddit.finalproject.team2.vo.Lsy_EmbraceExamVo;
@@ -39,9 +41,14 @@ public class ControllerForView {
 	@Inject
 	LSY_IQuizService service;
 	
+	@Inject
+	Ljs_IGradeService ljs_service;
+	
 		@PostMapping("/student/submit")
 		public String dsadada12(@Validated @ModelAttribute Lsy_EmbraceAnswer answerList, Model model, Authentication au) {
 			Lsy_QuizQuestionVO quizVo = new Lsy_QuizQuestionVO();
+			List<AttendVo> attendNo = ((UserVo)au.getPrincipal()).getAttendNoList();
+			System.out.println(attendNo.get(0).getAttend_no());
 			List<String> keyVal = service.stAnswerNextVal(answerList.getAnswerList().size());
 			
 			for (int idx = 0; idx < answerList.getAnswerList().size(); idx++) {
@@ -49,6 +56,8 @@ public class ControllerForView {
 			}
 			int result = service.createStAnswer(answerList);
 			if(result>0) {
+				//성적테이블에 성적넣는 작업해야함
+//				ljs_service.createExamGrade(material)
 				model.addAttribute("close", "close");
 				return "new/quiz";
 			}
@@ -59,7 +68,12 @@ public class ControllerForView {
 		public ModelAndView dadsdad(ModelAndView mav, @Validated @ModelAttribute Lsy_QuizQuestionVO quizVo,
 									@PathVariable String lecture_code, Authentication au) {
 			Lsy_LectureInfos lectureInfos = service.retrieveLectureInfoForViews(lecture_code);
+			List<Lsy_ExamVo> evalTypeAndCode = service.retrieveEvalStudyCodes(lecture_code);
+			System.out.println(lectureInfos);
 			mav.getModel().put("lectureInfos", lectureInfos);
+			mav.getModel().put("evalTypeAndCode", evalTypeAndCode);
+			List<String> auth = AuthorityUtil.getAuthorityList(au);
+			mav.getModel().put("identifier", auth);
 			mav.setViewName("professor/registerLecture");
 			return mav;
 		}
@@ -70,19 +84,17 @@ public class ControllerForView {
 								@PathVariable String class_identifying_code,
 								@PathVariable String lecture_class,
 								@PathVariable String lecture_code, Authentication au){
-					System.out.println("왔다오ㅓㅏㅆ어");
 					Map<String, String> lectureMap = new HashMap<String, String>();
 					lectureMap.put("lecture_code", lecture_code);
 					lectureMap.put("class_identifying_code", class_identifying_code);
 					Lsy_LectureInfos lectureInfos = service.retrieveLectureInfoForOneViews(lectureMap);
-					System.out.println(lectureInfos);
 					mav.getModel().put("lectureInfos", lectureInfos);
 					mav.getModel().put("userVo", (UserVo)au.getPrincipal());
 					List<String> auth = AuthorityUtil.getAuthorityList(au);
 					mav.getModel().put("btnType", "quiz");
 					mav.getModel().put("identifier", auth);
-					quizVo.setClass_identifying_code("11");
-					quizVo.setLecture_code("lecture_code_1");
+					quizVo.setClass_identifying_code(class_identifying_code);
+					quizVo.setLecture_code(lecture_code);
 					mav.getModel().put("start", 1);
 					mav.getModel().put("end", 5);
 					//학생, 교수 구분해서 정보 가져오기.
@@ -97,23 +109,22 @@ public class ControllerForView {
 				}
 				
 				@GetMapping("/student/quiz/{class_identifying_code}/{lecture_class}/{lecture_code}")
-				public ModelAndView showQuizStudent(@Validated @ModelAttribute Lsy_QuizQuestionVO quizVo, ModelAndView mav,
+				public ModelAndView showQuizPro2(@Validated @ModelAttribute Lsy_QuizQuestionVO quizVo, ModelAndView mav,
 								@PathVariable String class_identifying_code,
 								@PathVariable String lecture_class,
 								@PathVariable String lecture_code, Authentication au){
-					System.out.println("왔다오ㅓㅏㅆ어");
+					System.out.println("들어왔다");
 					Map<String, String> lectureMap = new HashMap<String, String>();
 					lectureMap.put("lecture_code", lecture_code);
 					lectureMap.put("class_identifying_code", class_identifying_code);
 					Lsy_LectureInfos lectureInfos = service.retrieveLectureInfoForOneViews(lectureMap);
-					System.out.println(lectureInfos);
 					mav.getModel().put("lectureInfos", lectureInfos);
 					mav.getModel().put("userVo", (UserVo)au.getPrincipal());
 					List<String> auth = AuthorityUtil.getAuthorityList(au);
 					mav.getModel().put("btnType", "quiz");
 					mav.getModel().put("identifier", auth);
-					quizVo.setClass_identifying_code("11");
-					quizVo.setLecture_code("lecture_code_1");
+					quizVo.setClass_identifying_code(class_identifying_code);
+					quizVo.setLecture_code(lecture_code);
 					mav.getModel().put("start", 1);
 					mav.getModel().put("end", 5);
 					//학생, 교수 구분해서 정보 가져오기.
@@ -170,13 +181,17 @@ public class ControllerForView {
 		}
 		
 		@PostMapping("/professor/addQuiz")
-		public String addQuiz(@Validated @ModelAttribute("allQuestion") Lsy_EmbraceQuizVo allQuestion, BindingResult error){
+		public String addQuiz(@Validated @ModelAttribute("allQuestion") Lsy_EmbraceQuizVo allQuestion, BindingResult error,
+								Model model){
 			if(error.hasErrors()) {
 				System.out.println(error);
 			}
-			System.out.println(allQuestion.getQuizList().get(0).getQuestion_no());
-			service.createQuiz(allQuestion);
-			return "professor/quizz";
+			System.out.println(allQuestion);
+			int result = service.createQuiz(allQuestion);
+			if(result>0) {
+				model.addAttribute("close", "close");
+			}
+			return "new/quiz";
 		}
 		
 //		@GetMapping("/professor/showQuiz/{lecture_code}/{class_code}/{btnType}")
@@ -204,55 +219,98 @@ public class ControllerForView {
 //			return mav;
 //		}
 		
-		@GetMapping("/new/createSurvey")
-		public String dsada21(Model model) {
-			model.addAttribute("btnType", "survey");
-			return "new/survey";
-		}
+//		@GetMapping("/new/createSurvey")
+//		public String dsada21(Model model) {
+//			model.addAttribute("btnType", "survey");
+//			return "new/survey";
+//		}
 
-//		@GetMapping("/professor/showExam/{lecture_code}/{examType}")
-		@GetMapping("/professor/showExam")
-//		public String dsada2231(Model model, @PathVariable String lecture_code, @PathVariable String examType) {
-		public String showExamSt(Model model) {
+		@GetMapping("/professor/showExam/{evalType}/{evalCode}/{lecture_code}/{week}")
+		public ModelAndView showExam(ModelAndView mav, @PathVariable String evalType,
+								@PathVariable String evalCode, @PathVariable String lecture_code,
+								Authentication au, @PathVariable String week) {
 			HashMap<String, String> examMap = new HashMap<String, String>();
-//			examMap.put("examType", examType);
-			examMap.put("examType", "중간");
-			//jsp에서 렉쳐코드와 시험타입 쏴줄것
-			examMap.put("lecture_code", "CS001");
-//			model.addAttribute("success", "success");
-			model.addAttribute("btnType", "exam");
-			//au에서 값꺼내서 넣기
-			model.addAttribute("identifier", "교수");
-			Lsy_ExamVo result = service.retrieveExamList(examMap);
-			model.addAttribute("examVo", result);
-			model.addAttribute("start", 0);
-			model.addAttribute("end", 5);
+			examMap.put("exam_type", evalType);
+			examMap.put("lecture_code", lecture_code);
+			mav.getModel().put("btnType", "exam");
+			List<String> auth = AuthorityUtil.getAuthorityList(au);
+			mav.getModel().put("identifier", auth);
+			mav.getModel().put("userVo", (UserVo)au.getPrincipal());
+			Lsy_ExamVo examVo = service.retrieveExamList(examMap);
+			System.out.println(evalType+"/"+lecture_code+"/"+auth+"/"+examVo);
+			mav.getModel().put("examVo", examVo);
+			Lsy_LectureInfos lectureInfos = service.retrieveLectureInfoForViews(lecture_code);
+			mav.getModel().put("lecture_code", lecture_code);
+			mav.getModel().put("start", 0);
+			mav.getModel().put("end", 5);
+			mav.getModel().put("lectureInfos", lectureInfos);
 			List<String> otherType = new ArrayList<String>();
 			otherType.add("①"); otherType.add("②"); otherType.add("③"); otherType.add("④");
-			model.addAttribute("numList", otherType);
-			return "new/exam";
+			mav.getModel().put("numList", otherType);
+			mav.setViewName("new/exam");
+			mav.getModel().put("week", week);
+			return mav;
 		}
 		
-		@GetMapping("/professor/createExam")
-		public String asdad(Model model) {
-			model.addAttribute("btnType", "exam");
-			//au에서 값꺼내서 넣기
-			model.addAttribute("identifier", "교수");
-			return "new/createQuestion";
+		@GetMapping("/student/showExam/{evalType}/{evalCode}/{lecture_code}/{week}")
+		public ModelAndView showExamSt(ModelAndView mav, @PathVariable String evalType,
+								@PathVariable String evalCode, @PathVariable String lecture_code,
+								Authentication au, @PathVariable String week) {
+			HashMap<String, String> examMap = new HashMap<String, String>();
+			examMap.put("exam_type", evalType);
+			examMap.put("lecture_code", lecture_code);
+			mav.getModel().put("btnType", "exam");
+			List<String> auth = AuthorityUtil.getAuthorityList(au);
+			mav.getModel().put("identifier", auth);
+			mav.getModel().put("userVo", (UserVo)au.getPrincipal());
+			Lsy_ExamVo examVo = service.retrieveExamList(examMap);
+			System.out.println(evalType+"/"+lecture_code+"/"+auth+"/"+examVo);
+			mav.getModel().put("examVo", examVo);
+			mav.getModel().put("lecture_code", lecture_code);
+			mav.getModel().put("start", 0);
+			mav.getModel().put("end", 5);
+			List<String> otherType = new ArrayList<String>();
+			otherType.add("①"); otherType.add("②"); otherType.add("③"); otherType.add("④");
+			mav.getModel().put("numList", otherType);
+			mav.setViewName("new/exam");
+			mav.getModel().put("week", week);
+			return mav;
 		}
 		
-		@PostMapping("/professor/createExam")
-		public String dasddsda23132(@Validated @ModelAttribute Lsy_EmbraceExamVo examVo, Model model) {
-			int problemSize = 20;
+		@GetMapping("/professor/createExam/{evalType}/{evalCode}/{lecture_code}/{week}")
+		public ModelAndView asdad(ModelAndView mav, @PathVariable String evalType,
+				@PathVariable String evalCode, @PathVariable String lecture_code,
+				Authentication au, @PathVariable String week) {
+			Lsy_LectureInfos lectureInfos = service.retrieveLectureInfoForViews(lecture_code);
+			mav.getModel().put("lectureInfos", lectureInfos);
+			HashMap<String, String> examMap = new HashMap<String, String>();
+			examMap.put("exam_type", evalType);
+			examMap.put("lecture_code", lecture_code);
+			Lsy_ExamVo examVo = service.retrieveExamList(examMap);
+			mav.getModel().put("btnType", "exam");
+			mav.getModel().put("examVo", examVo);
+			mav.getModel().put("lecture_code", lecture_code);
+			mav.getModel().put("start", 0);
+			mav.getModel().put("end", 5);
+			List<String> auth = AuthorityUtil.getAuthorityList(au);
+			mav.getModel().put("identifier", auth);
+			mav.getModel().put("userVo", (UserVo)au.getPrincipal());
+			mav.getModel().put("week", week);
+			mav.setViewName("new/createQuestion");
+			return mav;
+		}
+		
+		@PostMapping("/professor/createExam/{lecture_code}")
+		public String dasddsda23132(@Validated @ModelAttribute Lsy_EmbraceExamVo examVo, 
+									ModelAndView mav, @PathVariable String lecture_code,
+									Authentication au) {
+			int problemSize = 20; //나중엔 문제의 사이즈로 변환해주기 지금은 5개만 해놔서 이렇게 하드코딩한 것.
 			int problemIdx = 0;
 			if(examVo!=null) {
-				System.out.println(examVo.getLecture_code());
 				HashMap<String, String> examMap = new HashMap<String, String>();
-				System.out.println(examVo.getExamList().get(0).getExam_type());
-				examMap.put("examType", examVo.getExamList().get(0).getExam_type().substring(0, 2));
-				//jsp에서 렉쳐코드 쏴줄것.
-				examMap.put("lecture_code", "CS001");
-				examMap.put("problemSize", "20");
+				examMap.put("exam_type", examVo.getExamList().get(0).getExam_type().substring(0, 2));
+				examMap.put("lecture_code", lecture_code);
+				examMap.put("problemSize", String.valueOf(problemSize));
 				HashMap<String, Object> examNoAndStudyCode = (HashMap<String, Object>) service.examNoNextVal(examMap);
 				examMap.put("evalCode", examNoAndStudyCode.get("studyCode").toString());
 				List<String> problemSeq = (List<String>) examNoAndStudyCode.get("problemSeq");
@@ -273,12 +331,11 @@ public class ControllerForView {
 				int result = service.createExam(examVo);
 				if(result>0) {
 					Lsy_ExamVo result2 = service.retrieveExamList(examMap);
-					model.addAttribute("result", "성공");
-					model.addAttribute("btnType", "exam");
+					mav.getModel().put("close", "close");
+					mav.getModel().put("btnType", "exam");
 					return "new/exam";
 				}
 			}
-			model.addAttribute("failed", "failed");
 			return "new/exam";
 		}
 		

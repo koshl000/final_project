@@ -6,9 +6,6 @@
     <title>Title</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
-    <%--    <link rel="shortcut icon" type="image/x-icon" href="//production-assets.codepen.io/assets/favicon/favicon-8ea04875e70c4b0bb41da869e81236e54394d63638a1ef12fa558a4a835f1164.ico"/>--%>
-    <%--    <link rel="mask-icon" href="//production-assets.codepen.io/assets/favicon/logo-pin-f2d2b6d2c61838f7e76325261b7195c27224080bc099486ddd6dccb469b8e8e6.svg" color="#111"/>--%>
-    <%--    <link rel="canonical" href="https://codepen.io/emilcarlsson/pen/ZOQZaV?limit=all&page=74&q=contact+"/>--%>
     <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,300' rel='stylesheet'
           type='text/css'>
     <link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css'>
@@ -18,23 +15,45 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/res/css/mychat.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/res/css/example-styles.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/res/dev/getHTMLMediaElement.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/res/Login_v3/vendor/bootstrap/css/bootstrap.css">
 
-    <script src="https://use.typekit.net/hoy3lrg.js"></script>
-    <%--    <script src='//production-assets.codepen.io/assets/common/stopExecutionOnTimeout-b2a7b3fe212eaa732349046d8416e00a9dec26eb7fd347590fbced3ab38af52e.js'></script>--%>
     <script src="${pageContext.request.contextPath}/res/js/jquery-3.3.1.min.js"></script>
-    <%--    <script src='//production-assets.codepen.io/assets/editor/live/console_runner-079c09a0e3b9ff743e39ee2d5637b9216b3545af0de366d4b9aad9dc87e26bfd.js'></script>--%>
-    <%--    <script src='//production-assets.codepen.io/assets/editor/live/events_runner-73716630c22bbc8cff4bd0f07b135f00a0bdc5d14629260c3ec49e5606f98fdd.js'></script>--%>
-    <%--    <script src='//production-assets.codepen.io/assets/editor/live/css_live_reload_init-2c0dc5167d60a5af3ee189d570b1835129687ea2a61bee3513dee3a50c115a77.js'></script>--%>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
+            integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
+            crossorigin="anonymous"></script>
+    <script src="${pageContext.request.contextPath}/res/Login_v3/vendor/bootstrap/js/bootstrap.js"></script>
+    <script src="https://use.typekit.net/hoy3lrg.js"></script>
     <script src="${pageContext.request.contextPath}/res/dist/RTCMultiConnection.min.js"></script>
     <script src="${pageContext.request.contextPath}/res/socket/socket.io.js"></script>
     <script src="${pageContext.request.contextPath}/res/dev/getHTMLMediaElement.js"></script>
 </head>
 <body>
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
 <div id="frame" class="vid_con">
 </div>
 <div id="frame">
     <div id="half_frame">
-        <iframe src="${pageContext.request.contextPath}/professor/showExam" style="width: 100%;height: 100%;"></iframe>
+        <iframe src="${pageContext.request.contextPath}/professor/showExam/중간/CS001EVAL01/CS001"
+                style="width: 100%;height: 100%;"></iframe>
     </div>
     <div id="half_frame">
         <div id="sidepanel">
@@ -44,6 +63,7 @@
                     <img id="profile-img" src="${pageContext.request.contextPath}/res/images/male.png" class="online"
                          alt=""/>
                     <p>${user.user_id}(${user.user_name})</p>
+
                     <div id="status-options">
                         <ul>
                             <li id="status-online" class="active"><span class="status-circle"></span>
@@ -61,28 +81,10 @@
                 <ul>
                     <%--                    <li class="contact">--%>
                     <%--                        <div class="wrap">--%>
-                    <%--                            <span class="contact-status online"></span>--%>
+                    <%--                            <span class="contact-status online"></span><busy,online,' '>--%>
                     <%--                            <img src="${pageContext.request.contextPath }/res/images/male.png" alt=""/>--%>
                     <%--                            <div class="meta">--%>
                     <%--                                <p class="name">${user.user_name}(${user.user_id})</p>--%>
-                    <%--                            </div>--%>
-                    <%--                        </div>--%>
-                    <%--                    </li>--%>
-                    <%--                    <li class="contact active">--%>
-                    <%--                        <div class="wrap">--%>
-                    <%--                            <span class="contact-status busy"></span>--%>
-                    <%--                            <img src="http://emilcarlsson.se/assets/harveyspecter.png" alt=""/>--%>
-                    <%--                            <div class="meta">--%>
-                    <%--                                <p class="name">Harvey Specter</p>--%>
-                    <%--                            </div>--%>
-                    <%--                        </div>--%>
-                    <%--                    </li>--%>
-                    <%--                    <li class="contact">--%>
-                    <%--                        <div class="wrap">--%>
-                    <%--                            <span class="contact-status"></span>--%>
-                    <%--                            <img src="http://emilcarlsson.se/assets/danielhardman.png" alt=""/>--%>
-                    <%--                            <div class="meta">--%>
-                    <%--                                <p class="name">Daniel Hardman</p>--%>
                     <%--                            </div>--%>
                     <%--                        </div>--%>
                     <%--                    </li>--%>
@@ -92,34 +94,37 @@
         <div class="content">
             <div class="messages">
                 <ul>
-                    <%--                    <li class="sent">--%>
-                    <%--                        <img src="http://emilcarlsson.se/assets/mikeross.png" alt=""/>--%>
-                    <%--                        <p>How the hell am I supposed to get a jury to believe you when I am not even sure that--%>
-                    <%--                            I--%>
-                    <%--                            do?!</p>--%>
-                    <%--                    </li>--%>
-                    <%--                    <li class="replies">--%>
-                    <%--                        <img src="http://emilcarlsson.se/assets/harveyspecter.png" alt=""/>--%>
-                    <%--                        <p>When you're backed against the wall, break the god damn thing down.</p>--%>
-                    <%--                    </li>--%>
                 </ul>
             </div>
             <div class="message-input">
                 <div class="wrap">
-                    <input type="text" placeholder="Write your message..."/>
-                    <i class="fa fa-paperclip attachment" aria-hidden="true"></i>
+                    <input type="text" placeholder="Write your message..." style="width: 91%"/>
                     <button class="submit"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
                 </div>
             </div>
         </div>
     </div>
 </div>
+</body>
+<script>
+    String.prototype.hashCode = function () {
+        var hash = 0, i, chr;
+        if (this.length === 0) return hash;
+        for (i = 0; i < this.length; i++) {
+            chr = this.charCodeAt(i);
+            hash = ((hash << 5) - hash) + chr;
+            hash |= 0; // Convert to 32bit integer
+        }
+        return hash;
+    };
+</script>
 <%--화상채팅js--%>
 <script>
     var connection = new RTCMultiConnection();
-    // connection.socketURL = 'https://localhost:9002/';
-    connection.socketURL = 'https://rtcmulticonnection.herokuapp.com:443/';
-    connection.socketMessageEvent = 'video-conference-demo';
+    connection.socketURL = 'https://192.168.207.208:9002/';
+    // connection.socketURL = 'https://rtcmulticonnection.herokuapp.com:443/';
+    connection.socketMessageEvent = 'videoevent';
+
     connection.session = {
         audio: true,
         video: true
@@ -129,7 +134,7 @@
         OfferToReceiveVideo: true
     };
     let connectedCount = 0;
-    let roomid = 100;
+    let roomid = '${roomId}'.toString().hashCode();
     connection.openOrJoin(roomid, function (isRoomExist, roomid, error) {
         if (error) {
             alert(error);
@@ -143,7 +148,17 @@
         event.mediaElement.removeAttribute('srcObject');
         event.mediaElement.muted = true;
         event.mediaElement.volume = 0;
+
         let video = document.createElement("video");
+
+        try {
+            video.setAttributeNode(document.createAttribute('autoplay'));
+            video.setAttributeNode(document.createAttribute('playsinline'));
+        } catch (e) {
+            video.setAttribute('autoplay', true);
+            video.setAttribute('playsinline', true);
+        }
+
         if (event.type === 'local') {
             video.setAttribute("width", "100%");
             video.setAttribute("height", "100%");
@@ -153,6 +168,7 @@
             } catch (e) {
                 video.setAttribute('muted', true);
             }
+
         } else if (event.type === 'remote') {
             if (video_cnt >= 4) {
                 alert("허용인원 초과");
@@ -175,16 +191,10 @@
         }
         vid_con.appendChild(video);
         videos.push(video);
-        try {
-            video.setAttributeNode(document.createAttribute('autoplay'));
-            video.setAttributeNode(document.createAttribute('playsinline'));
-        } catch (e) {
-            video.setAttribute('autoplay', true);
-            video.setAttribute('playsinline', true);
-        }
+
         video.srcObject = event.stream;
         setTimeout(function () {
-            // video.media.play();
+            video.play();
         }, 5000);
         mediaElement.id = event.streamid;
         // to keep room-id in cache
@@ -209,6 +219,7 @@
                 alert('Please select external microphone. Check github issue number 483.');
                 return;
             }
+
             var secondaryMic = DetectRTC.audioInputDevices[1].deviceId;
             connection.mediaConstraints.audio = {
                 deviceId: secondaryMic
@@ -224,9 +235,6 @@
             videos[1].setAttribute("width", "100%");
         } else if (videos.length === 1) {
             videos[0].setAttribute("height", "100%");
-        } else {
-            alert("videos is out of index");
-            return;
         }
     };
     if (roomid && roomid.length) {
@@ -243,74 +251,12 @@
 </script>
 <%--문자채팅 및 유저 리스트--%>
 <script>
-    var socket = io('https://localhost:9003');
+    var socket = io('https://192.168.0.9:9003');
 
     var userInfo = {
         user_id: '${user.user_id}',
         user_name: '${user.user_name}'
     };
-
-    function user_info(id, name) {
-        var out =
-            "<li class=\"contact\">\n" +
-            "   <div class=\"wrap\">\n" +
-            "       <span class=\"contact-status online\"></span>\n" +
-            "       <img src=\"${pageContext.request.contextPath}/res/images/male.png\" alt=\"\"/>\n" +
-            "       <div class=\"meta\">\n" +
-            "       <p class=\"name\">" + name + "(" + id + ")</p>\n" +
-            "       </div>\n" +
-            "   </div>\n" +
-            "</li>";
-        return out;
-    }
-
-    function message(msg) {
-        var out =
-            "<li class=\"replies\">\n" +
-            "   <img src=\"${pageContext.request.contextPath}/res/images/male.png\" alt=\"\"/>\n" +
-            "   <p>" + msg + "</p>\n";
-        return out;
-    }
-
-    socket.on('connect', function () {
-        console.log('connected....');
-    });
-
-    socket.emit('userInfo', userInfo);
-    socket.on('userInfo', function (users) {
-        $('#contacts ul').empty();
-        for (var i = 0; i<users.user_id.length; ++i) {
-            $('#contacts ul').append(user_info(users.user_id[i], users.user_name[i]));
-        }
-    });
-
-    $(window).on('unload',function(){
-        console.log('unload');
-        socket.emit('exit', userInfo);
-    });
-
-    socket.on('chat message', function (msg) {
-        $('.messages ul').append(newMessage(msg));
-    });
-
-    socket.on('disconnect', function (userInfo) {
-    });
-
-
-    function newMessage(message) {
-        if ($.trim(message) == '') {
-            return false;
-        }
-        $('<li class="sent"><img src="http://emilcarlsson.se/assets/mikeross.png" alt="" /><p>' + message + '</p></li>').appendTo($('.messages ul'));
-        $('.message-input input').val(null);
-        $(".messages").animate({scrollTop: $(document).height()}, "fast");
-    }
-
-    $(".messages").animate({scrollTop: $(document).height()}, "fast");
-
-    $("#profile-img").click(function () {
-        $("#status-options").toggleClass("active");
-    });
 
     //유저 상태 변경
     $("#status-options ul li").click(function () {
@@ -330,28 +276,115 @@
             $("#profile-img").removeClass();
         }
         $("#status-options").removeClass("active");
+
+        socket.emit('status_change',$("profile-img").attr('class'),userInfo);
     });
 
-    $('.submit').click(function () {
-        socket.emit('chat message', message);
-        newMessage(message);
+    socket.on('status_change',function(status,info){
+        $(".contacts").find("contact").each(function(index){
+            if($(this ).text().indexOf(info.user_id)!==-1){
+                $(this).
+            }
+        })
+    });
 
+    function user_info(id, name) {
+        var out =
+            "<li class=\"contact\">\n" +
+            "   <div class=\"wrap\">\n" +
+            "       <span class=\"contact-status online\"></span>\n" +
+            "       <img src=\"${pageContext.request.contextPath}/res/images/male.png\" alt=\"\"/>\n" +
+            "       <div class=\"meta\">\n" +
+            "       <p class=\"name\">" + name + "(" + id + ")</p>\n" +
+            "       </div>\n" +
+            "   </div>\n" +
+            "</li>";
+        return out;
+    }
+
+    function message1(msg, info) {
+        var out =
+            "<li class=\"replies\">\n" +
+            "<img src=\"${pageContext.request.contextPath}/res/images/male.png\" alt=\"\"/>\n" +
+            "<h6 style=\" float: right;margin: 6px 0 0 8px;display:block;\"><font color=\"white\" style=\"float: right;margin: 6px 0 0 8px;display:block;\">" + info.user_name + "(" + info.user_id + ")</font></h6>\n" +
+            "<p>" + msg + "</p>\n";
+        $(".messages").animate({scrollTop: $(document).height()}, "fast");
+
+        return out;
+    }
+
+    function newMessage(message, info) {
+        if ($.trim(message) == '') {
+            return false;
+        }
+        $('<li class="sent"><img src="${pageContext.request.contextPath}/res/images/male.png" alt="" /><h6 style><font color="white">' +
+            info.user_name + '(' + info.user_id + ')</font></h6><p>' + message + '</p></li>').appendTo($('.messages ul'));
+        $('.message-input input').val(null);
+        $(".messages").animate({scrollTop: $(document).height()}, "fast");
+    }
+
+    socket.on('connect', function () {
+        console.log('connected....');
+    });
+
+    socket.emit('userInfo', userInfo);
+    socket.on('userInfo', function (users) {
+        $('#contacts ul').empty();
+        for (var i = 0; i < users.user_id.length; ++i) {
+            $('#contacts ul').append(user_info(users.user_id[i], users.user_name[i]));
+        }
+    });
+
+    $(window).on('unload', function () {
+        console.log('unload');
+        socket.emit('exit', userInfo);
+    });
+
+    socket.on('disconnect', function (userInfo) {
+    });
+
+    $(".messages").animate({scrollTop: $(document).height()}, "fast");
+
+    $("#profile-img").click(function () {
+        $("#status-options").toggleClass("active");
+    });
+
+    socket.on('chat message', function (msg, info) {
+        if (info.user_id !== userInfo.user_id) {
+            $('.messages ul').append(message1(msg, info));
+        }
+    });
+
+    // socket.emit('status_change',$("profile-img").attr('class'),userInfo);
+
+    var testPtag =null;
+
+    function test(pTag){
+        testPtag = pTag;
+        return pTag;
+    }
+
+    $('.submit').click(function () {
+        message = $(".message-input input").val();
+        socket.emit('chat message', message, userInfo);
+        newMessage(message, userInfo);
     });
 
     $(window).on('keydown', function (e) {
         if (e.which === 13) {
             message = $(".message-input input").val();
-            newMessage(message);
-            socket.emit('chat message', message);
-            return false;
+            newMessage(message, userInfo);
+            socket.emit('chat message', message, userInfo);
         }
     });
 
-    $(document).on("dblclick",".contact",function(){
-
+    $(document).on("dblclick", ".contact", function (e) {
+        if($(this).find("span").hasClass("busy")||$(this).find("span").hasClass("offline")){
+            alert("오프라인&화상채팅 중인 유저는 초대할수 없습니다.");
+        }else{
+            $(".modal").modal({backdrop: 'static', keyboard: false});
+        }
     });
-
-
 </script>
 
 </body>

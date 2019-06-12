@@ -35,6 +35,7 @@ public class Jch_LectureVo implements Serializable{
 	private int checkplan;
 	
 	
+	private String lecUpdateBtn = "<button class='btn btn-default notika-btn-default waves-effect lecUpdateBtn'>강의정보수정</button>";
 	private String lecturePlanBtn = "<button class='btn btn-default notika-btn-default waves-effect lecturePlan'>강의계획서</button>";
 	private String lectureAddBtn ;
 	

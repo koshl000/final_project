@@ -29,4 +29,8 @@ public interface Jch_CurriculumService {
 
 	Jch_LecturePlanVo getLecturePlanVO();
 
+	ServiceResult insertLecturePlan(Jch_LecturePlanVo vo);
+
+	Jch_LecturePlanVo getLecturePlanView(String no);
+
 }

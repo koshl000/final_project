@@ -21,12 +21,12 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/res/Login_v3/vendor/bootstrap/css/bootstrap.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath }/notika/css/dialog/sweetalert2.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath }/notika/css/dialog/dialog.css">
-    <script src="${pageContext.request.contextPath}/res/js/video.min.js"></script>
     <script src="${pageContext.request.contextPath}/notika/js/vendor/jquery-1.12.4.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
     <script src="${pageContext.request.contextPath}/res/Login_v3/vendor/bootstrap/js/bootstrap.js"></script>
-    <script src="${pageContext.request.contextPath}/res/js/videojs.disableProgress.js"></script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/res/js/webcam.min.js"></script>
+    <script src="${pageContext.request.contextPath}/res/js/video.min.js"></script>
+    <script src="${pageContext.request.contextPath}/res/js/videojs.disableProgress.js"></script>
     <style>
     .modal-content {
         background-color: #1f1f1f;
@@ -45,7 +45,7 @@
             }
 
             vid = videojs("my-video", {
-                preload: 'auto', muted: true, controls: true,
+                preload: 'auto', muted: false, controls: true,
                 sources: [{
                     src: '${continuePlay.FILE_URL}',
                     type: 'video/mp4'
@@ -60,16 +60,6 @@
                         location.href="${pageContext.request.contextPath}/student/quiz/${class_identifying_code}/"+i.substring(2,1)+"/${lecture_code}";
                     }
                 });
-            }).ready(function () {
-                this.disableProgress();
-
-                if(enabled){
-                    this.disableProgress.enable();
-                }
-                else{
-                    this.disableProgress.disable();
-                }
-
             });
 
             //동영상 제목 헤더 뷰
@@ -92,13 +82,14 @@
             //나가기버튼
             $j("div.right_buttons").on("click", function (event) {
                 event.stopPropagation();
+                console.log(vid);
                 videoinfo = {
                     "class_identifying_code":${class_identifying_code},
                     "replay_time": vid.currentTime()
                 };
                 $j.ajax({
                     type: "POST",
-                    url: "${pageContext.request.contextPath}/subjectPage/${lecture_code}/lecturePage",
+                    url: "${pageContext.request.contextPath}/subjectPage/lecturePage/${lecture_code}",
                     dataType: 'json',
                     data: JSON.stringify(videoinfo),
                     contentType: 'application/json; charset=utf-8',
@@ -109,7 +100,7 @@
                         err.toString();
                     }
                 });
-                location.href = "${pageContext.request.contextPath}/subjectPage/${continuePlay.LECTURE_CODE}/eduGoal";
+                location.href = "${pageContext.request.contextPath}/subjectPage/${lecture_code}/eduGoal";
             });
 
             //페이지 에서 나갈시 주차코드와 나가기전까지 재생된 시간을 저장하여 이어보기 기능 구현

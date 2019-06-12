@@ -31,4 +31,8 @@ public interface Jch_CurriculumDao {
 
 	Jch_LecturePlanVo getLecturePlanVO();
 
+	int insertLecturePlan(Jch_LecturePlanVo vo);
+
+	Jch_LecturePlanVo getLecturePlanView(String no);
+
 }

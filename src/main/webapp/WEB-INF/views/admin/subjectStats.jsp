@@ -11,6 +11,38 @@
 * 관리자 과목통계관리 화면
  --%>
 <link rel="stylesheet" href="${pageContext.request.contextPath }/notika/css/datapicker/datepicker3.css">
+
+<style>
+   tfoot { 
+       display: table-header-group; 
+   }
+   select {
+       border: 1px solid #eee;
+       height: 35px;
+       padding: 7px 15px;
+       font-size: 13px;
+       border-radius: 2px;
+       -webkit-appearance: none;
+       -moz-appearance: none;
+       line-height: 100%;
+       background-color: #fff;
+       outline: none;
+   }
+   
+   select :hover  {
+      background-color: #00c292 !important;
+       color: #fff !important;
+   }
+   .selectSpan {
+      font-size: 16px;
+      font-weight: bold;
+      margin : 0 5px 0 20px;
+   }
+   #grade, #credit, #course {
+      width: 60px;
+   }
+   
+</style>
 <script type="text/javascript">
 	$(function() {
 		
@@ -287,6 +319,7 @@
 		$("[name='lowerOrganization']").on("change", function() {
 			var lec = $(this).val();
 			if (lec) {
+				$("[name='lecture']>option:not(:first)").hide();
 				$("[name='lecture']").children(":selected").hide();
 				$("." + lec).show();
 			}
@@ -393,7 +426,6 @@
 				</select>
 
 			</div>
-
 			<div>
 				<h4>조회 기준 일자</h4>
 			</div>

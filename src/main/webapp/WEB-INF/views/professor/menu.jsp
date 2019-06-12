@@ -118,11 +118,11 @@
                     </li>
                     <li><a data-toggle="tab" href="#manage"><i class="notika-icon notika-edit"></i> 강의관리</a>
                     </li>
-                    <li><a data-toggle="tab" href="#statistics"><i class="notika-icon notika-mail"></i> 학습통계</a>
+                    <li><a data-toggle="tab" href="#statistics"><i class="notika-icon notika-bar-chart"></i> 학습통계</a>
                     </li>
-                    <li><a data-toggle="tab" href="#cert"><i class="notika-icon notika-bar-chart"></i> 증명서</a>
+                    <li><a data-toggle="tab" href="#cert"><i class="notika-icon notika-form"></i> 증명서</a>
                     </li>
-                    <li><a href="${pageContext.request.contextPath }/professorMain/notice"><i class="notika-icon notika-bar-chart"></i>공지사항</a></li>
+                    <li><a href="${pageContext.request.contextPath }/professorMain/notice"><i class="notika-icon notika-windows"></i>공지사항</a></li>
                 </ul>
                 <%--마이페이지--%>
                 <div class="tab-content custom-menu-content">

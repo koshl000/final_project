@@ -17,6 +17,9 @@
 	{
 	width: 20%;
 }
+#goList{
+	float : right;
+}
 </style>
 
 <!--    메뉴 소개 영역 -->
@@ -43,8 +46,8 @@
 									<h2>공지사항 상세</h2>
 									<p>
 										<span class="bread-ntd">공지사항 상세 페이지</span>
+										<button type="button" id="goList" class="btn btn-default notika-btn-default">목록으로</button>
 									</p>
-									<button type="button" id="goList">목록으로</button>
 								</div>
 							</div>
 						</div>

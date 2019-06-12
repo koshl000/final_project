@@ -51,6 +51,7 @@ img.visible {
 <c:if test="${result eq '성공'}">
 	self.close();
 </c:if>
+	var source;
 	var start = ${not empty start?start:0};
 	var end = ${not empty end?end:5};
 	var questions = [];
@@ -58,18 +59,16 @@ img.visible {
 	var resp;
 	var saveBtn; var modifyBtn; var aTags = []; var checkBoxes; var inputTexts; var textAreas; var strongs;
 	function completePage(){
-		if($("#identifier")=="교수"){
+		if($("#identifier")=="ROLE_PROFESSOR"&&'${btnType}'=='exam'){
 			$('.timee').hide();
+			$("#boddy").after("<div class='row'>"+"<div class='col-xs-6 col-sm-6 btnSpace'>" +
+					"<button class='btn' disabled type='button' id='prev'>이전</button>"+
+					"<button class='btn' type='button' id='next'>다음</button>"+
+					"<button class='btn' type='button' id='complete'>등록</button>"
+						);	
 		}
 		$('textArea').hide();
 		$("input[type='text']").attr('type', 'hidden');
-		if('${btnType}'=="exam"){
-		$("#boddy").after("<div class='row'>"+"<div class='col-xs-6 col-sm-6 btnSpace'>" +
-				"<button class='btn' disabled type='button' id='prev'>이전</button>"+
-				"<button class='btn' type='button' id='next'>다음</button>"+
-				"<button class='btn' type='button' id='complete'>제출</button>"
-				);	
-		}
 	}
 	
 	function showPage(questionBody, start, end){
@@ -206,11 +205,11 @@ img.visible {
 			}
 		}
 		console.log($("#yaoZhuannSong"))
-		if($('#identifier').val()=='교수'){
+		if($('#identifier').val()=='ROLE_PROFESSOR'){
 			alert("등록하시겠습니까?");
-			$("#yaoZhuannSong").attr("action", "${pageContext.request.contextPath}/student/submit");
+			$("#yaoZhuannSong").attr("action", "${pageContext.request.contextPath}/professor/createExam/"+"${lecture_code}");
 			$("#yaoZhuannSong").submit();
-		} else if($('#identifier').val()=='학생'){
+		} else if($('#identifier').val()=='ROLE_STUDENT'){
 			alert("제출 이후에는 수정이 불가합니다.\n제출하시겠습니까?")
 			$("#yaoZhuannSong").attr("action", "${pageContext.request.contextPath}/professor/createExamAnswer");
 			$("#yaoZhuannSong").submit();
@@ -312,7 +311,7 @@ img.visible {
 					$(havingAll).find('.textQAnswer').hide();
 					$(textAreas).siblings(".examContent").children().show();
 					strongs.css('display', 'block')
-					strongs.children('.pTag').text(resp.question_content);
+					strongs.children('.pTag').text(resp.questionList[0].question_content);
 					checkedBoxes = $(havingAll).find('.i-checks');
 					$(checkedBoxes).prop('disabled', true);
 					inputTexts.attr('type', 'hidden');
@@ -325,7 +324,7 @@ img.visible {
 						}
 					</c:forEach>
 					} else if(resp.questionList[0].subjective_answer!=null){
-						$(havingAll).find('.ForSubjec').text(resp.questionList[0].subjective_answer).show()
+						$(havingAll).find('.subjectAnswer').text(resp.questionList[0].subjective_answer).show()
 					}
 		    	}
 			},
@@ -341,7 +340,8 @@ img.visible {
 	<div class="container">
 		<div class='row timeCnt'>
 			<div class="col-xs-12 col-sm-12 timeCnt">
-				<span>퀴즈인지 시험인지 구분할 것 / ${quizList[0].lecture_code} / 주차와 차시 or 주차와 시험구분</span>
+				<span><h3>과목명 중간고사</h3>
+				</span>
 				<span style="font-size: 10pt; font-weight: 500" class="timee"> 
 				<span style="padding-left: 8px; font-weight: 500" class="timee">Timer</span>
 				<span id="min" style="width: 15px; font-weight: 500; text-align: right" class="timee">
@@ -377,23 +377,26 @@ img.visible {
 			updateTime();
 		</script>
 		<div class='row' id='boddy'>
-			<div class="col-xs-4 col-sm-4 left">
+			<div class="col-xs-1 col-sm-1 veryLeft">
 			</div>
-			<div class="col-xs-4 col-sm-4 center">
+			<div class="col-xs-5 col-sm-5 left">
 			</div>
-			<div class="col-xs-4 col-sm-4 right">
+			<div class="col-xs-5 col-sm-5 center">
 			</div>
+			<div class="col-xs-1 col-sm-1 right">
+			</div>
+			
 			<c:set var="questionList" value="${examVo.questionList}"></c:set>
-				<c:set var="idx" value="0"/>
-				<c:set var='idx2' value='0'/>
+<%-- 				<c:set var="idx" value="0"/> --%>
+<%-- 				<c:set var='idx2' value='0'/> --%>
 				<c:forEach var="questionVo" items="${questionList}" varStatus="vs">
 					<c:choose>
 						<c:when test="${vs.count%5 eq 1 or vs.count%5 eq 2 or vs.count%5 eq 3}">
 							<script>
-							var source = "";
-								source = "<form id='formquestionNum' class='formT'>"+
+							source = "";
+							source = "<form id='formquestionNum' class='formT'>"+
 									"<div class='questionBody question${vs.index} coverEach'>" +
-									"<span id='spanYet'></span><select id='whichType' class='whichType' disabled>";
+									"<select id='whichType' class='whichType' disabled>";
 							if(${not empty fn:trim(questionVo.subjective_answer)}){
 								source += "<option selected>주관식</option><option>객관식</option></select>";
 							} else if(${not empty fn:trim(questionVo.objective_answer)}){
@@ -408,7 +411,7 @@ img.visible {
 								"${questionVo.question_content}</textarea>" + 
 								"<strong class='examContent'><p class='pTag ForMod'>${questionVo.question_content}</p></strong>"+
 								"<input name='examList[0].questionList[${vs.index}].subjective_answer' type='text' class='examproblem_nno textQAnswer question_answer professor' value='${questionVo.subjective_answer}' placeholder='정답을 입력하세요.'/>" +
-								"<p class='pTag ForSubjec'>${questionVo.subjective_answer}</p>"+
+								"<p class='pTag subjectAnswer'>${questionVo.subjective_answer}</p>"+
 								"<input name='examList[0].questionList[${vs.index}].objective_answer' type='hidden' class='examproblem_nno QAnswer question_answer professor' value='${questionVo.objective_answer}'/>" +
 								"<input class='student' name='answerList[${vs.index}].exam_no' type='hidden' value='${examVo.exam_no}'/>"+
 								"<input class='student' name='answerList[${vs.index}].attend_no' type='hidden'/>"+
@@ -418,7 +421,7 @@ img.visible {
 								"<c:forEach var='problemVo' items='${questionVo.problemList}' varStatus='vs3'>";
 									if(${not empty fn:trim(questionVo.subjective_answer)}){
 										source += "<div class='yaoRemove'><input name='' type='hidden' class='examproblem_nno i-checks checkQAnswer question_answer professor' ${questionVo.objective_answer.contains(problemVo.problem_no.substring(0,1))?'checked':''} value='${vs3.count}'/>" +
-										"<input name='examList[0].questionList[${vs.index}].problemList[${vs3.index}].problem_content' class='examproblem_nno PContent problem_content checkQAnswer professor' type='hidden' placeholder='선택지를 입력하세요' value='${problemVo.problem_content}'/>"; 
+										"<input name='examList[0].questionList[${vs.index}].problemList[${vs3.index}].problem_content' class='examproblem_nno PContent problem_content checkQAnswer professor' type='hidden' placeholder='선택지를 입력하세요' value='${problemVo.problem_content}'/>";
 									} else if(${not empty fn:trim(questionVo.objective_answer)}){
 										source += "<div class='yaoRemove'><input name='' type='checkbox' class='examproblem_nno i-checks checkQAnswer question_answer professor' ${questionVo.objective_answer.contains(problemVo.problem_no.substring(0,1))?'checked':''} value='${vs3.count}'/>" +
 										 "<input name='answerList[${vs.index}].problem_no' type='checkbox' class='examproblem_nno checkQAnswer student' value='${vs3.count}'/>" +
@@ -453,7 +456,7 @@ img.visible {
 							"${questionVo.question_content}</textarea>" + 
 							"<strong class='examContent'><p class='pTag ForMod'>${questionVo.question_content}</p></strong>"+
 							"<input name='examList[0].questionList[${vs.index}].subjective_answer' type='text' class='examproblem_nno textQAnswer question_answer professor' value='${questionVo.subjective_answer}' placeholder='정답을 입력하세요.'/>" +
-							"<p class='pTag ForSubjec'>${questionVo.subjective_answer}</p>"+
+							"<p class='pTag subjectAnswer'>${questionVo.subjective_answer}</p>"+
 							"<input name='examList[0].questionList[${vs.index}].objective_answer' type='hidden' class='examproblem_nno QAnswer question_answer professor' value='${questionVo.objective_answer}'/>" +
 							"<input class='student' name='answerList[${vs.index}].exam_no' type='hidden' value='${examVo.exam_no}'/>"+
 							"<input class='student' name='answerList[${vs.index}].attend_no' type='hidden'/>"+
@@ -463,7 +466,7 @@ img.visible {
 							"<c:forEach var='problemVo' items='${questionVo.problemList}' varStatus='vs3'>";
 								if(${not empty fn:trim(questionVo.subjective_answer)}){
 									source += "<div class='yaoRemove'><input name='' type='hidden' class='examproblem_nno i-checks checkQAnswer question_answer professor' ${questionVo.objective_answer.contains(problemVo.problem_no.substring(0,1))?'checked':''} value='${vs3.count}'/>" +
-									"<input name='examList[0].questionList[${vs.index}].problemList[${vs3.index}].problem_content' class='examproblem_nno PContent problem_content checkQAnswer professor' type='hidden' placeholder='선택지를 입력하세요' value='${problemVo.problem_content}'/>"; 
+									"<input name='examList[0].questionList[${vs.index}].problemList[${vs3.index}].problem_content' class='examproblem_nno PContent problem_content checkQAnswer professor' type='hidden' placeholder='선택지를 입력하세요' value='${problemVo.problem_content}'/>";
 								} else if(${not empty fn:trim(questionVo.objective_answer)}){
 									source += "<div class='yaoRemove'><input name='' type='checkbox' class='examproblem_nno i-checks checkQAnswer question_answer professor' ${questionVo.objective_answer.contains(problemVo.problem_no.substring(0,1))?'checked':''} value='${vs3.count}'/>" +
 									 "<input name='answerList[${vs.index}].problem_no' type='checkbox' class='examproblem_nno checkQAnswer student' value='${vs3.count}'/>" +
@@ -483,15 +486,12 @@ img.visible {
 		</div>
 	</div>
 </div>
-<input id="qStart" type="hidden" value="1"/>
-<input id="identifier" type="hidden" value="학생"/>
+<input id="identifier" type="hidden" value="${identifier[0]}"/>
 <input id="attend_no" type="hidden" value="CS001002"/>
-<%-- <input id="attend_no" type="hidden" value="${attend_no }"/> --%>
-<input id="user_id" type="hidden" value="st_001"/>
-<input id="exam_no" type="hidden" value="3"/>
+<input id="user_id" type="hidden" value="${userVo.user_id}"/>
+<input id="exam_no" type="hidden" value="${examVo.exam_no}"/>
 <input id="btnType" type='hidden' value="${btnType}"/>
-<input id="class_identifying_code" type='hidden' value="${quizList[0].class_identifying_code}"/>
-<input id="lecture_code" type='hidden' value="${quizList[0].lecture_code}"/>
+<input id="lecture_code" type='hidden' value="${lecture_code}"/>
 
 <!-- autosize JS
 		============================================ -->

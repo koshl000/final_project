@@ -66,13 +66,18 @@
 	</select>
 	
 	<select id="selectStudyCode" parameterType="java.util.HashMap" resultType="ddit.finalproject.team2.vo.Lsy_ExamVo">
-		select e.exam_no, es.evalstudy_code
-		from exam e, evaluationstudy es
-		where es.evalstudy_code = 
-		(select evalstudy_code from evaluationstudy where lecture_code = #{lecture_code} and evalstudy_type like #{examType}||'%')
-		and e.exam_no = 
-		(select exam_no from exam where evalstudy_code = 
-		(select evalstudy_code from evaluationstudy where lecture_code = #{lecture_code} and evalstudy_type like #{examType}||'%'))
+		select es.evalstudy_code, e.exam_no 
+         from evaluationstudy es, exam e 
+         where es.lecture_code = #{lecture_code} 
+         and es.evalstudy_code = (select ev.evalstudy_code from evaluationstudy ev where ev.lecture_code = #{lecture_code} and ev.evalstudy_type like #{exam_type}||'%')
+         and e.exam_type like #{exam_type}||'%'
+	</select>
+	
+	<select id="selectExamNo" parameterType="java.util.HashMap" resultType="String">
+		select exam_no
+		from exam
+		where exam_type like #{exam_type}||'%'
+		and evalstudy_code = #{evalstudy_code};
 	</select>
 	
 	<select id="markingTest" parameterType="ddit.finalproject.team2.vo.Lsy_EmbraceAnswer" resultType="ddit.finalproject.team2.vo.Lsy_QuizQuestionVO">
@@ -94,7 +99,7 @@
 		from exam e inner join examquestion eq on e.exam_no = eq.exam_no
 		            left outer join examproblem ep on eq.question_no = ep.question_no
 		where e.evalstudy_code = #{evalCode}
-		and e.exam_type like #{examType}||'%'
+		and e.exam_type like #{exam_type}||'%'
 		and ep.exam_no = #{examNo}
 	</select>
 	
@@ -212,7 +217,6 @@
 		from examquestion eq inner join exam e on e.exam_no = eq.exam_no
 		                     inner join examproblem ep on eq.question_no = ep.question_no
 		where ep.exam_no = #{exam_no}
-		and ep.question_no = #{question_no}
 		and exam_type like #{exam_type}||'%'
 	</select>
 	
@@ -260,6 +264,14 @@
 			from quizquestion q where q.lecture_code = #{lecture_code}
 								and q.class_identifying_code = #{class_identifying_code}) qn
 		where p.question_no = qn.question_no
+	</select>
+	
+	<select id="selectEvalStudyCodes" resultType="ddit.finalproject.team2.vo.Lsy_ExamVo">
+		select evalstudy_code, evalstudy_type
+		from evaluationstudy
+		where lecture_code = #{lecture_code}
+		and (evalstudy_type like '%'||'중간'||'%'
+		or evalstudy_type like '%'||'기말'||'%')
 	</select>
 </mapper>
 

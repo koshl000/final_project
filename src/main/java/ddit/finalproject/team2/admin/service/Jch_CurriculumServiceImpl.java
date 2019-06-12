@@ -52,7 +52,7 @@ public class Jch_CurriculumServiceImpl implements Jch_CurriculumService {
 		 
 		for(Jch_LectureVo vo : lecList) {
 			if(vo.getChecklec()==0) 
-				vo.setLectureAddBtn("<button class='btn btn-default notika-btn-default waves-effect lectureAddBtn'>등록</button>");
+				vo.setLectureAddBtn("<button class='btn btn-default notika-btn-default waves-effect lectureAddBtn'>주차등록</button>");
 			if(vo.getCheckplan()==0) 
 				vo.setLecturePlanBtn("<button class='btn btn-default notika-btn-default waves-effect lecPlanAddBtn'>등록</button>");
 			vo.setLecture_code("<a href='register/"+vo.getLecture_code()+"'>"+vo.getLecture_code()+"</a>");
@@ -88,6 +88,21 @@ public class Jch_CurriculumServiceImpl implements Jch_CurriculumService {
 	@Override
 	public Jch_LecturePlanVo getLecturePlanVO() {
 		return curDao.getLecturePlanVO();
+	}
+
+	@Override
+	public ServiceResult insertLecturePlan(Jch_LecturePlanVo vo) {
+		int rowCnt = curDao.insertLecturePlan(vo);
+		ServiceResult result = ServiceResult.FAILED;
+		if (rowCnt > 0) {
+			result = ServiceResult.OK;
+		}
+		return result;
+	}
+
+	@Override
+	public Jch_LecturePlanVo getLecturePlanView(String no) {
+		return curDao.getLecturePlanView(no);
 	}
 
 }
