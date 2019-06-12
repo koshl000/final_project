@@ -121,8 +121,8 @@
 <%--화상채팅js--%>
 <script>
     var connection = new RTCMultiConnection();
-    connection.socketURL = 'https://192.168.207.208:9002/';
-    // connection.socketURL = 'https://rtcmulticonnection.herokuapp.com:443/';
+    // connection.socketURL = 'https://192.168.207.208:9002/';
+    connection.socketURL = 'https://rtcmulticonnection.herokuapp.com:443/';
     connection.socketMessageEvent = 'videoevent';
 
     connection.session = {
@@ -281,8 +281,9 @@
     });
 
     socket.on('status_change',function(status,info){
-        $(".contacts").find("contact").each(function(index){
-            if($(this ).text().indexOf(info.user_id)!==-1){
+        $(".contacts").find(".contact").each(function(index){
+            if($(this).find("p").first().text().indexOf(info.user_id)!==-1){
+                $(this).find("span").first().addClass();
             }
         })
     });

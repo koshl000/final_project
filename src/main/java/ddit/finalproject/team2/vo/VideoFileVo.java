@@ -18,4 +18,6 @@ public class VideoFileVo implements Serializable{
 	@NotNull private String file_url;
 	@NotNull private String file_name;
 	@NotNull private String videofile_time;
+	@NotNull private String class_identifying_code;
+	@NotNull private String lecture_code;
 }

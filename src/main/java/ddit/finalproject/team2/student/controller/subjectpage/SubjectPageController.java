@@ -3,8 +3,10 @@ package ddit.finalproject.team2.student.controller.subjectpage;
 
 import ddit.finalproject.team2.admin.service.KJE_IStatisticsService;
 import ddit.finalproject.team2.common.service.Lsh_IOpenSemeService;
+import ddit.finalproject.team2.myPack.LSY_IQuizService;
 import ddit.finalproject.team2.student.dao.KJE_IStatisticsStuDao;
 import ddit.finalproject.team2.student.service.Lsh_ILectureService;
+import ddit.finalproject.team2.vo.Lsy_ExamVo;
 import ddit.finalproject.team2.vo.UserVo;
 import org.apache.log4j.Logger;
 import org.springframework.security.core.Authentication;
@@ -54,6 +56,9 @@ public class SubjectPageController {
 
     @Inject
     Lsh_IOpenSemeService openService;
+    
+    @Inject
+    LSY_IQuizService quizExamService;
 
     @Resource(name = "socketSessionMap")
     ConcurrentMap<String, CopyOnWriteArrayList<WebSocketSession>> smap;
@@ -107,7 +112,11 @@ public class SubjectPageController {
         map.put("user_id", au.getName());
         map.put("class_identifying_code", class_identifying_code);
         map.put("isplaying", class_identifying_code);
+        List<Lsy_ExamVo> evalStCodes = quizExamService.retrieveEvalStudyCodes(lecture_code);
         mv.setViewName("student/exclude/lecturePage");
+        mv.getModel().put("lecture_code", lecture_code);
+        mv.getModel().put("class_identifying_code", class_identifying_code);
+        mv.getModel().put("evalStCodes", evalStCodes);
         mv.getModel().put("videoList", lectureService.selectVideoListbyLecture(map));
         mv.getModel().put("completeList", lectureService.selectAbsenceListYN(map));
         mv.getModel().put("period", openService.selectOPenPeriod(lecture_code));
