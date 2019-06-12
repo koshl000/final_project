@@ -81,7 +81,7 @@
     							'width=800, height=700'); return false;	
             	} else {
 	                var obj = JSON.parse($j(this).attr("fxd-data"));
-	                window.open("${pageContext.request.contextPath}/subjectPage/${continuePlay.LECTURE_CODE}/lecturePage/" + obj.id;
+	                location.href="${pageContext.request.contextPath}/subjectPage/${continuePlay.LECTURE_CODE}/lecturePage/" + obj.id;
             	}
             });
 
