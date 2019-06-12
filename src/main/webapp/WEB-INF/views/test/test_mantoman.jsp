@@ -144,10 +144,10 @@
     var connection = new RTCMultiConnection();
 
     // by default, socket.io server is assumed to be deployed on your own URL
-    connection.socketURL = 'https://192.168.207.208:9002/';
+    // connection.socketURL = 'https://192.168.207.208:9002/';
 
     // comment-out below line if you do not have your own socket.io server
-    // connection.socketURL = 'https://rtcmulticonnection.herokuapp.com:443/';
+    connection.socketURL = 'https://rtcmulticonnection.herokuapp.com:443/';
 
     connection.socketMessageEvent = 'video-conference-demo';
 

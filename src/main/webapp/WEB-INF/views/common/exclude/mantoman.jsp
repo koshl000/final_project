@@ -134,8 +134,9 @@
         OfferToReceiveVideo: true
     };
     let connectedCount = 0;
-    let roomid = '${roomId}'.toString().hashCode();
-    connection.openOrJoin(roomid, function (isRoomExist, roomid, error) {
+    <%--let roomid = '${roomId}'.toString().hashCode();--%>
+    let roomid=100;
+    connection.openOrJoin(100, function (isRoomExist, roomid, error) {
         if (error) {
             alert(error);
         }
@@ -149,63 +150,112 @@
         event.mediaElement.muted = true;
         event.mediaElement.volume = 0;
 
-        let video = document.createElement("video");
+        var video = document.createElement('video');
 
         try {
             video.setAttributeNode(document.createAttribute('autoplay'));
             video.setAttributeNode(document.createAttribute('playsinline'));
+
         } catch (e) {
             video.setAttribute('autoplay', true);
             video.setAttribute('playsinline', true);
+            video.setAttribute('height','100%');
+            video.setAttribute('width','100%');
+            video.setAttribute('object-fit',)
         }
 
-        if (event.type === 'local') {
-            video.setAttribute("width", "100%");
-            video.setAttribute("height", "100%");
+        if(event.type === 'local') {
             video.volume = 0;
             try {
                 video.setAttributeNode(document.createAttribute('muted'));
             } catch (e) {
                 video.setAttribute('muted', true);
             }
-
-        } else if (event.type === 'remote') {
-            if (video_cnt >= 4) {
-                alert("허용인원 초과");
-                return;
-            }
-            if (video_cnt === 1) {
-                videos[0].setAttribute("height", "50%");
-                video.setAttribute("width", "100%");
-                video.setAttribute("height", "50%");
-            } else if (video_cnt === 2) {
-                videos[1].setAttribute("width", "50%");
-                video.setAttribute("width", "50%");
-                video.setAttribute("height", "50%");
-            } else if (video_cnt === 3) {
-                videos[0].setAttribute("width", "50%");
-                video.setAttribute("width", "50%");
-                video.setAttribute("height", "50%");
-            }
-            video_cnt++;
         }
-        vid_con.appendChild(video);
-        videos.push(video);
-
         video.srcObject = event.stream;
-        setTimeout(function () {
+        //
+        // var mediaElement = getHTMLMediaElement(video, {
+        //     buttons: ['full-screen'],
+        //     showOnMouseEnter: false
+        // });
+        // mediaElement.style.maxHeight=null;
+        // mediaElement.style.height='100%';
+
+        vid_con.appendChild(video);
+
+        setTimeout(function() {
             video.play();
         }, 5000);
+
         video.id = event.streamid;
+
         // to keep room-id in cache
         localStorage.setItem(connection.socketMessageEvent, connection.sessionid);
-        if (event.type === 'local') {
-            connection.socket.on('disconnect', function () {
-                if (!connection.getAllParticipants().length) {
+
+        if(event.type === 'local') {
+            connection.socket.on('disconnect', function() {
+                if(!connection.getAllParticipants().length) {
                     location.reload();
                 }
             });
         }
+        // let video = document.createElement("video");
+        //
+        // try {
+        //     video.setAttributeNode(document.createAttribute('autoplay'));
+        //     video.setAttributeNode(document.createAttribute('playsinline'));
+        // } catch (e) {
+        //     video.setAttribute('autoplay', true);
+        //     video.setAttribute('playsinline', true);
+        // }
+        //
+        // if (event.type === 'local') {
+        //     video.setAttribute("width", "100%");
+        //     video.setAttribute("height", "100%");
+        //     video.volume = 0;
+        //     try {
+        //         video.setAttributeNode(document.createAttribute('muted'));
+        //     } catch (e) {
+        //         video.setAttribute('muted', true);
+        //     }
+        //
+        // } else if (event.type === 'remote') {
+        //     if (video_cnt >= 4) {
+        //         alert("허용인원 초과");
+        //         return;
+        //     }
+        //     if (video_cnt === 1) {
+        //         videos[0].setAttribute("height", "50%");
+        //         video.setAttribute("width", "100%");
+        //         video.setAttribute("height", "50%");
+        //     } else if (video_cnt === 2) {
+        //         videos[1].setAttribute("width", "50%");
+        //         video.setAttribute("width", "50%");
+        //         video.setAttribute("height", "50%");
+        //     } else if (video_cnt === 3) {
+        //         videos[0].setAttribute("width", "50%");
+        //         video.setAttribute("width", "50%");
+        //         video.setAttribute("height", "50%");
+        //     }
+        //     video_cnt++;
+        // }
+        // vid_con.appendChild(video);
+        // videos.push(video);
+        //
+        // video.srcObject = event.stream;
+        // setTimeout(function () {
+        //     video.play();
+        // }, 5000);
+        // video.id = event.streamid;
+        // // to keep room-id in cache
+        // localStorage.setItem(connection.socketMessageEvent, connection.sessionid);
+        // if (event.type === 'local') {
+        //     connection.socket.on('disconnect', function () {
+        //         if (!connection.getAllParticipants().length) {
+        //             location.reload();
+        //         }
+        //     });
+        // }
     };
     connection.onstreamended = function (event) {
         var mediaElement = document.getElementById(event.streamid);

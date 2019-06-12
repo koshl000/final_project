@@ -38,7 +38,7 @@ public class Lsh_LectureFileController {
         mv.setViewName("new/regVideo");
         return mv;
     }
-    @PostMapping("/professor/{lecture_code}/{class_identifying_code}/regvideo")
+    @PostMapping("/professor/regvideo")
     public void uploadVideoService(@RequestParam Map<String,String> map, MultipartFile file,@PathVariable String lecture_code) throws IOException {
         Map<String,String> map1=map;
         String savedName=file.getOriginalFilename();
