@@ -127,11 +127,9 @@
 			});
 			$("#eee").text(name);
 			$("#no").text(no);
-			var normals = $('#adda').find('input:eq(65)').val();
-			var finals = $('#adda').find('input:eq(131)').val();
 			$("input[name=lecture_subname]").val(name);
-			$('.normamlSub').val(normals);
-			$('.finalSub').val(finals);
+			$('.normamlSub').val("중간고사");
+			$('.finalSub').val("기말고사");
 		});
 		
 		//강의주차수정버튼
@@ -206,7 +204,7 @@
 					alert("강의주차 등록이 완료되었습니다.");
 					console.log(resp);
 					$('#myModalthree').modal("hide");
-					window.location.href = "${pageContext.request.contextPath}/professor/lectureList";
+					window.location.href = "${pageContext.request.contextPath}/professor/alectureList";
 				},
 				error : function(errorResp) {
 					console.log(errorResp.status);
@@ -244,7 +242,7 @@
 					alert("강의계획 등록이 완료되었습니다.");
 					console.log(resp);
 					$('#myModalfour').modal("hide");
-					window.location.href = "${pageContext.request.contextPath}/professor/lectureList";
+					window.location.href = "${pageContext.request.contextPath}/professor/alectureList";
 				},
 				error : function(errorResp) {
 					console.log(errorResp.status);
@@ -617,7 +615,7 @@
                             <table class="table table-bordered">
 								<tr>
 									<th><span>학기</span></th>
-									<td><input name="lecture_name" type="text" class="form-control" value="${lecture.openseme_no }" disabled="disabled"/></td>
+									<td><input name="openseme_no" type="text" class="form-control" value="${lecture.openseme_no }" disabled="disabled"/></td>
 					            	<th><span>교과목명</span></th>
 						            <td><input name="lecture_name" type="text" class="form-control" value="${lecture.lecture_code }"/></td>
 					            </tr>

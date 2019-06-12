@@ -97,6 +97,7 @@ public class Jch_LectureController {
 			}
 			if(aaa.get(i).contains("subname")) {
 				lwVo.setLecture_subname(list.get(i));
+				lwVo.setClass_identifying_code(lwVo.getLecture_week()+lwVo.getLecture_class());
 				lwvList.add(lwVo);
 				continue;
 			}

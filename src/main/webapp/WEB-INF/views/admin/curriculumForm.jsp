@@ -64,7 +64,7 @@
 			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 				<div class="data-table-list">
 					<form:form modelAttribute="lecture" method="post" id="lectureForm">
-						<div>
+						<div >
 							<table class="table table-bordered col-md-8">
 								<tr>
 									<th><span>학기선택</span></th>

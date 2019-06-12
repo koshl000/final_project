@@ -70,7 +70,7 @@
 		INSERT ALL
 		<foreach collection="lecWeek_list" item="item">
 			INTO LECTUREWEEK (  CLASS_IDENTIFYING_CODE, LECTURE_CODE, LECTURE_CLASS, LECTURE_WEEK, LECTURE_SUBNAME ) 
-			VALUES ( get_identifying_code(), #{item.lecture_code}, #{item.lecture_class}, #{item.lecture_week}, #{item.lecture_subname} )
+			VALUES ( #{item.class_identifying_code}, #{item.lecture_code}, #{item.lecture_class}, #{item.lecture_week}, #{item.lecture_subname} )
 		</foreach>
 		SELECT * FROM DUAL
 	</insert>
