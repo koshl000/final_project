@@ -20,7 +20,7 @@
 		UPDATE GRADE
 		SET GRADE_MIDTERM = #{grade_midterm, jdbcType = VARCHAR}, GRADE_FINAL = #{grade_final, jdbcType = VARCHAR}
 			, GRADE_ABSENCE = #{grade_absence, jdbcType = VARCHAR}, GRADE_ASSIGNMENT = #{grade_assignment, jdbcType = VARCHAR}
-			, AVERAGE = #{average. jdbcType = VARCHAR}
+			, ATTEND_NO = #{attend_no, jdbcType = VARCHAR}, AVERAGE = #{average, jdbcType = VARCHAR}
 		WHERE GRADE_NO = #{grade_no}
 	</update>
 	

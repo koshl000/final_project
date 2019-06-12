@@ -15,21 +15,21 @@
 		<collection property="assignmentNoList" autoMapping="true" ofType="AssignmentVo">
 			<id property="assignment_no" column="ASSIGNMENT_NO"/>
 		</collection>
-	</resultMap>
-	<resultMap type="Ljs_ExamVo" id="examMap" autoMapping="true">
-		<id property="exam_no" column="EXAM_NO"/>
-		<collection property="questionList" autoMapping="true" ofType="ExamQuestionVo">
-			<id property="question_no" column="QUESTION_NO"/>
+		<collection property="exams" autoMapping="true" ofType="Ljs_ExamVo">
+			<id property="exam_no" column="EXAM_NO"/>
+			<collection property="questionList" autoMapping="true" ofType="ExamQuestionVo">
+				<id property="question_no" column="QUESTION_NO"/>
+			</collection>
+			<collection property="answerList" autoMapping="true" ofType="ExamAnswerVo">
+				<id property="answer_no" column="ANSWER_NO"/>
+			</collection>
 		</collection>
-		<collection property="answerList" autoMapping="true" ofType="ExamAnswerVo">
-			<id property="answer_no" column="ANSWER_NO"/>
-		</collection>
 	</resultMap>
-	<select id="selectExam" parameterType="Ljs_EvaluationMaterialVo" resultMap="materialMap, examMap">
-		SELECT A.USER_ID, B.ATTEND_NO, B.LECTURE_CODE, B.LECTURE_NAME
+	<select id="selectExam" parameterType="Ljs_EvaluationMaterialVo" resultMap="materialMap">
+		SELECT A.USER_ID, B.ATTEND_NO, B.LECTURE_CODE
 			, C.EVALSTUDY_CODE, C.EVALSTUDY_TYPE, C.EVALSTUDY_RATIO
 			, D.EXAM_NO, D.EXAM_TYPE, E.QUESTION_NO, E.OBJECTIVE_ANSWER, E.SUBJECTIVE_ANSWER
-			, F.ANSWER_NO, F.PROBLEM_NO, F.SUBJECTIVE_ANSWER
+			, F.ANSWER_NO, F.PROBLEM_NO, F.SUBJECTIVE_ANSWER SUBJECTANSWER
 		FROM USERS A LEFT OUTER JOIN ATTEND B
 		ON(A.USER_ID = B.USER_ID)
 		LEFT OUTER JOIN EVALUATIONSTUDY C
@@ -45,7 +45,7 @@
 	</select>
 	
 	<select id="selectAbsenceAndAssignment" parameterType="Ljs_EvaluationMaterialVo" resultMap="materialMap">
-		SELECT A.USER_ID, B.LECTURE_CODE, B.CLASS_IDENTIFYING_CODE
+		SELECT A.USER_ID, A.ATTEND_NO, B.LECTURE_CODE, B.CLASS_IDENTIFYING_CODE
 			, C.ABSENCE_NO, C.ABSENCE_WEEK, C.ABSENCE_CLASS, C.ABSENCE_YN
 		    , D.ASSIGNMENT_NO, E.SUBMITFILE_NO, E.ASSIGNMENT_NO, E.FILE_MARKSCORE
 		FROM ATTEND A LEFT OUTER JOIN LECTUREWEEK B
@@ -56,7 +56,7 @@
 		ON(B.CLASS_IDENTIFYING_CODE = D.CLASS_IDENTIFYING_CODE AND B.LECTURE_CODE = D.LECTURE_CODE)
 		LEFT OUTER JOIN SUBMITFILE E
 		ON(A.ATTEND_NO = E.ATTEND_NO AND D.ASSIGNMENT_NO = E.ASSIGNMENT_NO)
-		WHERE A.USER_ID = #{user_id} B.LECTURE_CODE = #{lecture_code}
+		WHERE A.USER_ID = #{user_id} AND B.LECTURE_CODE = #{lecture_code}
 		ORDER BY A.USER_ID, LECTURE_CODE, CLASS_IDENTIFYING_CODE
 	</select>
 </mapper>

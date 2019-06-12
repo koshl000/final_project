@@ -47,7 +47,7 @@ public class RingUtils {
 		String message = "<"+RingType.ASSIGNMENT.getTitle()+"> "+me.getUser_name()+" 님이 새 과제물을 등록했습니다.";
 		for(AttendVo attender : attendList){
 			ringDao.insertRing(
-					new RingVo(null, attender.getUser_id(), me.getUser_id(), RingType.INVITATION.getTitle(), null
+					new RingVo(null, attender.getUser_id(), me.getUser_id(), RingType.ASSIGNMENT.getTitle(), null
 							, "/subjectPage/"+attender.getLecture_code()+"/lectureAssignment"
 							, null, null, "N", message));
 		}

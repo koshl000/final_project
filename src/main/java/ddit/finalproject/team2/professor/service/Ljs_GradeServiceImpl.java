@@ -4,7 +4,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.springframework.aop.RawTargetAccess;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import ddit.finalproject.team2.professor.dao.Ljs_IEvaluationDao;
 import ddit.finalproject.team2.professor.dao.Ljs_IGradeDao;
@@ -46,11 +48,10 @@ public class Ljs_GradeServiceImpl implements Ljs_IGradeService{
 	
 	private GradeVo evaluateExam(String[] rateArr, Ljs_EvaluationMaterialVo vo){
 		List<Ljs_ExamVo> examList = vo.getExams();
-		GradeVo grade = null;
-		if(examList.size()>0){
+		GradeVo grade = new GradeVo(vo.getAttend_no());
+		if(examList!=null && examList.size()>0){
 			for(Ljs_ExamVo exam : examList){
-				if(exam!=null){
-					grade = new GradeVo(vo.getAttend_no());
+				if(exam!=null && exam.getExam_type()!=null){
 					List<ExamQuestionVo> questionList = exam.getQuestionList();
 					List<ExamAnswerVo> answerList = exam.getAnswerList();
 					
@@ -67,7 +68,7 @@ public class Ljs_GradeServiceImpl implements Ljs_IGradeService{
 								}
 							}else if(questionVo.getSubjective_answer()!=null){
 								//주관식 문항
-								if(questionVo.getSubjective_answer().equals(answerVo.getSubjective_answer())){
+								if(questionVo.getSubjective_answer().equals(answerVo.getSubjectanswer())){
 									correct = true;
 								}
 							}else{
@@ -81,8 +82,14 @@ public class Ljs_GradeServiceImpl implements Ljs_IGradeService{
 						}
 					}
 					
-					String evaluatedScore = (score*5/100f*Integer.parseInt(rateArr[0])*100+0.5f)/100+"";
-					if(EvaluationType.MIDTERM.getText().equals(exam.getExam_type())){
+					String evaluatedScore = null;
+					if(score==0){
+						evaluatedScore = "0";
+					}else{
+						evaluatedScore = (int)(score*5/100f*Integer.parseInt(rateArr[0])*100)/100f+"";
+					}
+					
+					if(EvaluationType.MIDTERM.getText().contains(exam.getExam_type())){
 						grade.setGrade_midterm(evaluatedScore);
 					}else{
 						grade.setGrade_final(evaluatedScore);
@@ -170,7 +177,7 @@ public class Ljs_GradeServiceImpl implements Ljs_IGradeService{
 		ServiceResult result = ServiceResult.FAILED;
 		Ljs_EvaluationMaterialVo vo = evaluationDao.selectAbsenceAndAssignment(material);
 		if(vo!=null){
-			String[] rateArr = evaluateRate(vo);
+			String[] rateArr = evaluateRate(evaluationDao.selectExam(material));
 			GradeVo grade = evaluateAbsenceAndAssignment(rateArr, vo);
 			GradeVo inserted = gradeDao.selectGrade(vo.getAttend_no());
 			int cnt = 0;

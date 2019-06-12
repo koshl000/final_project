@@ -267,13 +267,7 @@ public class LSY_QuizServiceImpl implements LSY_IQuizService{
 	public int createExamAnswer(Lsy_EmbraceExamAnswer answerList, Ljs_EvaluationMaterialVo material, String exam_type) {
 		int result = quizDao.insertExamAnswer(answerList);
 		if(result>0) {
-			ljsService.createExamGrade(material);
-			if("기말".equals(exam_type)) {
-				ServiceResult serviceResult = ljsService.createAbsenceAndAssignmentGrade(material);
-				if(ServiceResult.OK.equals(serviceResult)) {
-					return result;
-				}
-			}
+			ljsService.evaluateAverage(material.getLecture_code());
 		}
 		return 0;
 	}
