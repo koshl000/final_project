@@ -231,7 +231,7 @@
 </script>
 <%--문자채팅 및 유저 리스트--%>
 <script>
-    var socket = io('https://localhst:9003');
+    var socket = io('https://192.168.207.208:9003');
 
     var userInfo = {
         user_id: '${user.user_id}',
