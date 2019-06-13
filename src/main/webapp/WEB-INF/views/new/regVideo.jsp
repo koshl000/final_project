@@ -25,12 +25,11 @@
 </head>
 <body>
 <div>
-    <form id="data" method="post">
-        <div class="form-group">
-            <input type="file" name="vidfile">
-            <button type="button" id="button1" style="width: height:20px;width: 100px; margin-top: 15px;margin-left: 200px;
-                background-color: #0E993C";font>업로드</button>
-        </div>
+    <form id="data" method="post" enctype="multipart/form-data">
+        <input type="file" name="vidfile">
+        <button type="submit" id="button1" style="width: height:20px;width: 100px; margin-top: 15px;margin-left: 200px;
+                background-color: #0E993C" ;font>업로드
+        </button>
     </form>
 </div>
 <%--<div class="bs-example">--%>
@@ -46,16 +45,17 @@
         buttonName: 'btn-success',
         buttonText: ' Open'
     });
-    $('#button1').on("click",function(event){
+    $('#data').on("submit", function (event) {
+        event.preventDefault();
         var formData = new FormData(this);
         $.ajax({
             type: "POST",
             enctype: 'multipart/form-data',
-            url: "${pageContext.request.contextPath}/professor/${lecture_code}/${class_identifying_code}/regvideo",
             data: formData,
             processData: false,
             contentType: false,
             cache: false,
+            dataType:'text',
             timeout: 600000,
             success: function (data) {
                 alert('파일 업로드가 완료되었습니다.');

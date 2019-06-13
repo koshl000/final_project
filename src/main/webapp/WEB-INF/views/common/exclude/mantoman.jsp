@@ -127,7 +127,7 @@
         OfferToReceiveAudio: true,
         OfferToReceiveVideo: true
     };
-    connection.videosContainer = document.getElementById('vid_con');
+    connection.videosContainer = document.querySelector('.vid_con');
 
     var roomid=100;
     connection.openOrJoin(roomid, function (isRoomExist, roomid, error) {
@@ -161,18 +161,34 @@
             }
         }
         video.srcObject = event.stream;
-        var width =     //parseInt(connection.videosContainer.clientWidth / 3) - 20;
-        var mediaElement = getHTMLMediaElement(video, {
-            title: event.userid,
-            buttons: ['full-screen'],
-            width: width,
-            showOnMouseEnter: false
-        });
-        connection.videosContainer.appendChild(mediaElement);
+
+        // video.setAttribute('width',500);
+        // video.setAttribute('height',500);
+        // video.setAttribute('videowidth',500);
+        // video.setAttribute('videoheight',500);
+        // var mediaElement = getHTMLMediaElement(video, {
+        //     title: event.userid,
+        //     buttons: ['full-screen'],
+        //     width: 500,
+        //     showOnMouseEnter: false
+        // });
+        // connection.videosContainer.appendChild(mediaElement);
+        // setTimeout(function() {
+        //     mediaElement.media.play();
+        // }, 5000);
+        // mediaElement.id = event.streamid;
+        // // to keep room-id in cache
+        // localStorage.setItem(connection.socketMessageEvent, connection.sessionid);
+
+
+
+        video.setAttribute('width','50%');
+        video.setAttribute('height','50%');
+        connection.videosContainer.appendChild(video);
         setTimeout(function() {
-            mediaElement.media.play();
+            video.play();
         }, 5000);
-        mediaElement.id = event.streamid;
+        video.id = event.streamid;
         // to keep room-id in cache
         localStorage.setItem(connection.socketMessageEvent, connection.sessionid);
         if(event.type === 'local') {
