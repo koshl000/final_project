@@ -150,6 +150,7 @@ input:focus {
 				dataType : "text", // request header(Accept), response header(Content-Type),
 				success : function(resp) {
 					console.log(resp);
+					alert("전송이 완료되었습니다");
 					window.location = 'smsGroupList';
 				},
 				error : function(errorResp) {

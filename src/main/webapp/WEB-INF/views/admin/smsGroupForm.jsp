@@ -198,6 +198,7 @@ input:focus {
 				dataType : "text", // request header(Accept), response header(Content-Type),
 				success : function(resp) {
 					console.log(resp);
+					alert("그룹등록이 완료되었습니다.");
 					window.location.href = 'smsGroupList';
 				},
 				error : function(errorResp) {
@@ -233,6 +234,7 @@ input:focus {
 				dataType : "text", // request header(Accept), response header(Content-Type),
 				success : function(resp) {
 					console.log(resp);
+					alert("그룹수정이 완료되었습니다.");
 					window.location.href = 'smsGroupList';
 				},
 				error : function(errorResp) {

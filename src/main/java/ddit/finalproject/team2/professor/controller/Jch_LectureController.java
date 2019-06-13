@@ -12,7 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.maven.model.Model;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,6 +45,22 @@ public class Jch_LectureController {
 		mv.addObject("userVo", userVo);
 		mv.addObject("jlpVo", jlpVo);
 		mv.setViewName("professor/lectureList");
+		return mv;
+	}
+	
+	@PostMapping("alectureList")
+	public ModelAndView doPost(
+			@ModelAttribute("lecture") Jch_LectureVo lecture
+			, Errors errors
+			, ModelAndView mv
+			){
+		System.out.println(lecture.toString());
+		ServiceResult result = service.updateLecutre(lecture);
+		if (ServiceResult.OK.equals(result)) {
+			mv.setViewName("redirect:alectureList");
+		} else {
+			mv.setViewName("professor/lectureList");
+		}
 		return mv;
 	}
 	

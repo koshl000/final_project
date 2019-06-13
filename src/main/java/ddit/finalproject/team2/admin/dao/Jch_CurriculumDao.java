@@ -37,4 +37,6 @@ public interface Jch_CurriculumDao {
 
 	Jch_LectureVo getLectureData(String no);
 
+	int updateLecutre(Jch_LectureVo lecture);
+
 }
