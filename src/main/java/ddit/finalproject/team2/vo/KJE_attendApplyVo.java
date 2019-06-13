@@ -16,7 +16,7 @@ import lombok.ToString;
 @ToString
 public class KJE_attendApplyVo implements Serializable{
 	
-	@NotNull private String lecture_code;
+	@NotNull private String lecture_code; 
 	 private String subject_code;
 	 private String user_id;
 	 private String attend_no;
