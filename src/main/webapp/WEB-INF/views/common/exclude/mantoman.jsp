@@ -422,9 +422,9 @@
     });
 
     socket.on('chat message', function (msg, info) {
-        if (info.user_id !== userInfo.user_id) {
-            $('.messages ul').append(message1(msg, info));
-        }
+            if (info.user_id !== userInfo.user_id) {
+                $('.messages ul').append(message1(msg, info));
+            }
     });
 
     // socket.emit('status_change',$("profile-img").attr('class'),userInfo);
