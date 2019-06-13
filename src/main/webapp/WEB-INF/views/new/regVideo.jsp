@@ -25,41 +25,44 @@
 </head>
 <body>
 <div>
-    <form id="data" enctype="multipart/form-data" method="post">
+    <form id="data" method="post">
         <div class="form-group">
-            <input type="file" name="file" id="BSbtnsuccess">
-            <input type="submit" value="업로드" id="BSbtnsuccess">
+            <input type="file" name="vidfile">
+            <button type="button" id="button1" style="width: height:20px;width: 100px; margin-top: 15px;margin-left: 200px;
+                background-color: #0E993C";font>업로드</button>
         </div>
     </form>
 </div>
-<div class="bs-example">
-    <div class="progress">
-        <div class="progress-bar" style="width: 60%;">
-            60%
-        </div>
-    </div>
-</div>
+<%--<div class="bs-example">--%>
+<%--    <div class="progress">--%>
+<%--        <div class="progress-bar" style="width: 60%;">--%>
+<%--            60%--%>
+<%--        </div>--%>
+<%--    </div>--%>
+<%--</div>--%>
 </body>
 <script>
     $('#BSbtnsuccess').filestyle({
         buttonName: 'btn-success',
         buttonText: ' Open'
     });
-    $('#form#data').submit(function (e) {
-        e.preventDefault();
+    $('#button1').on("click",function(event){
         var formData = new FormData(this);
         $.ajax({
+            type: "POST",
+            enctype: 'multipart/form-data',
             url: "${pageContext.request.contextPath}/professor/${lecture_code}/${class_identifying_code}/regvideo",
-            type: 'POST',
             data: formData,
-            success: function (data) {
-                alert(data)
-            },
-            cache: false,
+            processData: false,
             contentType: false,
-            processData: false
+            cache: false,
+            timeout: 600000,
+            success: function (data) {
+                alert('파일 업로드가 완료되었습니다.');
+            }
         });
     });
+
 
 </script>
 </html>

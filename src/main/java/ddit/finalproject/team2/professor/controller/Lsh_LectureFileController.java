@@ -34,8 +34,8 @@ public class Lsh_LectureFileController {
         mv.setViewName("new/regVideo");
         return mv;
     }
-    @PostMapping("/professor/${lecture_code}/${class_identifying_code}/regvideo")
-    public void uploadVideoService(MultipartFile file) throws IOException {
+    @PostMapping(value = "/professor/${lecture_code}/${class_identifying_code}/regvideo")
+    public void uploadVideoService(MultipartFile file,@PathVariable String lecture_code) throws IOException {
 //        Map<String,String> map1=map;
         String savedName=file.getOriginalFilename();
 
@@ -46,8 +46,8 @@ public class Lsh_LectureFileController {
         try {
             ObjectMetadata meta=new ObjectMetadata();
             meta.setContentLength(file.getSize());
-//            Upload xfer = xfer_mgr.upload("finalproject001/"+lecture_code, savedName, file.getInputStream(), meta);
-//            service.showTransferProgress(xfer);
+            Upload xfer = xfer_mgr.upload("finalproject001/"+lecture_code, savedName, file.getInputStream(), meta);
+            service.showTransferProgress(xfer);
         } catch (Exception e) {
             e.printStackTrace();
         }
