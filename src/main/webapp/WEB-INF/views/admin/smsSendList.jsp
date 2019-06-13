@@ -35,7 +35,9 @@
 			    , { data : "sms_type" }
 			    , { data : "sms_category" }
 			    , { data : "reservCancelBtn" }
-			]
+			],
+			"order" : []
+			,
 		});
 		
 		var table = $('#sms-group-send-list').DataTable();
@@ -43,20 +45,24 @@
 			var tr = $(this).parents('tr');
 			var no = table.row(tr).data().sms_groupid;
 			var jsonData = {"no" : no};	
-			$.ajax({
-				url : "${pageContext.request.contextPath}/sms/smsSendCancle",
-				method : "get",
-				data : jsonData,
-				dataType : "text", // request header(Accept), response header(Content-Type)
-				success : function(resp) {
-					console.log(resp);
-					$(this).hide();
-					window.location.href = 'groupSendListRe';
-				},
-				error : function(errorResp) {
-					console.log(errorResp.status);
-				}
-			});
+			
+			alert("예약이 취소되었습니다");
+			$(this).hide();
+			
+// 			$.ajax({
+// 				url : "${pageContext.request.contextPath}/sms/smsSendCancle",
+// 				method : "get",
+// 				data : jsonData,
+// 				dataType : "text", // request header(Accept), response header(Content-Type)
+// 				success : function(resp) {
+// 					console.log(resp);
+// 					$(this).hide();
+// 					window.location.href = 'groupSendListRe';
+// 				},
+// 				error : function(errorResp) {
+// 					console.log(errorResp.status);
+// 				}
+// 			});
 		});
 	});
 	

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%--
 * [[개정이력(Modification Information)]]
 * 수정일                 수정자      수정내용
@@ -12,6 +13,10 @@
  --%>
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/css/bootstrap-select.min.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath }/notika/css/datapicker/datepicker3.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath }/notika/css/dialog/sweetalert2.min.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath }/notika/css/dialog/dialog.css">
+   
 <style>
 	tfoot { 
     	display: table-header-group; 
@@ -130,6 +135,16 @@
 			$("input[name=lecture_subname]").val(name);
 			$('.normamlSub').val("중간고사");
 			$('.finalSub').val("기말고사");
+		});
+		
+		$('#data_1 .input-group.date').datepicker({
+			todayBtn : "linked",
+			keyboardNavigation : false,
+			forceParse : false,
+			calendarWeeks : true,
+			autoclose : true,
+			format : "yyyy/mm/dd"
+
 		});
 		
 		//강의주차수정버튼
@@ -264,11 +279,11 @@
 				success : function(resp) {
 					
 					$('#lPlandheader').html("<h2>"+name+" 강의 계획서</>");
-					$('#lec_plan_summary').text(resp.lec_plan_summary);
-					$('#introduction').text(resp.introduction);
-					$('#week_content').text(resp.week_content);
-					$('#lec_plan_method').text(resp.lec_plan_method);
-					$('#book_material').text(resp.book_material);
+					$('#lec_plan_summary').html(resp.lec_plan_summary);
+					$('#introduction').html(resp.introduction);
+					$('#week_content').html(resp.week_content);
+					$('#lec_plan_method').html(resp.lec_plan_method);
+					$('#book_material').html(resp.book_material);
 				},
 				error : function(errorResp) {
 					console.log(errorResp.status);
@@ -299,9 +314,30 @@
 				data : {"no" : no},
 				dataType : "json",
 				success : function(resp) {
+// 					$('#week_content').text(resp.week_content);
 					console.log(resp);
 					console.log(resp.lowerList);
-					console.log(resp.lecture);
+					$("input[name=lecture_code]").val(resp.lecture_code);
+					$("input[name=openseme_no]").val(resp.openseme_haki);
+					$("input[name=lecture_name]").val(resp.lecture_name);
+					$("select[name=lecture_target]").val(resp.lecture_target);
+					$("select[name=lecture_coursetype]").val(resp.lecture_coursetype);
+					$("select[name=lecture_credit]").val(resp.lecture_credit);
+					
+					$("input[name=lecture_capacity]").val(resp.lecture_capacity);
+					$("input[name=mid_date]").val(resp.mid_date);
+					$("input[name=final_date]").val(resp.final_date);
+					
+					$("select[name=lower_organization]").empty();
+					$.each(resp.lowerList, function(idx, obj){
+// 						console.log(obj);	
+						var option = "<option value="+obj.lower_organization+">"+obj.lower_organization+"</option>";
+						$("select[name=lower_organization]").append(option);
+					});
+					$("select[name=lower_organization]").val(resp.lower_organization);
+// 					$resp.lowerList.each(function (i, e) {
+// 						console.log(e);
+// 					});
 				},
 				error : function(errorResp) {
 					console.log(errorResp.status);
@@ -498,37 +534,37 @@
 	                            	<tr>
 	                            		<th>주별 강의 내용</th>
 	                            		<td>
-	                            			<textArea id="weekCon">${jlpVo.week_content }</textArea>
+	                            			<textArea id="weekCon"></textArea>
 	                            		</td>
 	                            	</tr>
 	                            	<tr>
 	                            		<th>학습과제물안내</th>
 	                            		<td>
-	                            			<textArea id="studyAssi">${jlpVo.assignment_info }</textArea>
+	                            			<textArea id="studyAssi"></textArea>
 	                            		</td>
 	                            	</tr>
 	                            	<tr>
 	                            		<th>교수소개</th>
 	                            		<td>
-	                            			<textArea id="profInfo">${jlpVo.introduction }</textArea>
+	                            			<textArea id="profInfo"></textArea>
 	                            		</td>
 	                            	</tr>
 	                            	<tr>
 	                            		<th>교과목 개요</th>
 	                            		<td>
-	                            			<textArea id="lecSummary">${jlpVo.lec_plan_summary }</textArea>
+	                            			<textArea id="lecSummary"></textArea>
 	                            		</td>
 	                            	</tr>
 	                            	<tr>
 	                            		<th>수업진행방식</th>
 	                            		<td>
-	                            			<textArea id="lecMethod">${jlpVo.lec_plan_method }</textArea>
+	                            			<textArea id="lecMethod"></textArea>
 	                            		</td>
 	                            	</tr>
 	                            	<tr>
 	                            		<th>교재/참고자료</th>
 	                            		<td>
-	                            			<textArea id="book">${jlpVo.book_material }</textArea>
+	                            			<textArea id="book"></textArea>
 	                            		</td>
 	                            	</tr>
 								</table>
@@ -602,6 +638,7 @@
 <div class="modal fade" id="myModalsix" role="dialog">
     <div class="modal-dialog modal-large">
         <div class="modal-content">
+            <form:form id="lecture" modelAttribute="lecture" method="post" >
             <div class="modal-header">
             </div>
             <div class="modal-body">
@@ -609,53 +646,95 @@
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="widget-tabs-int">
                         <div class="tab-hd" id="lPlandheader">
-                           
                         </div>
                         <div class="widget-tabs-list">
+	                        <input name="lecture_code" type="text" class="form-control" value="" style="display: none"/>
                             <table class="table table-bordered">
 								<tr>
 									<th><span>학기</span></th>
-									<td><input name="openseme_no" type="text" class="form-control" value="${lecture.openseme_no }" disabled="disabled"/></td>
+									<td><input name="openseme_no" type="text" class="form-control" value="" disabled="disabled"/></td>
+								</tr>
+					            <tr>
 					            	<th><span>교과목명</span></th>
-						            <td><input name="lecture_name" type="text" class="form-control" value="${lecture.lecture_code }"/></td>
+						            <td><input name="lecture_name" type="text" class="form-control" value="" disabled="disabled"/></td>
 					            </tr>
 					            <tr>
 						            <th><span>대상학년</span></th>
 						            <td>
-							            <select name="lecture_target" class="academicYear form-control">
-							            	<option value=""></option>
-							            	<option value="0" ${"0" eq lecture.lecture_target ? "selected":"" }>0학년</option>
-							            	<option value="1" ${"1" eq lecture.lecture_target ? "selected":"" }>1학년</option>
-							            	<option value="2" ${"2" eq lecture.lecture_target ? "selected":"" }>2학년</option>
-							            	<option value="3" ${"3" eq lecture.lecture_target ? "selected":"" }>3학년</option>
-							            	<option value="4" ${"4" eq lecture.lecture_target ? "selected":"" }>4학년</option>
+							            <select name="lecture_target" class="academicYear form-control" disabled="disabled">
+							            	<option value="0" >0학년</option>
+							            	<option value="1" >1학년</option>
+							            	<option value="2" >2학년</option>
+							            	<option value="3" >3학년</option>
+							            	<option value="4" >4학년</option>
 							            </select>
 						            </td>
+						        </tr>
+					            <tr>
 						            <th><span>이수구분</span>
 						            <td>
-						            	<select name="lecture_coursetype" class="courseType form-control">
-						            		<option value=""></option>
-						            		<option value="전공" ${"전공" eq lecture.lecture_coursetype ? "selected":"" }>전공</option>
-						            		<option value="교양" ${"교양" eq lecture.lecture_coursetype ? "selected":"" }>교양</option>
+						            	<select name="lecture_coursetype" class="courseType form-control" disabled="disabled">
+						            		<option value="전공" >전공</option>
+						            		<option value="교양" >교양</option>
 						            	</select>
 					            	</td>
 					            </tr>
 				            	<tr>
 						            <th><span>학점</span></th>
 						            <td>
-						            <select name="lecture_credit" class="credit form-control">
-						            	<option value=""></option>
+						            <select name="lecture_credit" class="credit form-control" disabled="disabled">
+						            	<option value="1">1</option>
+						            	<option value="2">2</option>
 						            	<option value="3">3</option>
+						            	<option value="4">4</option>
 						            </select>
 						            </td>
+						        </tr>
+					            <tr>
 						            <th><span>학과선택</span></th>
 						            <td>
-						            <select name="lower_organization" class="form-control lower">
-						            	<option value=""></option>
-						            	<c:forEach items="${lowerList}" var="lower" >
-						            		<option value="${lower.lower_organization }">${lower.lower_organization }</option>
-						            	</c:forEach>
+						            <select name="lower_organization" class="form-control lower" disabled="disabled">
 						            </select>
+					            </tr>
+					            <tr>
+					            	<th><span>수강인원</span></th>
+					            	<td><input name="lecture_capacity" type="text" class="form-control" value="0"/></td>
+					            	<th style="display: none;"></th>
+					            	<td style="display: none;"></td>
+					            </tr>
+					            <tr>
+					            	<th><span>중간고사 시험일</span></th>
+					            	<td colspan="3">
+					            		<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+										<div class="form-group nk-datapk-ctm form-elet-mg" id="data_1"
+											name="data_1">
+											<div class="input-group date nk-int-st">
+												<span class="input-group-addon"></span> <input type="text"
+													name="mid_date" id="mid_date" class="form-control"
+													placeholder="제출 종료일">
+												<form:errors path="submit_period2" element="span"
+													cssClass="error" />
+											</div>
+										</div>
+									</div>
+					            	</td>
+					            </tr>
+					            <tr>
+					            	<th><span>기말고사 시험일</span></th>
+					            	<td colspan="3">
+					            		<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+										<div class="form-group nk-datapk-ctm form-elet-mg" id="data_1"
+											name="data_1">
+											<div class="input-group date nk-int-st">
+												<span class="input-group-addon"></span> <input type="text"
+													name="final_date" id="final_date" class="form-control"
+													placeholder="제출 종료일">
+												<form:errors path="submit_period2" element="span"
+													cssClass="error" />
+											</div>
+										</div>
+									</div>
+					            	</td>
 					            </tr>
 				            </table>
                         </div>
@@ -664,14 +743,18 @@
             </div>
             </div>
             <div class="modal-footer">
+            	<button type="submit" class="btn btn-default notika-btn-default waves-effect">설정저장</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
             </div>
+            </form:form>
         </div>
     </div>
 </div>
 
 <script src="https://cdn.ckeditor.com/4.11.4/standard-all/ckeditor.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script	src="${pageContext.request.contextPath }/notika/js/dialog/sweetalert2.min.js"></script>
+<script src="${pageContext.request.contextPath }/notika/js/datapicker/bootstrap-datepicker.js"></script>
 <script type="text/javascript">
 	CKEDITOR.replace("weekCon");
 	CKEDITOR.replace("studyAssi");

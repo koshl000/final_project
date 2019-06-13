@@ -1,6 +1,7 @@
 package ddit.finalproject.team2.student.controller.subjectpage;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -15,10 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ddit.finalproject.team2.student.dao.KJE_IattendApplyDao;
 import ddit.finalproject.team2.student.service.KJE_IAttendApplyService;
-import ddit.finalproject.team2.vo.KJE_LWeekAssignmentProVo;
+import ddit.finalproject.team2.vo.AttendVo;
 import ddit.finalproject.team2.vo.KJE_attendApplyVo;
 import ddit.finalproject.team2.vo.LecturePlanVo;
+import ddit.finalproject.team2.vo.LectureVo;
 import ddit.finalproject.team2.vo.OpenSemesterVo;
+import ddit.finalproject.team2.vo.UserVo;
 
 @RestController
 public class KJE_attendApplyRestController {
@@ -70,6 +73,14 @@ public class KJE_attendApplyRestController {
 		
 		Map<String, Object> map = new HashMap<>();
 		List<KJE_attendApplyVo> list = attendApplyService.retriveAttendApplyList(stuInfo);
+		List<KJE_attendApplyVo> comlist =attendApplyService.retriveAttendApplyCompList(stuInfo);
+		List<LectureVo> attendList = new ArrayList<>();
+		for(int i=0;i<comlist.size();i++){
+			attendList.add(new LectureVo(comlist.get(i).getLecture_code()));
+			
+		}
+		
+		((UserVo)au.getPrincipal()).setLectureList(attendList); 
 		map.put("data", list);
 		return map;
 	}
@@ -97,6 +108,15 @@ public class KJE_attendApplyRestController {
 		
 		Map<String, Object> map = new HashMap<>();
 		List<KJE_attendApplyVo> list = attendApplyService.retriveAttendApplyCompList(stuInfo);
+		List<KJE_attendApplyVo> comlist =attendApplyService.retriveAttendApplyCompList(stuInfo);
+		List<LectureVo> attendList = new ArrayList<>();
+		for(int i=0;i<comlist.size();i++){
+			attendList.add(new LectureVo(comlist.get(i).getLecture_code()));
+			
+		}
+		
+		((UserVo)au.getPrincipal()).setLectureList(attendList); 
+		
 		map.put("data", list);
 		return map;
 	}

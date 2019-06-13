@@ -35,4 +35,6 @@ public interface Jch_CurriculumService {
 
 	Jch_LectureVo getLectureData(String no);
 
+	ServiceResult updateLecutre(Jch_LectureVo lecture);
+
 }

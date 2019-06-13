@@ -26,14 +26,15 @@ public class Jch_LectureVo implements Serializable{
 	@NotNull private String lecture_target;
 	private String openseme_no;
 	@NotNull private String lecture_capacity;
-	@NotNull private Date mid_date;
-	@NotNull private Date final_date;
+	@NotNull private String mid_date;
+	@NotNull private String final_date;
 	
 	private String openseme_year;
 	private String openseme_semester;
 	private String user_name;
 	private int checklec;
 	private int checkplan;
+	private String openseme_haki;
 	
 	private List<Jch_LectureVo> lowerList;
 	

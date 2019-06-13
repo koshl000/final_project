@@ -107,7 +107,20 @@ public class Jch_CurriculumServiceImpl implements Jch_CurriculumService {
 
 	@Override
 	public Jch_LectureVo getLectureData(String no) {
-		return curDao.getLectureData(no);
+		Jch_LectureVo vo = curDao.getLectureData(no);
+		vo.setMid_date(vo.getMid_date().substring(0, vo.getMid_date().indexOf(" ")));
+		vo.setFinal_date(vo.getFinal_date().substring(0, vo.getFinal_date().indexOf(" ")));
+		return vo;
+	}
+
+	@Override
+	public ServiceResult updateLecutre(Jch_LectureVo lecture) {
+		int rowCnt = curDao.updateLecutre(lecture);
+		ServiceResult result = ServiceResult.FAILED;
+		if (rowCnt > 0) {
+			result = ServiceResult.OK;
+		}
+		return result;
 	}
 
 }
