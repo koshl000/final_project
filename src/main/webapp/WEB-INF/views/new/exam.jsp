@@ -59,8 +59,8 @@ if(${close eq 'createExam'}){
 	self.close();
 }
 	var source;
-	var start = '${not empty start?start:0}';
-	var end = '${not empty end?end:5}';
+	var start = ${not empty start?start:0};
+	var end = ${not empty end?end:5};
 	var questions = [];
 	var idx = 0;
 	var resp;
