@@ -110,15 +110,11 @@
 												</div>
 												<div style="display: inline-block; padding-left: 50px;">
 													<strong>동영상</strong>
-													<button class="btn-sm" onClick="openQuizSt(
-														'${lectureWeekClass.class_identifying_code}',
-														'${lectureWeekClass.lecture_class}',
-														'${lectureInfos.lecture_code}')">보기</button>
+													<button class="btn-sm">보기</button>
 													<button class="btn-sm" onClick="openUploadVideo(
 														'${lectureInfos.lecture_code}',
 														'${lectureWeekClass.class_identifying_code}',
 													)">등록</button>
-													<button class="btn-sm">수정</button>
 												</div>
 													<div style="display: inline-block; padding-left: 50px;">
 														<strong>퀴즈</strong>
@@ -210,7 +206,6 @@
 														'${lectureWeekClass.lecture_class}',
 														'${lectureInfos.lecture_code}')">보기</button>
 													<button class="btn-sm">등록</button>
-													<button class="btn-sm">수정</button>
 												</div>
 													<div style="display: inline-block; padding-left: 50px;">
 														<strong>퀴즈</strong>
