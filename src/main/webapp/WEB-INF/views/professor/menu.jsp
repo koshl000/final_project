@@ -130,8 +130,6 @@
                         <ul class="notika-main-menu-dropdown">
                             <li><a href="${pageContext.request.contextPath }/professorMain/searchGrade">성적조회</a>
                             </li>
-                            <li><a href="${pageContext.request.contextPath }/professorMain/">나의정보</a>
-                            </li>
                             <li><a href="${pageContext.request.contextPath}/professor/proschedule">일정관리</a>
                             </li>
                         </ul>
@@ -144,8 +142,6 @@
                             <li><a href="${pageContext.request.contextPath}/professor/alectureList">강의목록</a>
                             </li>
                             <li><a href="${pageContext.request.contextPath}/professorMain/openChat">화상채팅개설</a>
-                            </li>
-                            <li><a href="${pageContext.request.contextPath}/professorMain/mantoman">1:1지도</a>
                             </li>
                             <li><a href="${pageContext.request.contextPath}/professor/assignment">과제물관리</a>
                             </li>
