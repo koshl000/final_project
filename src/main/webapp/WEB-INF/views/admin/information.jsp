@@ -106,7 +106,22 @@
 			
 		
 	$('#createBtn').on("click",function(event){
-		$('#insertForm input').val("");
+// 		$('#insertForm input').val("");
+
+				$("[name='openseme_period1']").val("2019/08/01");  
+				$("[name='openseme_period2']").val("2019/12/31");  
+				$("[name='openseme_attend1']").val("2019/07/10");
+				$("[name='openseme_attend2']").val("2019/07/17");
+				$("[name='openseme_registgrade1']").val("2019/10/15");
+				$("[name='openseme_registgrade2']").val("2019/10/22");
+				$("[name='openseme_checkgrade1']").val("2019/10/23");
+				$("[name='openseme_checkgrade2']").val("2019/10/30");
+				$("[name='openseme_registgrade3']").val("2019/12/18");
+				$("[name='openseme_registgrade4']").val("2019/12/24");
+				$("[name='openseme_checkgrade3']").val("2019/12/25");
+				$("[name='openseme_checkgrade4']").val("2019/12/31");
+				$("[name='openseme_evaluate1']").val("2019/12/25");
+				$("[name='openseme_evaluate2']").val("2019/12/30");
 		
 		if (!($('.modal.in').length)) {
 			$('.modal-dialog').css({
@@ -305,7 +320,7 @@
 											<div class="form-group nk-datapk-ctm form-elet-mg">
 												<div class="input-group date nk-int-st">
 													<span class="input-group-addon"></span> 
-													<input type="text" class="form-control" placeholder="학기 시작일" name="openseme_period1">
+													<input type="text" class="form-control" name="openseme_period1"/> 
 													</div>
 												</div>
 											</div>

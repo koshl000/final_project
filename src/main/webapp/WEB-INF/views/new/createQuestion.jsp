@@ -68,6 +68,7 @@ if('${examState}'=="already"){
 	self.close();
 }
 if('${close}'=='close'){
+	alert("등록이 완료되었습니다.");
 	self.close();
 }
 $(function(){
@@ -217,7 +218,7 @@ $(function(){
 				$(".lecture_week").val('1');
 				$(".container").find('.textQAnswer').hide();
 			} else if(btnType=='exam'){
-				var result = makeQuestion(".container", btnType, 5, 4)
+				var result = makeQuestion(".container", btnType, 20, 4)
 				var examType = $('.container').find(".timeCnt")[1];
 				$(examType).after("<select class='selectYet'><option></option></select>");
 				$("#quiz").remove();
@@ -327,33 +328,18 @@ $(function(){
 		<div class='row timeCnt'>
 			<div class="col-xs-12 col-sm-12 timeCnt">
 				<span><h3>${lectureInfos.lecture_name} / ${week}주차 : 시험등록</h3>
-				</span>
-				<span style="font-size: 10pt; font-weight: 500" class="timee"> 
-				<span style="padding-left: 8px; font-weight: 500" class="timee">Timer</span>
-				<span id="min" style="width: 15px; font-weight: 500; text-align: right" class="timee">
-				</span>분
-				<span id="sec" style="width: 15px; font-weight: 500; text-align: right" class="timee">
-				</span>초</span>
+<!-- 				</span> -->
+<!-- 				<span style="font-size: 10pt; font-weight: 500" class="timee">  -->
+<!-- 				<span style="padding-left: 8px; font-weight: 500" class="timee">Timer</span> -->
+<!-- 				<span id="min" style="width: 15px; font-weight: 500; text-align: right" class="timee"> -->
+<!-- 				</span>분 -->
+<!-- 				<span id="sec" style="width: 15px; font-weight: 500; text-align: right" class="timee"> -->
+<!-- 				</span>초</span> -->
 			</div>
 		</div>
 
-		<script type="text/javascript" language="javascript">
-			$("#takeExam").on('click', function(){
-				$('.timeCnt').show();
-				updateTime();
-			})
-			function updateTime() {
-				var now = new Date();
-				var t = now.getTime() - startDate.getTime();
-				var s = Math.round(t / 1000);
-
-				min.innerHTML = Math.floor(s / 60);
-				sec.innerHTML = s % 60;
-				setTimeout("updateTime()", 500);
-			}
-			var startDate = new Date();
-// 			updateTime();
-		</script>
+<!-- 		<script type="text/javascript" language="javascript"> -->
+<!-- 		</script> -->
 		<div class='row' id='boddy'>
 			<div class="col-xs-1 col-sm-1 veryLeft">
 			</div>

@@ -138,6 +138,7 @@ public class SubjectPageController {
         map.put("user_id", au.getName());
         map.put("lecture_code", lecture_code);
         Map<String, String> continuePlay = lectureService.selectContinuePlay(map);
+        
         String class_code = continuePlay.get("CLASS_IDENTIFYING_CODE");
         RedirectView r=new RedirectView();
         return new RedirectView("lecturePage/" + class_code);

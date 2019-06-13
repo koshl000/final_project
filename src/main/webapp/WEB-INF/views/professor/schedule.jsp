@@ -61,13 +61,14 @@ $(function(){
 
 		});
 	
+	
+	
 	$('#saveschedule').on("click",function(event){
 		
 		var lecture_name= $("[name='lecture']").children(":selected").val();	
 		var lecture_code= $("[name='lecture']").children(":selected").prop("id");	
 		$("[name='lecture_code']").val(lecture_code);
 		$("[name='lecture_name']").val(lecture_name);
-		
 		var queryString = $('#scheduleForm').serialize();
 		
 		$.ajax({

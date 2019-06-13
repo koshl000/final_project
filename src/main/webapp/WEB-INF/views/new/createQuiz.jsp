@@ -58,9 +58,13 @@ var selectSD;
 var btnType;
 var surveyList; var classList; var examList;
 var identifying_code = "";
+if('${close}'=='close'){
+	alert("퀴즈가 등록되었습니다.");
+	self.close();
+}
 $(function(){
 		var error = "";
-		var lecture_code = $("#lecture_code").val();
+		var lecture_code = $("#lecture_code").val();		
 		
 		var len; var len2; var len3;
 		$(".container").on("click", '#complete',function(event){
@@ -174,7 +178,6 @@ $(function(){
 		<div class='row timeCnt'>
 			<div class="col-xs-12 col-sm-12 timeCnt">
 				<span><h3>${lectureInfos.lectureWeekInfos[0].lectureWeekClass[0].lecture_subname} / ${lectureInfos.lectureWeekInfos[0].lecture_week}주차 ${lectureInfos.lectureWeekInfos[0].lectureWeekClass[0].lecture_class}교시 : 퀴즈</h3>
-				${lectureInfos.lectureWeekInfos[0].lecture_code}
 				</span>
 			</div>
 		</div>
