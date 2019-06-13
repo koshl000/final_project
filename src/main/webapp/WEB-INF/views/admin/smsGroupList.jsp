@@ -162,6 +162,7 @@ input:focus {
 				success : function(resp) {
 // 					console.log(resp);
 // 					$(".main").html(resp);
+					alert("삭제가 완료되었습니다");
 					window.location.href = 'smsGroupList';
 				},
 				error : function(errorResp) {

@@ -62,7 +62,7 @@
 	<select id="getSmsSendList" resultType="ddit.finalproject.team2.vo.Jch_SMSVo">
 		SELECT SMS_GROUPID, SMS_NO, SMS_CATEGORY,  SMS_TITLE, SMS_CONTENT, SMS_TARGET, to_char(SMS_DATE, 'YYYY-MM-DD HH24:MI:SS') SMS_DATE, SMS_TYPE
 		FROM SMS
-		ORDER BY TO_NUMBER(SMS_NO)
+		ORDER BY TO_NUMBER(SMS_NO) DESC
 	</select>
 	
 </mapper>

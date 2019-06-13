@@ -49,11 +49,11 @@
 		    #{lecture_credit},
 		    #{lecture_target},
 		    #{openseme_no},
-		    #{lecture_capacity, jdbcType=VARCHAR},
-		    #{mid_date, jdbcType=DATE},
-		    #{final_date, jdbcType=DATE},
+		    '0',
+		    SYSDATE,
+		    SYSDATE,
 		    #{lower_organization, jdbcType=VARCHAR},
-		    #{lecture_current, jdbcType=VARCHAR}
+		    '0'
 		)
 	</insert>
 	
@@ -105,7 +105,22 @@
 	</select>
 	
 	<select id="getLectureData" parameterType="string" resultType="ddit.finalproject.team2.vo.Jch_LectureVo">
-		SELECT * FROM LECTURE WHERE LECTURE_CODE=#{no}
+		SELECT L.*, O.OPENSEME_YEAR||'년 '||O.OPENSEME_SEMESTER||'학기' AS OPENSEME_HAKI 
+		FROM LECTURE L LEFT OUTER JOIN OPENSEMESTER O ON(L.OPENSEME_NO=O.OPENSEME_NO) 
+		WHERE LECTURE_CODE=#{no}
 	</select>
+	
+	<update id="updateLecutre" parameterType="ddit.finalproject.team2.vo.Jch_LectureVo">
+		UPDATE LECTURE 
+		SET lecture_coursetype=#{lecture_coursetype}
+		    , lecture_name=#{lecture_name}
+		    , lecture_credit=#{lecture_credit}
+		    , lecture_target=#{lecture_target}
+		    , lecture_capacity=#{lecture_capacity}
+		    , mid_date=#{mid_date}
+		    , final_date=#{final_date}
+		    , lower_organization=#{lower_organization}
+		WHERE LECTURE_CODE=#{lecture_code}
+	</update>
 	
 </mapper>
