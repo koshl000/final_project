@@ -191,11 +191,15 @@ var scheduleRegist = (function($){
 	// 일정 등록 레이어 초기화
 	var resetData = function(){
 		colorSpectrum("#fff");
-		$schedule.find("input[type=text]").val("");
-		$schedule.find("#stTime").val("");
-		$schedule.find("#edTime").val("");
-		$schedule.find("#sbg").val("#fff");
-		$("[name='lecture_code']").val("");
+//		$schedule.find("input[type=text]").val("");
+//		$schedule.find("#stTime").val("");
+//		$schedule.find("#edTime").val("");
+//		$schedule.find("#sbg").val("#fff");
+//		$("[name='lecture_code']").val("");
+		
+		$("[name='schedule_title']").val("주간화상회의");
+		$("[name='stTime']").val("18:00");
+		$("[name='edTime']").val("18:00");
 	};
 
 	var inputVal = function(val){

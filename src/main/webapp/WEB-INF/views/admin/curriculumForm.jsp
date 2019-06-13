@@ -11,6 +11,12 @@
 </style>
 <script>
    $(function(){
+	   $("[name=lecture_name]").val("디지털논리회로");
+	   $("[name=midterm]").val("35");
+	   $("[name=final]").val("35");
+	   $("[name=absence]").val("20");
+	   $("[name=assignment]").val("10");
+	   
 	   $(".saveBtn").on("click", function(e) {
 		   var a = $("select[name=openseme_no]").val();
 		   var b = $("input[name=lecture_name]").val();
@@ -85,7 +91,7 @@
 					            </tr>
 					            <tr>
 					            	<th><span>교과목명</span></th>
-						            <td colspan="2"><input name="lecture_name" type="text" class="form-control" value="${lecture.lecture_code }"/></td>
+						            <td colspan="2"><input name="lecture_name" type="text" class="form-control" value="${lecture.lecture_code }" /></td>
 					            </tr>
 					            <tr>
 						            <th>
