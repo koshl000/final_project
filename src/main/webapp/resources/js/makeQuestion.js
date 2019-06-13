@@ -134,6 +134,13 @@ function makeQuestion(formRange, btn, Qnum, Anum){
 		}
 	}
 	source += "</div></div>"
+	$(".PContent").val("알고리즘 입문 퀴즈 정답");
+	$(".QContent").val("알고리즘 입문 퀴즈 문제");
+	var checkboxes = [];
+	checkboxes = $("input:checkbox");
+	for (var i = 0; i < checkboxes.length; i+=4) {
+		$(checkboxes[i]).prop("checked", true);
+	}
 	return;
 	
 }

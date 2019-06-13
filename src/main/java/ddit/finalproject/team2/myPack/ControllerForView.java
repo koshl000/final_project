@@ -195,7 +195,7 @@ public class ControllerForView {
 			if(result>0) {
 				model.addAttribute("close", "close");
 			}
-			return "new/quiz";
+			return "new/createQuiz";
 		}
 		
 //		@GetMapping("/professor/showQuiz/{lecture_code}/{class_code}/{btnType}")
@@ -313,10 +313,10 @@ public class ControllerForView {
 		}
 		
 		@PostMapping("/professor/createExam/{lecture_code}")
-		public String dasddsda23132(@Validated @ModelAttribute Lsy_EmbraceExamVo examVo, 
+		public ModelAndView dasddsda23132(@Validated @ModelAttribute Lsy_EmbraceExamVo examVo, 
 									ModelAndView mav, @PathVariable String lecture_code,
 									Authentication au) {
-			int problemSize = 20; //나중엔 문제의 사이즈로 변환해주기 지금은 5개만 해놔서 이렇게 하드코딩한 것.
+			int problemSize = 80; //나중엔 문제의 사이즈로 변환해주기 지금은 5개만 해놔서 이렇게 하드코딩한 것.
 			int problemIdx = 0;
 			if(examVo!=null) {
 				HashMap<String, String> examMap = new HashMap<String, String>();
@@ -345,10 +345,13 @@ public class ControllerForView {
 					Lsy_ExamVo result2 = service.retrieveExamList(examMap);
 					mav.getModel().put("close", "close");
 					mav.getModel().put("btnType", "exam");
-					return "new/exam";
+					mav.setViewName("new/exam");
+					return mav;
 				}
 			}
-			return "new/exam";
+			mav.getModel().put("close", "createExam");
+			mav.setViewName("new/exam");
+			return mav;
 		}
 		
 		@PostMapping(value="/professor/updateQuestion", produces="application/json;charset=utf-8")

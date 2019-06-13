@@ -51,25 +51,29 @@ div.yaoRemove{
 }
 </style>
 <script>
-<c:if test="${close eq 'close'}">
+if(${close eq 'createExam'}){
+	alert("등록이 완료되었습니다.");
 	self.close();
-</c:if>
+} else if(${close eq 'close'}){
+	alert("제출이 완료되었습니다.");
+	self.close();
+}
 	var source;
-	var start = ${not empty start?start:0};
-	var end = ${not empty end?end:5};
+	var start = '${not empty start?start:0}';
+	var end = '${not empty end?end:5}';
 	var questions = [];
 	var idx = 0;
 	var resp;
 	var saveBtn; var modifyBtn; var aTags = []; var checkBoxes; var inputTexts; var textAreas; var strongs;
 	function completePage(){
-		if("${identifier[0]}"=="ROLE_PROFESSOR"&&'${btnType}'=='exam'){
-			$('.timee').hide();
-			$("#boddy").after("<div class='row'>"+"<div class='col-xs-6 col-sm-6 btnSpace'>" +
-					"<button class='btn' disabled type='button' id='prev'>이전</button>"+
-					"<button class='btn' type='button' id='next'>다음</button>"+
-					"<button class='btn' type='button' id='complete'>등록</button>"
-						);	
-		}
+// 		if("${identifier[0]}"=="ROLE_STUDENT"&&'${btnType}'=='exam'){
+// 			$('.timee').hide();
+// 			$("#boddy").after("<div class='row'>"+"<div class='col-xs-6 col-sm-6 btnSpace'>" +
+// 					"<button class='btn' disabled type='button' id='prev'>이전</button>"+
+// 					"<button class='btn' type='button' id='next'>다음</button>"+
+// 					"<button class='btn' type='button' id='complete'>제출</button>"
+// 						);
+// 		}
 		$('textArea').hide();
 		$("input[type='text']").attr('type', 'hidden');
 	}

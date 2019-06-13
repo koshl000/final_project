@@ -16,6 +16,7 @@ function makeQuestionPage(identifier, boddy, btnType){
 		$(boddy).find('.coverEach').append(everyModiBtn);
 		$(boddy).find('input:checkbox.student').iCheck('destroy');
 		$(boddy).find('.student').remove();
+		$(boddy).find('#boddy').after(stExamBtn);
 		$('input:checkbox').attr('disabled', true);
 	} else if(identifier=="ROLE_PROFESSOR"&&btnType=='quiz'){
 		$(boddy).find('.coverEach').append(everyModiBtn);
