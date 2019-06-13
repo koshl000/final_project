@@ -316,12 +316,12 @@ html, body {
                                     <h2>통계관리</h2>
                                     <a href="${pageContext.request.contextPath }/statistics/subject" style="color:#fff">  
                                     <i class="notika-icon notika-bar-chart" style="font-size:50px;"></i></a>
-<!--                                 </div> -->
+                                </div>
 <!--  				<div class="color-single nk-orange mg-t-30" style="float:left; margin-right: 26px;"> -->
 <!--                                    <h2>증명서관리</h2> -->
 <%--                                    <a href="${pageContext.request.contextPath }/adminMain/certificate" style="color:#fff">   --%>
 <!--                                    <i class="notika-icon notika-form" style="font-size:50px;"></i></a> -->
-<!--                                 </div> -->
+<!--                                 </div>  -->
                                 
 				<div class="color-single nk-green mg-t-30" style="float:left; margin-right: 26px;">
                                     <h2>SMS관리</h2>
