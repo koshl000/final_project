@@ -46,11 +46,12 @@ img.visible {
 } 
 </style>
 <script>
-	if(eval('${quizResult gt 2}')){
+	if(eval('${not empty quizResult && quizResult gt 2}')){
 		alert("${quizResult}개 맞으셨습니다. 3개 이상 정답을 맞추셨으므로 수강이 완료됩니다.");
 		self.close();
-	} else {
+	} else if(eval('${not empty quizResult && quizResult lt 3}')) {
 		alert("${quizResult}개 맞으셨습니다. 3개 이상 정답을 맞추지 못하셨으므로 문제를 다시 푸셔야합니다.");
+		location.href="${pageContext.request.contextPath}/professor/quiz/"+class_identifying_code+'/'+lecture_class+'/'+lecture_code;
 	}
 	var start = '${not empty start?start:1}';
 	var end = '${not empty end?end:5}';
@@ -62,6 +63,7 @@ img.visible {
 		$('.timee').hide();
 		$('textArea').hide();
 		$("input[type='text']").attr('type', 'hidden');
+		
 // 		if(btnType=="exam"){
 // 		$("#boddy").after("<div class='row'>"+"<div class='col-xs-6 col-sm-6 btnSpace'>" +
 // 				"<button class='btn' disabled type='button' id='prev'>이전</button>"+

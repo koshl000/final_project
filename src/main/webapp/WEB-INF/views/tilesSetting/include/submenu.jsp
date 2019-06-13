@@ -1,4 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<style>
+	.notika-main-menu-dropdown>li:hover {
+		background-color: #f8f8f8;
+	}
+</style>
 <div class="main-menu-area mg-tb-40">
     <div class="container">
         <div class="row">
@@ -13,9 +18,6 @@
                             <li><a href="lectureBoard">게시판</a></li>
                             <li><a href="mantoman">1:1지도</a></li>
                             <li><a href="lectureAssignment">과제물</a></li>
-                            <li><a href="studyState">학습현황</a></li>
-                            <li><a href="survey">설문지</a></li>
-                            <li><a href="surveyResult">설문결과</a></li>
                         </ul>
                     </div>
                 </div>
