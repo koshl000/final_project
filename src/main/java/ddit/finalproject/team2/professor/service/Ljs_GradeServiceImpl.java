@@ -1,5 +1,6 @@
 package ddit.finalproject.team2.professor.service;
 
+import java.lang.management.GarbageCollectorMXBean;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -202,7 +203,7 @@ public class Ljs_GradeServiceImpl implements Ljs_IGradeService{
 		List<AttendVo> attendList = attendDao.selectAttendList(lecture_code);
 		
 		for(GradeVo grade : gradeList){
-			if(gradeList.size()>0 && gradeList.size()==attendList.size() && grade.getGrade_absence()!=null){
+			if(gradeList.size()>0){
 				float total = Float.parseFloat(grade.getGrade_midterm()) + Float.parseFloat(grade.getGrade_final())
 					+ Float.parseFloat(grade.getGrade_absence()) + Float.parseFloat(grade.getGrade_assignment());
 				float average = 0;
@@ -214,8 +215,10 @@ public class Ljs_GradeServiceImpl implements Ljs_IGradeService{
 				throw new CommonException("성적이 취합되지 않은 학생이 존재합니다.");
 			}
 		}
-		
-		int cnt = gradeDao.updateGradeAll(gradeList);
+		int cnt = 0;
+		for(GradeVo grade : gradeList){
+			cnt = gradeDao.updateGradeAll(grade);
+		}
 		if(cnt>0){
 			result = ServiceResult.OK;
 		}

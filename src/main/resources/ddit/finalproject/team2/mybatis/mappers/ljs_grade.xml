@@ -32,11 +32,9 @@
 		WHERE A.LECTURE_CODE = #{lecture_code}
 	</select>
 	
-	<update id="updateGradeAll" parameterType="java.util.List">
-		<foreach collection="list" index="i" item="grade">
+	<update id="updateGradeAll" parameterType="GradeVo">
 			UPDATE GRADE
-			SET AVERAGE = #{grade.average}
-			WHERE ATTEND_NO = #{grade.attend_no}
-		</foreach>
+			SET AVERAGE = #{average}
+			WHERE ATTEND_NO = #{attend_no}
 	</update>
 </mapper>

@@ -58,7 +58,7 @@ public class Ljs_SearchGradeServiceImpl implements Ljs_ISearchGradeService{
 			for(GradeVo grade : search.getAverageList()){
 				String average = grade.getAverage();
 				if(average!=null){
-					if(max<=Integer.parseInt(average)){
+					if(max<=Float.parseFloat(average)){
 						AttendVo attend = attendDao.selectAttend(grade.getAttend_no());
 						completeList.add(attend);
 					}
@@ -90,7 +90,7 @@ public class Ljs_SearchGradeServiceImpl implements Ljs_ISearchGradeService{
 			pastTotalCredit += totalCredit;
 			pastTotalGrade += totalGrade;
 			search.setCompleteCredit(completeCredit+"");
-			search.setTotalGrade(totalGrade+"");
+			search.setTotalGrade((int)totalGrade+"");
 			search.setTotalAverage(Math.floor(totalGrade/totalCredit*100)/100f+"");
 			search.setAccumulateAverage(Math.floor(pastTotalGrade/pastTotalCredit*100)/100f+"");
 		}
@@ -113,29 +113,16 @@ public class Ljs_SearchGradeServiceImpl implements Ljs_ISearchGradeService{
 		int countA = 0;
 		int countB = 0;
 		for(Ljs_GradeDetailVo de : detailList){
-			int lecture_current = Integer.parseInt(de.getLecture().getLecture_current());
+			int lecture_current = 40;
 			int capacityA = (int) (lecture_current*rateA/100);
 			int capacityB = (int) (lecture_current*rateB/100);
 			if(de.getGrade().getAverage()!=null){
 				float average = Float.parseFloat(de.getGrade().getAverage());
 				for(int i=0; i<minArr.length; i++){
 					if(average>=minArr[0]){
-						if(countA<capacityA){
-							de.setRank("A");
-							countA++;
-						}else if(countB<capacityB){
-							de.setRank("B");
-							countB++;
-						}else{
-							de.setRank("C");
-						}
+						de.setRank("A");
 					}else if(average>=minArr[1]){
-						if(countB<capacityB){
 							de.setRank("B");
-							countB++;
-						}else{
-							de.setRank("C");
-						}
 					}else if(average>=minArr[2]){
 						de.setRank("C");
 					}else if(average>=minArr[3]){

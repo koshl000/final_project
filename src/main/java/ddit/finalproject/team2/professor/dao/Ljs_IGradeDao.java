@@ -11,6 +11,6 @@ public interface Ljs_IGradeDao {
 	int insertGrade(GradeVo grade);
 	GradeVo selectGrade(String attend_no);
 	int updateGrade(GradeVo grade);
-	int updateGradeAll(List<GradeVo> gradeList);
+	int updateGradeAll(GradeVo grade);
 	List<GradeVo> selectGradeList(String lecture_code);
 }
