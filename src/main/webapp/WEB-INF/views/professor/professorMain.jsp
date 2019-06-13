@@ -61,11 +61,11 @@ html, body {
                                     <a href="${pageContext.request.contextPath }/professorMain/searchGrade" style="color:#fff">  
                                     <i class="notika-icon notika-bar-chart" style="font-size:50px;"></i></a>
                                 </div>
- 				<div class="color-single nk-orange mg-t-30" style="float:left; margin-right: 20px;">
-                                   <h2>증명서신청 </h2>
-                                   <a href="${pageContext.request.contextPath }/professor/certificate" style="color:#fff">  
-                                   <i class="notika-icon notika-form" style="font-size:50px;"></i></a>
-                                </div>
+<!--  				<div class="color-single nk-orange mg-t-30" style="float:left; margin-right: 20px;"> -->
+<!--                                    <h2>증명서신청 </h2> -->
+<%--                                    <a href="${pageContext.request.contextPath }/professor/certificate" style="color:#fff">   --%>
+<!--                                    <i class="notika-icon notika-form" style="font-size:50px;"></i></a> -->
+<!--                                 </div> -->
                                 
 				<div class="color-single nk-green mg-t-30" style="float:left; margin-right: 20px;">
                                     <h2>과제물관리</h2>
