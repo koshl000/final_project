@@ -12,7 +12,7 @@
                     <div id="Home"
                          class="tab-pane in active notika-tab-menu-bg animated flipInX">
                         <ul class="notika-main-menu-dropdown">
-                            <li><a href="eduGoal">교육목표</a></li>
+                            <li><a href="eduGoal">강의소개</a></li>
                             <li><a href="professorIntro">교수소개</a></li>
                             <li><a href="lecturePage">강의페이지</a></li>
                             <li><a href="lectureBoard">게시판</a></li>
@@ -24,3 +24,4 @@
             </div>
         </div>
     </div>
+</div>
