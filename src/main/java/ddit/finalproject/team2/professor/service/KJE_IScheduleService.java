@@ -12,5 +12,7 @@ public interface KJE_IScheduleService {
 	public Map<String,List<KJE_fullcalenderVo>> retriveScheduleList(String user_id);
 	
 	public ServiceResult createSchedule(KJE_ScheduleVo schedule);
+	
+	public int removeSchedule(String schedule_no);
 
 }

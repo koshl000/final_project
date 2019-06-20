@@ -64,34 +64,58 @@ $(function(){
 	
 	
 	$('#saveschedule').on("click",function(event){
-		
-		var lecture_name= $("[name='lecture']").children(":selected").val();	
-		var lecture_code= $("[name='lecture']").children(":selected").prop("id");	
-		$("[name='lecture_code']").val(lecture_code);
-		$("[name='lecture_name']").val(lecture_name);
-		var queryString = $('#scheduleForm').serialize();
-		
-		$.ajax({
-			url :"${pageContext.request.contextPath}/saveSchedule",
-			method : "post",
-			data : queryString,
-			success : function(resp) {
-				if(resp.msg=="SUCCESS"){
-					swal("일정 등록", "일정 등록에 성공하였습니다.", "success");
-					$("#calendar").fullCalendar( 'renderEvent', resp.schedule ,'stick');
-					scheduleRegist.init();			// 일정 등록 관리 초기화
-					scheduleRegist.hide();	
-				}else if(resp.msg=="FAIL"){
-					swal("일정 등록", "일정 등록에 실패 하였습니다.", "error"); 
+		var flag = $("[name='flag']").children(":selected").text();
+		var schedule_no = $('#seq').val();
+		if(flag=="중지"){
+			$.ajax({
+				url :"${pageContext.request.contextPath}/deleteSchedule?schedule_no="+schedule_no,
+				method : "get",
+				success : function(resp) {
+					if(resp=="SUCCESS"){
+						swal("일정 중지", "일정을 삭제하였습니다.", "success");
+						 location.reload();
+						scheduleRegist.hide();	
+					}else if(resp=="FAIL"){
+						swal("일정중지", "일정 중지에 실패 하였습니다.", "error"); 
+					}
+					
+				},
+				error : function(errorResp) {
+					swal("일정 중지", "일정 중지에 실패 하였습니다.", "error"); 
+					console.log(errorResp.status);
 				}
-				
-			},
-			error : function(errorResp) {
-				swal("일정 등록", "일정 등록에 실패 하였습니다.", "error"); 
-				console.log(errorResp.status);
-			}
-		});
-		
+			});//ajax
+			
+		}else{
+			var lecture_name= $("[name='lecture']").children(":selected").val();	
+			var lecture_code= $("[name='lecture']").children(":selected").prop("id");	
+			$("[name='lecture_code']").val(lecture_code);
+			$("[name='lecture_name']").val(lecture_name);
+			var queryString = $('#scheduleForm').serialize();
+			
+			$.ajax({
+				url :"${pageContext.request.contextPath}/saveSchedule",
+				method : "post",
+				data : queryString,
+				success : function(resp) {
+					if(resp.msg=="SUCCESS"){
+						swal("일정 등록", "일정 등록에 성공하였습니다.", "success");
+						$("#calendar").fullCalendar( 'renderEvent', resp.schedule ,'stick');
+						scheduleRegist.init();			// 일정 등록 관리 초기화
+						scheduleRegist.hide();	
+						 location.reload();
+					}else if(resp.msg=="FAIL"){
+						swal("일정 등록", "일정 등록에 실패 하였습니다.", "error"); 
+					}
+					
+				},
+				error : function(errorResp) {
+					swal("일정 등록", "일정 등록에 실패 하였습니다.", "error"); 
+					console.log(errorResp.status);
+				}
+			});//ajax
+			
+		}
 		
 	});
 	
@@ -198,10 +222,10 @@ $(function(){
 	            	<tr>
 	            		<th scope="row">상태</th>
 	            		<td>
-	            			<div >
+	            			<div>
 	                            <label>
 	                                <span></span>
-	                                <select>
+	                                <select name="flag">
 	                                    <option value="사용" selected>사용</option>
 	                                    <option value="중지">중지</option>
 	                                </select>
@@ -212,6 +236,7 @@ $(function(){
 	            	</tr>
 	            </tbody>
             </table>
+            <input type="hidden" name="schedule_no" id="seq"/>
             </form:form>
 		</div>
 		<!--// schedule_form-->

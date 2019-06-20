@@ -59,4 +59,7 @@
 	
 	</insert>
 
+	<delete id="delectSchedule" parameterType="String">
+		DELETE FROM SCHEDULE WHERE SCHEDULE_NO = #{schedule_no}
+	</delete>
 </mapper>

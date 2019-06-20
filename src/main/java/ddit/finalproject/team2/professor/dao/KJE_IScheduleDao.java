@@ -17,4 +17,5 @@ public interface KJE_IScheduleDao {
 	
 	public int insertSchedule(KJE_ScheduleVo schedule);
 	
+	public int delectSchedule(String schedule_no);
 }

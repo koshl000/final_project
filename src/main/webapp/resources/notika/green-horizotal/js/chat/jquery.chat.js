@@ -68,6 +68,7 @@
            			data: targetParam,
            			dataType : "json", // request header(Accept), response header(Content-Type)
            			success : function(resp) {
+           			 var chatTime = moment().format("MM/DD hh:mm");
            				if(resp.length>0){
            					var respList = resp;
                				$(respList).each(function(idx, resps){

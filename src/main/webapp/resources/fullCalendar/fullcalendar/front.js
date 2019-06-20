@@ -104,6 +104,7 @@ var sDataParsing = (function($){
 
 		for(var i=0; i<length; i++){
 			newData[i] = new Object;
+			newData[i].id = data[i].seq;
 			newData[i].title = data[i].title;
 			newData[i].write = data[i].writeDate;
 			newData[i].start = data[i].startDate;
@@ -204,15 +205,18 @@ var scheduleRegist = (function($){
 
 	var inputVal = function(val){
 		var data = val;
-
+		
 		var tmptitle = data.title.split(":");
 
 		$schedule.find("#sTitle").val(tmptitle[1]);
 		$schedule.find("#start-date").val(data.start.substring(0, 10));
 		$schedule.find("#end-date").val(data.end.substring(0, 10));
 		
+		$schedule.find("#seq").val(data.id);
 		$schedule.find("#stTime").val(data.start.substring(11, 19));
 		$schedule.find("#edTime").val(data.end.substring(11, 19));
+		
+		
 		colorSpectrum(data.color);
 
 		showRegistArea(data.write);

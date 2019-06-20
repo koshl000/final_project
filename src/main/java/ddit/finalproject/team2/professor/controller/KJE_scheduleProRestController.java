@@ -12,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -54,6 +55,19 @@ public class KJE_scheduleProRestController {
 		}
 		respMap.put("msg", msg);
 		return respMap;
+	}
+	
+	
+	@RequestMapping(value="/deleteSchedule")
+	public String deleteSchedule(@RequestParam String schedule_no) {
+		int cnt = scheduleService.removeSchedule(schedule_no);
+		String msg =null;
+		if(cnt>0) {
+			msg="SUCCESS";
+		}else {
+			msg="FAIL";
+		}
+		return msg;
 	}
 	
 	

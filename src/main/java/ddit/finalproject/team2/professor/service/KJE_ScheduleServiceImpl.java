@@ -119,4 +119,11 @@ public class KJE_ScheduleServiceImpl implements KJE_IScheduleService {
 		return result;
 	}
 
+	@Override
+	public int removeSchedule(String schedule_no) {
+		int rowCnt = scheduleDao.delectSchedule(schedule_no);
+		
+		return rowCnt;
+	}
+
 }
